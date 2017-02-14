@@ -1,8 +1,8 @@
  // index.ios.js
 
-import React from 'react';
-import { AppRegistry } from 'react-native';
+import React from "react";
+import { AppRegistry } from "react-native";
 
-import Activid8 from './app/index';
+import Activid8 from "./app/index";
 
-AppRegistry.registerComponent('Activid8', () => Activid8);
+AppRegistry.registerComponent("Activid8", () => Activid8);

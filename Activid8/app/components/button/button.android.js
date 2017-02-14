@@ -1,9 +1,9 @@
 // app/components/button.android.js
 
-import React, { Component } from 'react';
-import {TouchableOpacity, Text, StyleSheet } from 'react-native';
-import reactMixin from 'react-mixin';
-import ButtonCommon from './button.common';
+import React, { Component } from "react";
+import {TouchableOpacity, Text, StyleSheet } from "react-native";
+import reactMixin from "react-mixin";
+import ButtonCommon from "./button.common";
 
 class Button extends Component {
   render() {
@@ -14,9 +14,15 @@ class Button extends Component {
       <TouchableOpacity onPress={this.handlePress.bind(this)} style={buttonStyle}>
         <Text style={styles.text}>{this.props.text}</Text>
       </TouchableOpacity>
-    )
+    );
   }
 }
+
+//Ensure Text is string;
+Button.propTypes = {
+  text: React.PropTypes.string.isRequired,
+};
+
 
 reactMixin.onClass(Button, ButtonCommon);
 export default Button;
@@ -24,17 +30,17 @@ export default Button;
 const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
-    backgroundColor: '#F44336',
+    backgroundColor: "#F44336",
     paddingHorizontal: 16,
     paddingVertical: 10,
-    position: 'absolute',
+    position: "absolute",
     right: 16,
     bottom: 16
   },
   buttonPress: {
-    backgroundColor: '#C7C7C7'
+    backgroundColor: "#C7C7C7"
   },
   text: {
-    color: '#fff'
+    color: "#fff"
   }
 });

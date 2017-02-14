@@ -1,9 +1,9 @@
 // app/components/button.ios.js
 
-import React, { Component } from 'react';
-import {TouchableOpacity, Text, StyleSheet } from 'react-native';
-import reactMixin from 'react-mixin';
-import ButtonCommon from './button.common';
+import React, { Component } from "react";
+import {TouchableOpacity, Text, StyleSheet } from "react-native";
+import reactMixin from "react-mixin";
+import ButtonCommon from "./button.common";
 
 class Button extends Component {
   render() {
@@ -14,9 +14,15 @@ class Button extends Component {
       <TouchableOpacity onPress={this.handlePress.bind(this)} style={buttonStyle}>
         <Text style={styles.text}>{this.props.text}</Text>
       </TouchableOpacity>
-    )
+    );
   }
 }
+
+//Ensure Text is string;
+Button.propTypes = {
+  text: React.PropTypes.string.isRequired,
+};
+
 
 reactMixin.onClass(Button, ButtonCommon);
 export default Button;
@@ -25,12 +31,12 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#0E7AFE'
+    backgroundColor: "#0E7AFE"
   },
   buttonPress: {
-    backgroundColor: '#C7C7C7'
+    backgroundColor: "#C7C7C7"
   },
   text: {
-    color: 'white'
+    color: "white"
   }
 });
