@@ -5,6 +5,7 @@ import {TouchableOpacity, Text, StyleSheet } from "react-native";
 import reactMixin from "react-mixin";
 import ButtonCommon from "./button.common";
 
+
 class Button extends Component {
   render() {
     const buttonStyle = [styles.button];

@@ -52,3 +52,8 @@ android/app/libs
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
+
+
+#FIREBASE KEYS
+
+app/firebaseKeys.js
