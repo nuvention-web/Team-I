@@ -9,15 +9,21 @@ var styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor:"white",
-    height: 64,
-    borderTopColor: "red",
-    borderTopWidth: 2
+    top: 56,
+    borderBottomColor: "red",
+    borderBottomWidth: 2
   },
   androidTabbar: {
     top: 0,
     borderBottomColor: "red",
     borderBottomWidth: 2,
     borderTopColor: 0
+  },
+  profileimage: {
+    top: 3,
+    width: 40,
+    height: 40,
+    borderRadius: 20
   }
 });
 

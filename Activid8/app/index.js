@@ -1,9 +1,11 @@
 // app/index.js
 
 import React, { Component} from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { View, Text, StyleSheet, Platform, Image } from "react-native";
 import Tabs from "react-native-tabs";
 import Button from "./components/button/button";
+import Home from "./components/home/home.ios"
+
 
 const styles = require("./styles.js");
 
@@ -32,32 +34,53 @@ export default class Activid8 extends Component {
     super(props);
 
     this.state = {
-      page: "first"
+      page: "home"
     };
   }
   // console.log(keys);
 
   render() {
     const { page } = this.state;
-    const background = styles[page];
+    // console.log(this.state);
+    // const temp = <Button text='Click Me!' />;
+
+
+    const profImg = require("./imgs/FabioIcon.png");
+
+    var temp = (<Text>State: {page} does not have handler</Text>);
+    if (this.state.page == "profile") temp = (<Text>PROFILE</Text>);
+    if (this.state.page == "home"){ temp = (<Home style={{flex: 1, height: 300}}/>);}
+    if (this.state.page == "messages"){ temp = (<Text>MESSAGE LIST</Text>);}
+
+    // function testFunc(state) {
+    //   let description;
+    //   if (state.page == "home") {
+    //     description = <Button text="Click Me!" />;
+    //   } else {
+    //     description = <Text>No Button</Text>;
+    //   }
+    //   return <div>{description}</div>;
+    // }
+
     const tabbarStyles = [styles.tabbar];
+    const profileimg = [styles.profileimage];
     if (Platform.OS === "android") tabbarStyles.push(styles.androidTabbar);
 
     return (
-      <View style={[styles.container, background]}>
+      <View style={[styles.container]}>
         <Tabs
           selected={page}
           style={tabbarStyles}
           selectedStyle={{color:"red"}} onSelect={el=>this.setState({page:el.props.name})}
         >
-            <Text name="first">First</Text>
-            <Text name="second">Second</Text>
-            <Text name="third">Third</Text>
+            <Text name="profile">
+              <Image source={profImg} style={profileimg}/>
+            </Text>
+            <Text name="home">Home</Text>
+            <Text name="messages">Messages</Text>
         </Tabs>
 
-        <Text>Activid8 App</Text>
-        <Text>{page}</Text>
-        <Button text="Click Me!" />
+        {temp}
       </View>
     );
   }
