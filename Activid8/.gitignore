@@ -56,4 +56,4 @@ fastlane/screenshots
 
 #FIREBASE KEYS
 
-app/firebaseKeys.js
+app/services/firebase/firebaseKeys.js

@@ -1,4 +1,4 @@
-// app/components/home.ios.js
+// app/components/home.android.js /// NOT TESTED
 
 import React from "react";
 import {StyleSheet, Text, View, Image} from "react-native";
