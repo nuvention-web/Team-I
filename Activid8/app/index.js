@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, Platform, Image } from "react-native";
 import Tabs from "react-native-tabs";
 import Button from "./components/button/button";
 import Home from "./components/home/home";
+import Profile from "./components/profile/profile";
 
 const styles = require("./styles.js");
 
@@ -24,7 +25,7 @@ export default class Activid8 extends Component {
     const profImg = require("./imgs/FabioIcon.png");
 
     var temp = (<Text>State: {page} does not have handler</Text>);
-    if (this.state.page == "profile") temp = (<Text>PROFILE</Text>);
+    if (this.state.page == "profile") temp = (<Profile />);
     if (this.state.page == "home"){ temp = (<Home style={{flex: 1, height: 300}}/>);}
     if (this.state.page == "messages"){ temp = (<Button text='Click Me!' />);}
 
