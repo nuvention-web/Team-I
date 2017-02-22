@@ -105,10 +105,12 @@ const Home = React.createClass({
 
 const styles = StyleSheet.create({
   card: {
+  	width: 300,
+  	height: 400,
     alignItems: "center",
     borderRadius: 5,
     // overflow: "hidden",
-    borderColor: "grey",
+    borderColor: "black",
     backgroundColor: "white",
     borderWidth: 1,
     elevation: 1
@@ -130,8 +132,8 @@ const styles = StyleSheet.create({
   },
   container:{
     backgroundColor:"#fff",
-    height:200,
-    width:200
+    width:300,
+    height: 400
   },
 });
 
