@@ -1,10 +1,18 @@
 // app/components/home.android.js /// NOT TESTED
 
 import React from "react";
-import {StyleSheet, Text, View, Image} from "react-native";
+import {StyleSheet, Text, View, Image, Alert, Button} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 // import reactMixin from "react-mixin";
 // import HomeCommon from "./home.common";
+
+/*
+TODO: Create a button to expand a card
+*/
+const expandCard = () => {
+  Alert.alert('button has been pressed');
+
+}
 
 
 let Card = React.createClass({
@@ -13,6 +21,12 @@ let Card = React.createClass({
       <View style={styles.card}>
         <Image style={styles.thumbnail} source={{uri: this.props.image}} />
         <Text style={styles.text}>This is card {this.props.name}</Text>
+        <Button
+          onPress={expandCard}
+          title="Details"
+          color="#FF8900"
+          accessibilityLabel="Learn more about this event"
+        />
       </View>
     );
   }
@@ -113,7 +127,8 @@ const styles = StyleSheet.create({
     borderColor: "black",
     backgroundColor: "white",
     borderWidth: 1,
-    elevation: 1
+    elevation: 1,
+    paddingBottom: 10
   },
   thumbnail: {
     flex: 1,
