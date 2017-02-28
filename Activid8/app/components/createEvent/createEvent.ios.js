@@ -2,13 +2,7 @@
 
 import React, { Component } from "react";
 import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput } from "react-native";
-
-
-const SubmitButtonHandler = (date, name, location) => {
-  console.log(date);
-  console.log(name);
-  console.log(location);
-}
+import sendEvent from "../../services/firebase/sendEvent";
 
 
 class CreateEvent extends Component {
@@ -58,8 +52,9 @@ class CreateEvent extends Component {
   onButtonPress = () => {
     //SEND AS EVENT OBJECT TO FIREBASE:
     // ADD HERE
-
-    Alert.alert(this.state.eventName);
+    // var date = this
+    sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
+    Alert.alert("Submitted Event");
   };
 
 
