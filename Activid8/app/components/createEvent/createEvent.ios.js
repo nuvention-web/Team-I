@@ -53,8 +53,16 @@ class CreateEvent extends Component {
     //SEND AS EVENT OBJECT TO FIREBASE:
     // ADD HERE
     // var date = this
-    sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
-    Alert.alert("Submitted Event");
+    if(this.state.eventName === 'none'){
+      Alert.alert("Please type your event name");
+    }
+    else if(this.state.eventLocation === 'none'){
+      Alert.alert("Please type your event's location");
+    }
+    else{
+      sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
+      Alert.alert("Submitted Event");
+    }
   };
 
 
