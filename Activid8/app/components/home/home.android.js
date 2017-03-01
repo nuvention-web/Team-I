@@ -1,7 +1,7 @@
 // app/components/home.android.js /// NOT TESTED
 
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, Alert, Button, ScrollView} from "react-native";
+import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 // import reactMixin from "react-mixin";
 // import HomeCommon from "./home.common";
@@ -28,11 +28,11 @@ class Card extends Component{
 			return (
 	     		<ScrollView>
 	        	<Image style={styles.thumbnail} source={{uri: this.props.image}} />
-	        	<Text>Name: {this.props.name}</Text>
-	        	<Text>Age: {this.props.age} </Text>
-	        	<Text>Bio: {this.props.bio} </Text>
-	        	<Text>Event: {this.props.eventTitle}</Text>
-	        	<Text>Event Details: This will have details about the event</Text>
+	        	<Text style = {styles.detailText}>Name: {this.props.name}</Text>
+	        	<Text style = {styles.detailText}>Age: {this.props.age} </Text>
+	        	<Text style = {styles.detailText}>Bio: {this.props.bio} </Text>
+	        	<Text style = {styles.detailText}>Event: {this.props.eventTitle}</Text>
+	        	<Text style = {styles.detailText}>Event Details: This will have details about the event</Text>
 	        	<Button
 	          		onPress={this.expandCard}
 	          		title="Go back"
@@ -47,7 +47,7 @@ class Card extends Component{
 	     		<View style={styles.card}>
 	        	<Image style={styles.thumbnail} source={{uri: this.props.image}} />
 	        	<Text style={styles.text}>{this.props.name}, {this.props.age}</Text>
-	        	<Text style={styles.text}> {this.props.eventTitle}</Text>
+	        	<Text style={styles.titleText}> {this.props.eventTitle}</Text>
 	        	<Button
 	          		onPress={this.expandCard}
 	          		title="Details"
@@ -179,11 +179,22 @@ const styles = StyleSheet.create({
     height: 240
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     paddingTop: 10,
-    paddingBottom: 10
+    justifyContent: "center"
   },
 
+  detailText: {
+  	fontSize: 14,
+  	paddingTop: 2,
+  	paddingBottom: 2
+  },
+  titleText: {
+    fontSize: 16,
+    paddingTop: 5,
+    paddingBottom: 10,
+    justifyContent: "center"
+  },
 
   noMoreCards: {
     flex: 1,
@@ -192,8 +203,8 @@ const styles = StyleSheet.create({
   },
   container:{
     backgroundColor:"#fff",
-    width:300,
-    height: 400
+    width:350,
+    height: 450
   },
 });
 
