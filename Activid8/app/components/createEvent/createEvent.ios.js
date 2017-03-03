@@ -84,6 +84,7 @@ class CreateEvent extends Component {
         </WithLabel>
         <Heading label="When?*  " />
         <DatePickerIOS
+          minimumDate= {new Date()}
           date={this.state.date}
           mode="datetime"
           timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
