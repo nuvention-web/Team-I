@@ -7,13 +7,6 @@ import firebaseApp from "../../services/firebase/firebaseService";
 
 const ref = firebaseApp().database().ref("Events")
 
-var Cards2 = [
-  {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
-  {name: "11", image: "https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif"},
-  {name: "12", image: "https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif"},
-  {name: "13", image: "https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif"},
-];
-
 class Card extends Component{
 	constructor(props){
 		super(props);
@@ -77,6 +70,13 @@ let NoMoreCards = React.createClass({
 
 
 var Cards = [];
+var Cards2 = [
+  {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
+  {name: "11", image: "https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif"},
+  {name: "12", image: "https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif"},
+  {name: "13", image: "https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif"},
+];
+
 const Home = React.createClass({
   	getInitialState() {
       ref.on('value', (dataSnapshot) => {        
