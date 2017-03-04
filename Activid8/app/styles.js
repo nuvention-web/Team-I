@@ -22,7 +22,8 @@ var styles = StyleSheet.create({
     borderTopColor: 0
   },
   profileimage: {
-    top: 3,
+    
+    // top: 3,
     width: 40,
     height: 40,
     borderRadius: 20
