@@ -3,13 +3,16 @@
 import React, {Component} from "react";
 import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
-// import reactMixin from "react-mixin";
-// import HomeCommon from "./home.common";
+import firebaseApp from "../../services/firebase/firebaseService";
 
-/*
-TODO: Create a button to expand a card
-*/
+const ref = firebaseApp().database().ref("Events")
 
+var Cards2 = [
+  {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
+  {name: "11", image: "https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif"},
+  {name: "12", image: "https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif"},
+  {name: "13", image: "https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif"},
+];
 
 class Card extends Component{
 	constructor(props){
@@ -71,50 +74,42 @@ let NoMoreCards = React.createClass({
   }
 });
 
-const Cards = [
-  {name: "Neil", age: "58", bio: "Scientist. Smart.", eventTitle: "Want to go to the planetarium?", image: "http://i.imgur.com/GuAB8OE.jpg"},
-  {name: "Greg", age: "32", bio: "Hi", eventTitle: "Going to watch La La Land before it's out of the theater", image: "http://i.imgur.com/6ePfo5i.jpg"},
-  {name: "Bryan", age: "21", bio: "Nose looks like someone twerking.", eventTitle: "Anyone wanna hit up Chipotle?", image: "http://i.imgur.com/VtmB3LX.jpg"},
-  {name: "Cynthia", age: "27", bio: "A New York artist", eventTitle:"Field Museum free weekend - who's in?", image: "http://www.newwaytoship.com/wp-content/uploads/2015/02/banner-person-maria.png"},
-  {name: "5", image: "https://media.giphy.com/media/oDLDbBgf0dkis/giphy.gif"},
-  {name: "6", image: "https://media.giphy.com/media/7r4g8V2UkBUcw/giphy.gif"},
-  {name: "7", image: "https://media.giphy.com/media/K6Q7ZCdLy8pCE/giphy.gif"},
-  {name: "8", image: "https://media.giphy.com/media/hEwST9KM0UGti/giphy.gif"},
-  {name: "9", image: "https://media.giphy.com/media/3oEduJbDtIuA2VrtS0/giphy.gif"},
-];
-
-const Cards2 = [
-  {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
-  {name: "11", image: "https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif"},
-  {name: "12", image: "https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif"},
-  {name: "13", image: "https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif"},
-];
 
 
-
+var Cards = [];
 const Home = React.createClass({
   	getInitialState() {
+      ref.on('value', (dataSnapshot) => {        
+        dataSnapshot.forEach((child) => {
+
+          Cards.push({
+            name: "Fabio", 
+            age: 58, 
+            bio: "Scientist, Smart.", 
+            eventName: child.val().eventName, 
+            image: "http://i.imgur.com/GuAB8OE.jpg"
+          });
+        });
+        this.setState({loading: false}); 
+      });
+
     	return {
       		cards: Cards,
-      		outOfCards: false
+      		outOfCards: false,
+          loading: true
     	};
-  	},
-  	handleYup (card) {
-    	console.log("yup");
-  	},
-  	handleNope (card) {
-    	console.log("nope");
+
   	},
   	cardRemoved (index) {
-    	console.log("The index is ${index}");
+    	console.log("The index is {index}");
 
     let CARD_REFRESH_LIMIT = 3;
 
     if (this.state.cards.length - index <= CARD_REFRESH_LIMIT + 1) {
-      console.log("There are only ${this.state.cards.length - index - 1} cards left.");
+      console.log("There are only {this.state.cards.length - index - 1} cards left.");
 
       if (!this.state.outOfCards) {
-        console.log("Adding ${Cards2.length} more cards");
+        console.log("Adding {Cards2.length} more cards");
 
         this.setState({
           cards: this.state.cards.concat(Cards2),
@@ -126,23 +121,34 @@ const Home = React.createClass({
 
   },
   render() {
-    return (
-      <View style={styles.container}>
-      <SwipeCards
-        cards={this.state.cards}
-        loop={false}
+    if(this.state.loading){
+      console.log("Loading: " + Cards);
+      return(
+        <Text>
+          loading...
+        </Text>
+      )
+      
+    }
+    else{
+      return (
+        <View style={styles.container}>
+        <SwipeCards
+          cards={this.state.cards}
+          loop={false}
 
-        renderCard={(cardData) => <Card {...cardData} />}
-        renderNoMoreCards={() => <NoMoreCards />}
-        showYup={true}
-        showNope={true}
+          renderCard={(cardData) => <Card {...cardData} />}
+          renderNoMoreCards={() => <NoMoreCards />}
+          showYup={true}
+          showNope={true}
 
-        handleYup={this.handleYup}
-        handleNope={this.handleNope}
-        cardRemoved={this.cardRemoved}
-      />
-    </View>
-    );
+          handleYup={this.handleYup}
+          handleNope={this.handleNope}
+          cardRemoved={this.cardRemoved}
+        />
+      </View>
+      );     
+    }
   }
 });
 
