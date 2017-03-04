@@ -9,9 +9,11 @@ var styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor:"white",
-    top: 56,
+    marginTop: 25,
+    // top: 0,
     borderBottomColor: "red",
-    borderBottomWidth: 2
+    borderBottomWidth: 2,
+    flex: 1
   },
   androidTabbar: {
     top: 0,

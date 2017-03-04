@@ -1,8 +1,7 @@
 // app/index.js
 
 import React, { Component} from "react";
-import { View, Text, StyleSheet, Platform, Image } from "react-native";
-import Tabs from "react-native-tabs";
+import { View, Text, StyleSheet, Platform, Image, Navigator, TouchableHighlight} from "react-native";
 import Button from "./components/button/button";
 import Home from "./components/home/home";
 import Profile from "./components/profile/profile";
@@ -14,41 +13,60 @@ export default class Activid8 extends Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      page: "home"
-    };
   }
 
+  renderScene(route, navigator) {
+    if (route.name == "Profile") {
+      return (<View style={{top: 100}}><Profile navigator={navigator} /></View>) ;
+    }
+    if(route.name == "Home") {
+      return (<View style={{top: 100}}><Home navigator={navigator} /></View>) ;
+    }
+    if(route.name == "Messages") {
+      return (<View style={{top: 100}}><Button navigator={navigator} text='Click Me!' /></View>) ;
+    }
+    else return <Text>Invalid Route</Text>;
+  };
+
   render() {
-    const { page } = this.state;
     const profImg = require("./imgs/FabioIcon.png");
-
-    var temp = (<Text>State: {page} does not have handler</Text>);
-    if (this.state.page == "profile") temp = (<Profile />);
-    if (this.state.page == "home"){ temp = (<Home style={{flex: 1, height: 300}}/>);}
-    if (this.state.page == "messages"){ temp = (<Button text='Click Me!' />);}
-
     const tabbarStyles = [styles.tabbar];
     const profileimg = [styles.profileimage];
     if (Platform.OS === "android") tabbarStyles.push(styles.androidTabbar);
 
     return (
-      <View style={[styles.container]}>
-        <Tabs
-          selected={page}
-          style={tabbarStyles}
-          selectedStyle={{color:"red"}} onSelect={el=>this.setState({page:el.props.name})}
-        >
-            <Text name="profile">
-              <Image source={profImg} style={profileimg}/>
-            </Text>
-            <Text name="home">Home</Text>
-            <Text name="messages">Messages</Text>
-        </Tabs>
-
-        {temp}
-      </View>
+        <Navigator
+          initialRoute={{name: "Home", index: 0}}
+          renderScene={ this.renderScene }
+          navigationBar = {
+            <Navigator.NavigationBar
+             routeMapper={{
+               LeftButton: (route, navigator, index, navState) =>
+               {
+                 return (
+                  <TouchableHighlight onPress={() => navigator.resetTo({name: "Profile", index: 0})}>
+                    <Text>Profile</Text>
+                  </TouchableHighlight>);
+               },
+               RightButton: (route, navigator, index, navState) =>
+               {
+                 return (
+                  <TouchableHighlight onPress={() => navigator.resetTo({name: "Messages", index: 0})}>
+                    <Text>Messages</Text>
+                  </TouchableHighlight>);
+               },
+               Title: (route, navigator, index, navState) =>
+               {
+                 return (
+                  <TouchableHighlight onPress={() => navigator.resetTo({name: "Home", index: 0})}>
+                    <Text>Home</Text>
+                  </TouchableHighlight>);
+               },
+             }}
+             style={tabbarStyles}
+           />
+          }
+        />
     );
   }
 }
