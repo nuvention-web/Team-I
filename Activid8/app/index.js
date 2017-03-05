@@ -22,7 +22,7 @@ export default class Activid8 extends Component {
     case "Profile": //createEvent
       return (<View style={{top: 100}}><Profile navigator={navigator} /></View>) ;
     case "CreateEvent": //createEvent
-      return (<View style={{top: 100}}><CreateEvent navigator={navigator} /></View>);
+      return (<View style={{top: 100}}><CreateEvent navigator={navigator} route={route} /></View>);
     case "Home":
       return (<View style={{top: 100}}><Home navigator={navigator} /></View>) ;
     case "Messages":

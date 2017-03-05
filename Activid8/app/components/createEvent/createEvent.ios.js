@@ -50,9 +50,7 @@ class CreateEvent extends Component {
   };
 
   onButtonPress = () => {
-    //SEND AS EVENT OBJECT TO FIREBASE:
-    // ADD HERE
-    // var date = this
+    console.log(this.props);
     if(this.state.eventName === 'none'){
       Alert.alert("Please enter your Event's name");
     }
@@ -62,6 +60,7 @@ class CreateEvent extends Component {
     else{
       sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
       Alert.alert("Submitted Event");
+      this.props.route.getEvent(this.state.eventName);
       this.props.navigator.pop();
     }
   };

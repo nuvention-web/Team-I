@@ -6,11 +6,52 @@ import CreateEvent from "../createEvent/createEvent";
 
 class Profile extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      eventName: "Museum Date"
+    };
+  }
+
+  getEvent(eventName){
+    //ideally this funciton should update state here - but for some reason it is called
+    //by children and does not have access to this.state 
+    // console.log("HERE");
+    // console.log(eventName);
+    // console.log(this);
+    // // this.setState({eventName: eventName});
+    // // state.eventName =  eventName;
+    // // setEventName(eventName);
+  }
+
+  setEventName(eventName){
+    this.setState({eventName: eventName});
+  }
+
   render() {
     const ryanMain = require("../../imgs/ryanIcon.jpg");
     const ryan1 = require("../../imgs/ryan1.jpg");
     const ryan2 = require("../../imgs/ryan2.jpg");
-    // console.log(this.props);
+    var temp;
+
+    ///IF no event - create event - button
+    if (this.state.eventName === "none") {
+      temp = (<Button
+          style={styles.eventButton}
+          onPress={()=>this.props.navigator.push({name: "CreateEvent", getEvent: this.getEvent})}
+          title="Create Event"
+          accessibilityLabel="Create Event"
+        />);
+    }
+    //If has event - take to event page? - button
+    else {
+      temp = (<Button
+          style={styles.eventButton}
+          onPress={()=>this.props.navigator.push({name: "EventPage", getEvent: this.getEvent})}
+          title={this.state.eventName}
+          accessibilityLabel="Got to my Event"
+        />);
+    }
 
     return (
       <ScrollView>
@@ -23,19 +64,15 @@ class Profile extends Component {
           </View>
           <Text style={styles.title}>Bio: </Text>
           <Text style={styles.bio}> I'm Ryan Gosling.</Text>
-          <Button
-              style={styles.eventButton}
-              onPress={()=>this.props.navigator.push({name: "CreateEvent"})}
-              title="Create Event"
-              accessibilityLabel="Create Event"
-            />
+          {temp}
      </ScrollView>
     );
   }
 }
 
 Profile.propTypes = {
-  navigator: PropTypes.object.isRequired
+  navigator: PropTypes.object.isRequired,
+  // eventName: PropTypes.string.isRequired
 };
 
 export default Profile;
