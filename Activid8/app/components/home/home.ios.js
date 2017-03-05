@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
 
-const ref = firebaseApp().database().ref("Events")
+const ref = firebaseApp().database().ref("Events");
 
 class Card extends Component{
   constructor(props){
@@ -70,32 +70,48 @@ let NoMoreCards = React.createClass({
 var Cards = [];
 var Cards2 = [
   {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
-  {name: "11", image: "https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif"},
-  {name: "12", image: "https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif"},
-  {name: "13", image: "https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif"},
 ];
 
 const Home = React.createClass({
-    getInitialState() {
-      ref.on('value', (dataSnapshot) => {        
+    getInitialState(){
+      return{
+        cardsLoading: true,
+      }
+    },
+
+    componentWillMount() {
+      var numPushed = 0;
+      ref.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
           Cards.push({
             name: child.val().name, 
             age: child.val().age, 
             bio: child.val().bio, 
-            eventName: child.val().eventName, 
-            image: "http://i.imgur.com/GuAB8OE.jpg"
+            eventTitle: child.val().eventName, 
+            image: child.val().img,
           });
+          numPushed++;
         });
-        this.setState({loading: false}); 
-      });
-
-      return {
+        this.setState({
+          cardsLoading: false,
           cards: Cards,
-          outOfCards: false,
-          loading: true
-      };
+          outOfCards: false
+        }); 
+        console.log(numPushed);
+        console.log(Cards);
+      });
     },
+
+    handleYup (card) {
+      console.log("Swiped Yes and: " + Cards);
+      Cards.splice(0, 1);
+    },
+
+    handleNope (card) {
+      console.log("Swiped No and: " + Cards);
+      Cards.splice(0, 1);
+    },
+
     cardRemoved (index) {
       console.log("The index is {index}");
 
@@ -112,21 +128,19 @@ const Home = React.createClass({
           outOfCards: true
         });
       }
-
     }
-
   },
+
   render() {
-    if(this.state.loading){
-      console.log("Loading: " + Cards);
+    if(this.state.cardsLoading){
       return(
         <Text>
-          loading...
+          loading cards...
         </Text>
       )
     }
-    
     else{
+      console.log("Rendering: " + Cards);
       return (
         <View style={styles.container}>
         <SwipeCards
@@ -154,7 +168,6 @@ const styles = StyleSheet.create({
     height: 400,
     alignItems: "center",
     borderRadius: 5,
-    // overflow: "hidden",
     borderColor: "black",
     backgroundColor: "white",
     borderWidth: 1,

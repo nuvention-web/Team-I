@@ -70,9 +70,6 @@ let NoMoreCards = React.createClass({
 var Cards = [];
 var Cards2 = [
   {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
-  {name: "11", image: "https://media4.giphy.com/media/6csVEPEmHWhWg/200.gif"},
-  {name: "12", image: "https://media4.giphy.com/media/AA69fOAMCPa4o/200.gif"},
-  {name: "13", image: "https://media.giphy.com/media/OVHFny0I7njuU/giphy.gif"},
 ];
 
 const Home = React.createClass({
@@ -101,8 +98,18 @@ const Home = React.createClass({
           outOfCards: false
         }); 
         console.log(numPushed);
-        
+        console.log(Cards);
       });
+    },
+
+    handleYup (card) {
+      console.log("Swiped Yes and: " + Cards);
+      Cards.splice(0, 1);
+    },
+
+    handleNope (card) {
+      console.log("Swiped No and: " + Cards);
+      Cards.splice(0, 1);
     },
 
   	cardRemoved (index) {
@@ -121,10 +128,9 @@ const Home = React.createClass({
           outOfCards: true
         });
       }
-
     }
-
   },
+
   render() {
     if(this.state.cardsLoading){
       return(
@@ -134,6 +140,7 @@ const Home = React.createClass({
       )
     }
     else{
+      console.log("Rendering: " + Cards);
       return (
         <View style={styles.container}>
         <SwipeCards
@@ -161,7 +168,6 @@ const styles = StyleSheet.create({
   	height: 400,
     alignItems: "center",
     borderRadius: 5,
-    // overflow: "hidden",
     borderColor: "black",
     backgroundColor: "white",
     borderWidth: 1,
