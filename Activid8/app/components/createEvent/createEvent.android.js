@@ -16,7 +16,7 @@ var {
 import sendEvent from "../../services/firebase/sendEvent";
 
 class createEvent extends React.Component {
-  static title = 'DatePickerAndroid';
+  static title = "DatePickerAndroid";
   static description = 'Standard Android date picker dialog';
 
   state = {
@@ -83,10 +83,10 @@ class createEvent extends React.Component {
     // ADD HERE
     // var date = this
     if(this.state.eventName === 'none'){
-      Alert.alert("Please type your event name");
+      Alert.alert("Please enter your Event's name");
     }
     else if(this.state.eventLocation === 'none'){
-      Alert.alert("Please type your event's location");
+      Alert.alert("Please enter your Event's location");
     }
     else if(this.state.dateText === 'Click to pick a date'){
       Alert.alert("Please choose a date for this event");
@@ -98,7 +98,7 @@ class createEvent extends React.Component {
       sendEvent(this.state.eventName, this.state.eventLocation, this.state.dateText + ' ' + this.state.timeText);
       Alert.alert("Submitted Event");
     }
-    
+
   };
 
   render() {
@@ -171,7 +171,7 @@ var styles = StyleSheet.create({
     paddingBottom: 5,
   },
 
-  
+
   text: {
     color: 'black',
   },

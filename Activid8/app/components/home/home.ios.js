@@ -1,6 +1,6 @@
 // app/components/home.android.js /// NOT TESTED
 
-import React, {Component} from "react";
+import React, {Component, PropTypes} from "react";
 import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 // import reactMixin from "react-mixin";
@@ -208,5 +208,8 @@ const styles = StyleSheet.create({
   },
 });
 
+Home.propTypes = {
+  navigator: PropTypes.object.isRequired
+};
 
 export default Home;
