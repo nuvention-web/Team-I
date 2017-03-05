@@ -79,11 +79,10 @@ const Home = React.createClass({
     getInitialState() {
       ref.on('value', (dataSnapshot) => {        
         dataSnapshot.forEach((child) => {
-
           Cards.push({
-            name: "Fabio", 
-            age: 58, 
-            bio: "Scientist, Smart.", 
+            name: child.val().name, 
+            age: child.val().age, 
+            bio: child.val().bio, 
             eventName: child.val().eventName, 
             image: "http://i.imgur.com/GuAB8OE.jpg"
           });
@@ -96,7 +95,6 @@ const Home = React.createClass({
           outOfCards: false,
           loading: true
       };
-
     },
     cardRemoved (index) {
       console.log("The index is {index}");
@@ -126,8 +124,8 @@ const Home = React.createClass({
           loading...
         </Text>
       )
-      
     }
+    
     else{
       return (
         <View style={styles.container}>

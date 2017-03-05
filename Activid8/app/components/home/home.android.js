@@ -1,11 +1,9 @@
-// app/components/home.android.js /// NOT TESTED
-
 import React, {Component} from "react";
 import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
 
-const ref = firebaseApp().database().ref("Events")
+const ref = firebaseApp().database().ref("Events");
 
 class Card extends Component{
 	constructor(props){
@@ -78,28 +76,35 @@ var Cards2 = [
 ];
 
 const Home = React.createClass({
-  	getInitialState() {
-      ref.on('value', (dataSnapshot) => {        
+    getInitialState(){
+      return{
+        cardsLoading: true,
+      }
+    },
+
+    componentWillMount() {
+      var numPushed = 0;
+      ref.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
-
           Cards.push({
-            name: "Fabio", 
-            age: 58, 
-            bio: "Scientist, Smart.", 
-            eventName: child.val().eventName, 
-            image: "http://i.imgur.com/GuAB8OE.jpg"
+            name: child.val().name, 
+            age: child.val().age, 
+            bio: child.val().bio, 
+            eventTitle: child.val().eventName, 
+            image: child.val().img,
           });
+          numPushed++;
         });
-        this.setState({loading: false}); 
+        this.setState({
+          cardsLoading: false,
+          cards: Cards,
+          outOfCards: false
+        }); 
+        console.log(numPushed);
+        
       });
+    },
 
-    	return {
-      		cards: Cards,
-      		outOfCards: false,
-          loading: true
-    	};
-
-  	},
   	cardRemoved (index) {
     	console.log("The index is {index}");
 
@@ -121,14 +126,12 @@ const Home = React.createClass({
 
   },
   render() {
-    if(this.state.loading){
-      console.log("Loading: " + Cards);
+    if(this.state.cardsLoading){
       return(
         <Text>
-          loading...
+          loading cards...
         </Text>
       )
-      
     }
     else{
       return (
