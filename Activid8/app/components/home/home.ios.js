@@ -84,10 +84,10 @@ const Home = React.createClass({
       ref.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
           Cards.push({
-            name: child.val().name, 
-            age: child.val().age, 
-            bio: child.val().bio, 
-            eventTitle: child.val().eventName, 
+            name: child.val().name,
+            age: child.val().age,
+            bio: child.val().bio,
+            eventTitle: child.val().eventName,
             image: child.val().img,
           });
           numPushed++;
@@ -96,7 +96,7 @@ const Home = React.createClass({
           cardsLoading: false,
           cards: Cards,
           outOfCards: false
-        }); 
+        });
         console.log(numPushed);
         console.log(Cards);
       });
@@ -157,7 +157,7 @@ const Home = React.createClass({
           cardRemoved={this.cardRemoved}
         />
       </View>
-      );     
+      );
     }
   }
 });
