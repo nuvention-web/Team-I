@@ -15,7 +15,7 @@ class Profile extends Component {
 
   getEvent(eventName){
     //ideally this funciton should update state here - but for some reason it is called
-    //by children and does not have access to this.state 
+    //by children and does not have access to this.state.
     // console.log("HERE");
     // console.log(eventName);
     // console.log(this);
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginTop: 20,
-    color: "crimson",
+    color: "#FF851B",
     marginLeft: 20
   },
   eventButton: {

@@ -11,18 +11,18 @@ var styles = StyleSheet.create({
     backgroundColor:"white",
     marginTop: 25,
     // top: 0,
-    borderBottomColor: "red",
+    borderBottomColor: "orange",
     borderBottomWidth: 2,
     flex: 1
   },
   androidTabbar: {
     top: 0,
-    borderBottomColor: "red",
+    borderBottomColor: "orange",
     borderBottomWidth: 2,
     borderTopColor: 0
   },
   profileimage: {
-    
+
     // top: 3,
     width: 40,
     height: 40,

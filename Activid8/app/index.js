@@ -7,6 +7,7 @@ import Button from "./components/button/button";
 import Home from "./components/home/home";
 import Profile from "./components/profile/profile";
 import CreateEvent from "./components/createEvent/createEvent";
+import EventPage from "./components/eventPage/eventPage";
 
 const styles = require("./styles.js");
 
@@ -27,6 +28,8 @@ export default class Activid8 extends Component {
       return (<View style={{top: 100}}><Home navigator={navigator} /></View>) ;
     case "Messages":
       return (<View style={{top: 100}}><Button navigator={navigator} text='Click Me!' /></View>) ;
+    case "EventPage":
+      return (<View style={{top: 100}}><EventPage navigator={navigator} /></View>) ;
     default:
       return (<View style={{top: 100}}><Text>Invalid Route</Text></View>);
     }
