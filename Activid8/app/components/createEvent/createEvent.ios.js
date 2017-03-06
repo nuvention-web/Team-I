@@ -1,6 +1,6 @@
 // app/components/CreateEvent.ios.js
 
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput } from "react-native";
 import sendEvent from "../../services/firebase/sendEvent";
 
@@ -50,18 +50,18 @@ class CreateEvent extends Component {
   };
 
   onButtonPress = () => {
-    //SEND AS EVENT OBJECT TO FIREBASE:
-    // ADD HERE
-    // var date = this
+    console.log(this.props);
     if(this.state.eventName === 'none'){
-      Alert.alert("Please type your event name");
+      Alert.alert("Please enter your Event's name");
     }
     else if(this.state.eventLocation === 'none'){
-      Alert.alert("Please type your event's location");
+      Alert.alert("Please enter your Event's location");
     }
     else{
       sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
       Alert.alert("Submitted Event");
+      this.props.route.getEvent(this.state.eventName);
+      this.props.navigator.pop();
     }
   };
 
@@ -98,13 +98,6 @@ class CreateEvent extends Component {
           timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
           onDateChange={this.onDateChange}
         />
-        <WithLabel label="Value:">
-          <Text>{
-            this.state.date.toLocaleDateString() +
-            " " +
-            this.state.date.toLocaleTimeString()
-          }</Text>
-        </WithLabel>
         <Button
           onPress={this.onButtonPress}
           title="Create Event"
@@ -145,6 +138,9 @@ class Heading extends React.Component {
   }
 }
 
+CreateEvent.propTypes = {
+  navigator: PropTypes.object.isRequired
+};
 
 export default CreateEvent;
 
@@ -177,7 +173,9 @@ var styles = StyleSheet.create({
     fontSize: 14,
   },
   fullView: {
-    width: 300
+    width: 300,
+    marginLeft: 20,
+    marginTop: 20
   },
   default: {
     height: 26,

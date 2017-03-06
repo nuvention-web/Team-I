@@ -1,6 +1,6 @@
 // app/components/Profile.ios.js
 
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import { View, Alert, Text, StyleSheet, Button } from "react-native";
 import CreateEvent from "../createEvent/createEvent";
 
@@ -41,7 +41,8 @@ class Profile extends Component {
   }
 }
 
-
-
+Profile.propTypes = {
+  navigator: PropTypes.object.isRequired
+};
 
 export default Profile;
