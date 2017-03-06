@@ -7,9 +7,9 @@ import * as firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: keys.apiKey, // Auth / General Use
-  authDomain: "<your-auth-domain>", // Auth with popup/redirect
+  authDomain: keys.authDomain, // Auth with popup/redirect
   databaseURL: keys.databaseURL, // Realtime Database
-  storageBucket: "<your-storage-bucket>", // Storage
+  storageBucket: keys.storageBucket, // Storage
   messagingSenderId: "123456789"                  // Cloud Messaging
 };
 
