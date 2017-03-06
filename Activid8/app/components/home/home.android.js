@@ -1,57 +1,56 @@
-// app/components/home.android.js /// NOT TESTED
-
-import React, {Component, PropTypes} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
+import React, {Component} from "react";
+import {StyleSheet, Text, View, Image, Button, ScrollView, Alert} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
 
-const ref = firebaseApp().database().ref("Events");
-
+const eventRef = firebaseApp().database().ref("Events");
+const userRef = firebaseApp().database().ref("Users/neil01");
 class Card extends Component{
-	constructor(props){
-		super(props);
-		this.state = {expanded: false};
-	}
+  constructor(props){
+    super(props);
+    this.state = {expanded: false};
+  }
 
-	expandCard = () => {
-		this.setState(
-			{expanded: !this.state.expanded}
-		);
-	}
+  expandCard = () => {
+    this.setState(
+      {expanded: !this.state.expanded}
+    );
+  }
 
-	render() {
-		if(this.state.expanded){
-			return (
-	     		<ScrollView>
-	        	<Image style={styles.thumbnail} source={{uri: this.props.image}} />
-	        	<Text style = {styles.detailText}>Name: {this.props.name}</Text>
-	        	<Text style = {styles.detailText}>Age: {this.props.age} </Text>
-	        	<Text style = {styles.detailText}>Bio: {this.props.bio} </Text>
-	        	<Text style = {styles.detailText}>Event: {this.props.eventTitle}</Text>
-	        	<Text style = {styles.detailText}>Event Details: This will have details about the event</Text>
-	        	<Button
-	          		onPress={this.expandCard}
-	          		title="Go back"
-	          		color="#FF8900"
-	          		accessibilityLabel="Learn more about this event"
-	        		/>
-	      		</ScrollView>
-    		);
-		}
-		else{
-			return (
-	     		<View style={styles.card}>
-	        	<Image style={styles.thumbnail} source={{uri: this.props.image}} />
-	        	<Text style={styles.text}>{this.props.name}, {this.props.age}</Text>
-	        	<Text style={styles.titleText}> {this.props.eventTitle}</Text>
-	        	<Button
-	          		onPress={this.expandCard}
-	          		title="Details"
-	          		color="#FF8900"
-	          		accessibilityLabel="Learn more about this event"/>
-	      		</View>
-    		);
-		}
+  render() {
+    if(this.state.expanded){
+      return (
+          <ScrollView>
+            <Image style={styles.thumbnail} source={{uri: this.props.image}} />
+            <Text style = {styles.detailText}>Name: {this.props.name}</Text>
+            <Text style = {styles.detailText}>Age: {this.props.age} </Text>
+            <Text style = {styles.detailText}>Bio: {this.props.bio} </Text>
+            <Text style = {styles.detailText}>Event: {this.props.eventTitle}</Text>
+            <Text style = {styles.detailText}>Event Location: {this.props.eventLocation}</Text>
+            <Text style = {styles.detailText}>Event Date: {this.props.eventDate}</Text>
+            <Button
+                onPress={this.expandCard}
+                title="Go back"
+                color="#FF8900"
+                accessibilityLabel="Learn more about this event"
+              />
+            </ScrollView>
+        );
+    }
+    else{
+      return (
+          <View style={styles.card}>
+            <Image style={styles.thumbnail} source={{uri: this.props.image}} />
+            <Text style={styles.text}>{this.props.name}, {this.props.age}</Text>
+            <Text style={styles.titleText}> {this.props.eventTitle}</Text>
+            <Button
+                onPress={this.expandCard}
+                title="Details"
+                color="#FF8900"
+                accessibilityLabel="Learn more about this event"/>
+            </View>
+        );
+    }
 
 
   }
@@ -68,13 +67,15 @@ let NoMoreCards = React.createClass({
 });
 
 
-
+var swipedCards = [];
 var Cards = [];
 var Cards2 = [
   {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
 ];
 
 const Home = React.createClass({
+    
+
     getInitialState(){
       return{
         cardsLoading: true,
@@ -82,14 +83,20 @@ const Home = React.createClass({
     },
 
     componentWillMount() {
+      userRef.on('value', (userSnapshot) => {
+          swipedCards = userSnapshot.val().swipedCards;
+      });
+
       var numPushed = 0;
-      ref.on('value', (dataSnapshot) => {
+      eventRef.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
           Cards.push({
             name: child.val().name, 
             age: child.val().age, 
             bio: child.val().bio, 
-            eventTitle: child.val().eventName, 
+            eventTitle: child.val().eventName,
+            eventLocation: child.val().eventLocation,
+            eventDate: child.val().eventDate,
             image: child.val().img,
           });
           numPushed++;
@@ -105,17 +112,26 @@ const Home = React.createClass({
     },
 
     handleYup (card) {
+      var swipedCard = Cards.shift();
+      swipedCards.push(swipedCard);
+
+      var tmp = {};
+      tmp.swipedCards = swipedCards;
+      userRef.update(tmp);
+
+      Alert.alert("The user has been notified.")
+      console.log(swipedCards);
       console.log("Swiped Yes and: " + Cards);
-      Cards.splice(0, 1);
     },
 
     handleNope (card) {
+      var swipedCard = Cards.shift();
       console.log("Swiped No and: " + Cards);
-      Cards.splice(0, 1);
+
     },
 
-  	cardRemoved (index) {
-    	console.log("The index is {index}");
+    cardRemoved (index) {
+      console.log("The index is {index}");
 
     let CARD_REFRESH_LIMIT = 3;
 
@@ -166,8 +182,8 @@ const Home = React.createClass({
 
 const styles = StyleSheet.create({
   card: {
-  	width: 300,
-  	height: 400,
+    width: 300,
+    height: 400,
     alignItems: "center",
     borderRadius: 5,
     borderColor: "black",
@@ -178,11 +194,10 @@ const styles = StyleSheet.create({
   },
 
   expandedCard: {
-  	width: 300,
-  	height: 800,
+    width: 300,
+    height: 800,
     alignItems: "center",
     borderRadius: 5,
-    // overflow: "hidden",
     borderColor: "black",
     backgroundColor: "white",
     borderWidth: 1,
@@ -202,9 +217,9 @@ const styles = StyleSheet.create({
   },
 
   detailText: {
-  	fontSize: 14,
-  	paddingTop: 2,
-  	paddingBottom: 2
+    fontSize: 14,
+    paddingTop: 2,
+    paddingBottom: 2
   },
   titleText: {
     fontSize: 16,
@@ -224,10 +239,6 @@ const styles = StyleSheet.create({
     height: 450
   },
 });
-
-Home.propTypes = {
-  navigator: PropTypes.object.isRequired
-};
 
 
 export default Home;

@@ -1,10 +1,10 @@
-import React, {Component, PropTypes} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
+import React, {Component} from "react";
+import {StyleSheet, Text, View, Image, Button, ScrollView, Alert} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
 
-const ref = firebaseApp().database().ref("Events");
-
+const eventRef = firebaseApp().database().ref("Events");
+const userRef = firebaseApp().database().ref("Users/neil01");
 class Card extends Component{
   constructor(props){
     super(props);
@@ -26,7 +26,8 @@ class Card extends Component{
             <Text style = {styles.detailText}>Age: {this.props.age} </Text>
             <Text style = {styles.detailText}>Bio: {this.props.bio} </Text>
             <Text style = {styles.detailText}>Event: {this.props.eventTitle}</Text>
-            <Text style = {styles.detailText}>Event Details: This will have details about the event</Text>
+            <Text style = {styles.detailText}>Event Location: {this.props.eventLocation}</Text>
+            <Text style = {styles.detailText}>Event Date: {this.props.eventDate}</Text>
             <Button
                 onPress={this.expandCard}
                 title="Go back"
@@ -66,13 +67,15 @@ let NoMoreCards = React.createClass({
 });
 
 
-
+var swipedCards = [];
 var Cards = [];
 var Cards2 = [
   {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
 ];
 
 const Home = React.createClass({
+    
+
     getInitialState(){
       return{
         cardsLoading: true,
@@ -80,14 +83,20 @@ const Home = React.createClass({
     },
 
     componentWillMount() {
+      userRef.on('value', (userSnapshot) => {
+          swipedCards = userSnapshot.val().swipedCards;
+      });
+
       var numPushed = 0;
-      ref.on('value', (dataSnapshot) => {
+      eventRef.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
           Cards.push({
-            name: child.val().name,
-            age: child.val().age,
-            bio: child.val().bio,
+            name: child.val().name, 
+            age: child.val().age, 
+            bio: child.val().bio, 
             eventTitle: child.val().eventName,
+            eventLocation: child.val().eventLocation,
+            eventDate: child.val().eventDate,
             image: child.val().img,
           });
           numPushed++;
@@ -96,20 +105,29 @@ const Home = React.createClass({
           cardsLoading: false,
           cards: Cards,
           outOfCards: false
-        });
+        }); 
         console.log(numPushed);
         console.log(Cards);
       });
     },
 
     handleYup (card) {
+      var swipedCard = Cards.shift();
+      swipedCards.push(swipedCard);
+
+      var tmp = {};
+      tmp.swipedCards = swipedCards;
+      userRef.update(tmp);
+
+      Alert.alert("The user has been notified.")
+      console.log(swipedCards);
       console.log("Swiped Yes and: " + Cards);
-      Cards.splice(0, 1);
     },
 
     handleNope (card) {
+      var swipedCard = Cards.shift();
       console.log("Swiped No and: " + Cards);
-      Cards.splice(0, 1);
+
     },
 
     cardRemoved (index) {
@@ -157,7 +175,7 @@ const Home = React.createClass({
           cardRemoved={this.cardRemoved}
         />
       </View>
-      );
+      );     
     }
   }
 });
@@ -180,7 +198,6 @@ const styles = StyleSheet.create({
     height: 800,
     alignItems: "center",
     borderRadius: 5,
-    // overflow: "hidden",
     borderColor: "black",
     backgroundColor: "white",
     borderWidth: 1,
@@ -223,8 +240,5 @@ const styles = StyleSheet.create({
   },
 });
 
-Home.propTypes = {
-  navigator: PropTypes.object.isRequired
-};
 
 export default Home;
