@@ -74,7 +74,7 @@ var Cards2 = [
 ];
 
 const Home = React.createClass({
-    
+
 
     getInitialState(){
       return{
@@ -91,9 +91,9 @@ const Home = React.createClass({
       eventRef.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
           Cards.push({
-            name: child.val().name, 
-            age: child.val().age, 
-            bio: child.val().bio, 
+            name: child.val().name,
+            age: child.val().age,
+            bio: child.val().bio,
             eventTitle: child.val().eventName,
             eventLocation: child.val().eventLocation,
             eventDate: child.val().eventDate,
@@ -105,7 +105,7 @@ const Home = React.createClass({
           cardsLoading: false,
           cards: Cards,
           outOfCards: false
-        }); 
+        });
         console.log(numPushed);
         console.log(Cards);
       });
@@ -175,7 +175,7 @@ const Home = React.createClass({
           cardRemoved={this.cardRemoved}
         />
       </View>
-      );     
+      );
     }
   }
 });

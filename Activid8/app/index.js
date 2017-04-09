@@ -12,15 +12,15 @@ import EventPage from "./components/eventPage/eventPage";
 
 
 import Login from "./components/login/login.js";
-import Error from "./components/error/Error.js";
+
 import Launch from "./components/launch/Launch.js";
+import TabIcon from "./components/tabIcon/tabIcon.js";
+
 
 import Tabs from "react-native-tabs";
 
 
 // const styles = require("./styles.js");
-
-
 
 
 
@@ -133,35 +133,34 @@ export default class Activid8 extends Component {
     //       }
     //     />
     // );
-    // var self = this;
-    // return (
-    //   <View style={styles.container}>
-    //     <Tabs selected={this.state.page} style={{backgroundColor:'white'}}
-    //           selectedStyle={{color:'red'}} onSelect={el=>this.setState({page:el.props.name})}>
-    //         <Text name="first">First</Text>
-    //         <Text name="second" selectedIconStyle={{borderTopWidth:2,borderTopColor:'red'}}>Second</Text>
-    //         <Text name="third">Third</Text>
-    //         <Text name="fourth" selectedStyle={{color:'green'}}>Fourth</Text>
-    //         <Text name="fifth">Fifth</Text>
-    //     </Tabs>
-    //       <Text style={styles.welcome}>
-    //           Welcome to React Native
-    //       </Text>
-    //       <Text style={styles.instructions}>
-    //           Selected page: {this.state.page}
-    //       </Text>
-    //   </View>
-    // );
 
     return (
-    <Router getSceneStyle={getSceneStyle}>
-      <Scene key="root">
+    <Router createReducer={reducerCreate} getSceneStyle={getSceneStyle}>
+      <Scene key="root" hideNavBar hideTabBar>
         <Scene key="launch" component={Launch} title="Launch" initial/>
-        <Scene key="login" component={Login} direction="vertical">
-          <Scene key="loginModal" direction="vertical" component={Login} title="Login" />
-        </Scene>
+        <Scene key="login" component={Login} direction="vertical" title="Login"/>
         <Scene key="home" component={Home} title="Home"/>
-        <Scene key="error" component={Error}/>
+          <Scene
+            key="main"
+            tabs
+            tabBarStyle = {{
+              ...Platform.select({
+                ios: {
+                  top: 64,
+                },
+                android: {
+                  top: 54,
+                },
+              }),
+              height: 65,
+              padding: 16,
+            }}
+            tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
+          >
+            <Scene key="tab1" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
+            <Scene key="tab2" component={Home} title="Home" hideNavBar icon={TabIcon} />
+            <Scene key="tab3" component={Button} title="Messages" hideNavBar icon={TabIcon} />
+          </Scene>
       </Scene>
     </Router>
     );

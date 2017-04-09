@@ -20,8 +20,7 @@ class Launch extends React.Component {
       <View {...this.props}  style={styles.container}>
         <Text>Launch page</Text>
         <Button onPress={()=>Actions.login({data:"Custom data", title:"Custom title" })}>Go to Login page</Button>
-        <Button onPress={()=>Actions.error("Error message")}>Popup error</Button>
-        <Button onPress={Actions.tabbar}>Go to TabBar page</Button>
+        <Button onPress={Actions.main}>Go to TabBar page</Button>
         <Button onPress={Actions.pop}>back</Button>
       </View>
     );

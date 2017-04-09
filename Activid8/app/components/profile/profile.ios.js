@@ -1,7 +1,7 @@
 // app/components/Profile.ios.js
 
 import React, { Component, PropTypes } from "react";
-import { View, Text, StyleSheet, Button, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Button, Image, ScrollView, Platform } from "react-native";
 import CreateEvent from "../createEvent/createEvent";
 
 class Profile extends Component {
@@ -54,7 +54,7 @@ class Profile extends Component {
     }
 
     return (
-      <ScrollView>
+      <ScrollView style = {{...Platform.select({ios: {top: 129},android: {top: 119}})}}>
           <View style={{flex: 1, flexDirection: "row"}}>
             <Image source={ryanMain} style={styles.mainImage}/>
             <View style={{flex: 1, flexDirection: "column"}}>

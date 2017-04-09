@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView} from "react-native";
+import {StyleSheet, Text, View, Image, Button, ScrollView, Platform} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
 
@@ -87,10 +87,10 @@ const Home = React.createClass({
       ref.on('value', (dataSnapshot) => {
         dataSnapshot.forEach((child) => {
           Cards.push({
-            name: child.val().name, 
-            age: child.val().age, 
-            bio: child.val().bio, 
-            eventTitle: child.val().eventName, 
+            name: child.val().name,
+            age: child.val().age,
+            bio: child.val().bio,
+            eventTitle: child.val().eventName,
             image: child.val().img,
           });
           numPushed++;
@@ -99,9 +99,9 @@ const Home = React.createClass({
           cardsLoading: false,
           cards: Cards,
           outOfCards: false
-        }); 
+        });
         console.log(numPushed);
-        
+
       });
     },
 
@@ -150,7 +150,7 @@ const Home = React.createClass({
           cardRemoved={this.cardRemoved}
         />
       </View>
-      );     
+      );
     }
   }
 });
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   container:{
     backgroundColor:"#fff",
     width:350,
-    height: 450
+    height: 450,
+		...Platform.select({ios: {top: 129},android: {top: 119}})
   },
 });
 
