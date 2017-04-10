@@ -128,9 +128,11 @@ const Home = React.createClass({
   render() {
     if(this.state.cardsLoading){
       return(
-        <Text>
-          loading cards...
-        </Text>
+				<View style={styles.container}>
+	        <Text>
+	          loading cards...
+	        </Text>
+				</View>
       )
     }
     else{

@@ -3,6 +3,9 @@ import {View, Text, StyleSheet} from "react-native";
 import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
 
+import fbLogin from "../../services/firebase/fbLogin";
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -15,9 +18,10 @@ const styles = StyleSheet.create({
 });
 
 
-const FBSDK = require('react-native-fbsdk');
+const FBSDK = require("react-native-fbsdk");
 const {
   LoginButton,
+  AccessToken
 } = FBSDK;
 
 var Login = React.createClass({
@@ -25,19 +29,25 @@ var Login = React.createClass({
     return (
       <View>
         <LoginButton
-          publishPermissions={["publish_actions"]}
+          readPermissions={["public_profile", "email", "user_friends"]}
           onLoginFinished={
             (error, result) => {
               if (error) {
-                alert("Login failed with error: " + result.error);
+                alert("login has error: " + result.error);
               } else if (result.isCancelled) {
-                alert("Login was cancelled");
+                alert("login is cancelled.");
               } else {
-                alert("Login was successful with permissions: " + result.grantedPermissions);
+                AccessToken.getCurrentAccessToken().then(
+                  (data) => {
+                    console.log(data);
+                    fbLogin(data.accessToken);
+                    alert(data.accessToken.toString());
+                  }
+                );
               }
             }
           }
-          onLogoutFinished={() => alert("User logged out")}/>
+          onLogoutFinished={() => alert("logout.")}/>
       </View>
     );
   }
