@@ -58,27 +58,26 @@ export default class Activid8 extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {page:"second"};
   }
 
-  renderScene(route, navigator) {
-    switch (route.name) {
-    case "Profile": //createEvent
-      return (<View style={{top: 100}}><Profile navigator={navigator} /></View>) ;
-    case "CreateEvent": //createEvent
-      return (<View style={{top: 100}}><CreateEvent navigator={navigator} route={route} /></View>);
-    case "Home":
-      return (<View style={{top: 100}}><Home navigator={navigator} /></View>) ;
-    case "Messages":
-      return (<View style={{top: 100}}><Button navigator={navigator} text='Click Me!' /></View>) ;
-    case "EventPage":
-      return (<View style={{top: 100}}><EventPage navigator={navigator} /></View>) ;
-    default:
-      return (<View style={{top: 100}}><Text>Invalid Route</Text></View>);
-    }
-    //To pass data as well: (https://github.com/facebook/react-native/issues/4323)
-    // return <Home navigator={navigator} data={route.data} />;
-  };
+  // renderScene(route, navigator) {
+  //   switch (route.name) {
+  //   case "Profile": //createEvent
+  //     return (<View style={{top: 100}}><Profile navigator={navigator} /></View>) ;
+  //   case "CreateEvent": //createEvent
+  //     return (<View style={{top: 100}}><CreateEvent navigator={navigator} route={route} /></View>);
+  //   case "Home":
+  //     return (<View style={{top: 100}}><Home navigator={navigator} /></View>) ;
+  //   case "Messages":
+  //     return (<View style={{top: 100}}><Button navigator={navigator} text='Click Me!' /></View>) ;
+  //   case "EventPage":
+  //     return (<View style={{top: 100}}><EventPage navigator={navigator} /></View>) ;
+  //   default:
+  //     return (<View style={{top: 100}}><Text>Invalid Route</Text></View>);
+  //   }
+  //   //To pass data as well: (https://github.com/facebook/react-native/issues/4323)
+  //   // return <Home navigator={navigator} data={route.data} />;
+  // };
 
   render() {
     const profImg = require("./imgs/ryanIcon.jpg");
@@ -86,81 +85,23 @@ export default class Activid8 extends Component {
     const profileimg = [styles.profileimage];
     if (Platform.OS === "android") tabbarStyles.push(styles.androidTabbar);
 
-    // return (
-    //     <Navigator
-    //       initialRoute={{name: "Home", index: 0}}
-    //       renderScene={ this.renderScene }
-    //       configureScene={(route, routeStack) => CustomTransitions.NONE}
-    //       navigationBar = {
-    //         <Navigator.NavigationBar
-    //          routeMapper={{
-    //            LeftButton: (route, navigator, index, navState) =>
-    //            {
-    //              return (
-    //               <TouchableOpacity
-    //                 style={{paddingLeft: 20}}
-    //                 onPress={() => navigator.resetTo({name: "Profile", index: 0})}>
-    //                   <Image source={profImg} style={profileimg}/>
-    //               </TouchableOpacity>);
-    //            },
-    //            RightButton: (route, navigator, index, navState) =>
-    //            {
-    //              return (
-    //               <TouchableOpacity
-    //                 style={{paddingRight: 20}}
-    //                 onPress={() => navigator.resetTo({name: "Messages", index: 0})}>
-    //                 <Text
-    //                   style={{fontSize: 18, top: 5}}>
-    //                     Messages
-    //                 </Text>
-    //               </TouchableOpacity>);
-    //            },
-    //            Title: (route, navigator, index, navState) =>
-    //            {
-    //              return (
-    //               <TouchableOpacity
-    //                 style={{paddingRight: 5}}
-    //                 onPress={() => navigator.resetTo({name: "Home", index: 0})}>
-    //                   <Text
-    //                     style={{fontSize: 18, top: 5}}>
-    //                       Home
-    //                   </Text>
-    //               </TouchableOpacity>);
-    //            },
-    //          }}
-    //          style={tabbarStyles}
-    //        />
-    //       }
-    //     />
-    // );
-
     return (
     <Router createReducer={reducerCreate} getSceneStyle={getSceneStyle}>
       <Scene key="root" hideNavBar hideTabBar>
         <Scene key="launch" component={Launch} title="Launch" initial/>
         <Scene key="login" component={Login} direction="vertical" title="Login"/>
-        <Scene key="home" component={Home} title="Home"/>
           <Scene
             key="main"
             tabs
-            tabBarStyle = {{
-              ...Platform.select({
-                ios: {
-                  top: 64,
-                },
-                android: {
-                  top: 54,
-                },
-              }),
-              height: 65,
-              padding: 16,
-            }}
+            tabBarStyle = {styles.tabBarStyle}
             tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
           >
-            <Scene key="tab1" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
-            <Scene key="tab2" component={Home} title="Home" hideNavBar icon={TabIcon} />
-            <Scene key="tab3" component={Button} title="Messages" hideNavBar icon={TabIcon} />
+            <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
+            <Scene key="swipeScreen" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
+            <Scene key="messages" component={Button} title="Messages" hideNavBar icon={TabIcon} />
           </Scene>
+          <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
+          <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
       </Scene>
     </Router>
     );
@@ -178,7 +119,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tabBarStyle: {
-    backgroundColor: "#eee",
+    backgroundColor: "white",
+    ...Platform.select({
+      ios: {
+        top: 64,
+      },
+      android: {
+        top: 54,
+      },
+    }),
+    height: 65,
+    padding: 16,
   },
   tabBarSelectedItemStyle: {
     backgroundColor: "#ddd",
