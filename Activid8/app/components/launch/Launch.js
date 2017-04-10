@@ -14,6 +14,35 @@ const styles = StyleSheet.create({
   }
 });
 
+
+const FBSDK = require('react-native-fbsdk');
+const {
+  LoginButton,
+} = FBSDK;
+
+var Login = React.createClass({
+  render: function() {
+    return (
+      <View>
+        <LoginButton
+          publishPermissions={["publish_actions"]}
+          onLoginFinished={
+            (error, result) => {
+              if (error) {
+                alert("Login failed with error: " + result.error);
+              } else if (result.isCancelled) {
+                alert("Login was cancelled");
+              } else {
+                alert("Login was successful with permissions: " + result.grantedPermissions);
+              }
+            }
+          }
+          onLogoutFinished={() => alert("User logged out")}/>
+      </View>
+    );
+  }
+});
+
 class Launch extends React.Component {
   render(){
     return (
@@ -21,6 +50,7 @@ class Launch extends React.Component {
         <Text>Launch page</Text>
         <Button onPress={()=>Actions.login({data:"Custom data", title:"Custom title" })}>Go to Login page</Button>
         <Button onPress={Actions.main}>Go to TabBar page</Button>
+        <Login />
       </View>
     );
   }
