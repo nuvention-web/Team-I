@@ -4,6 +4,7 @@
 
 # Xcode
 #
+ios/Frameworks/
 build/
 *.pbxuser
 !default.pbxuser
