@@ -11,10 +11,7 @@ import Home from "./components/home/home";
 import Profile from "./components/profile/profile";
 import CreateEvent from "./components/createEvent/createEvent";
 import EventPage from "./components/eventPage/eventPage";
-<<<<<<< Updated upstream
 import Login from "./components/login/login.js";
-=======
->>>>>>> Stashed changes
 import Launch from "./components/launch/Launch.js";
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
@@ -58,8 +55,7 @@ export default class Activid8 extends Component {
     return (
     <Router createReducer={reducerCreate} getSceneStyle={getSceneStyle}>
       <Scene key="root" hideNavBar hideTabBar>
-<<<<<<< Updated upstream
-        <Scene key="launch" component={Launch} title="Launch" initial/>
+        <Scene key="launch" component={Launch} title="Launch" initial type={ActionConst.RESET}/>
         <Scene key="login" component={Login} direction="vertical" title="Login"/>
           <Scene
             key="main"
@@ -73,21 +69,6 @@ export default class Activid8 extends Component {
           </Scene>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
-=======
-        <Scene key="launch" component={Launch} title="Launch" initial type={ActionConst.RESET}/>
-        <Scene
-          key="main"
-          tabs
-          tabBarStyle = {styles.tabBarStyle}
-          tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
-        >
-          <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
-          <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
-          <Scene key="messages" component={Button} title="Messages" hideNavBar icon={TabIcon} />
-        </Scene>
-        <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
-        <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
->>>>>>> Stashed changes
       </Scene>
     </Router>
     );
