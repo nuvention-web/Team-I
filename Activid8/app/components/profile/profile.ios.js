@@ -7,6 +7,9 @@ import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
 
 
+import Login from "../login/login";
+
+
 class Profile extends Component {
 
   constructor(props) {
@@ -72,6 +75,7 @@ class Profile extends Component {
           <Text style={styles.title}>Bio: </Text>
           <Text style={styles.bio}> I'm Ryan Gosling.</Text>
           {temp}
+          <Login />
      </ScrollView>
     );
   }
@@ -102,7 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     marginLeft: 40,
-    paddingBottom: 200
+    paddingBottom: 100
   },
   title: {
     fontSize: 20,

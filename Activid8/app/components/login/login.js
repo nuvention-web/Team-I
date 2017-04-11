@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, {Component} from "react";
 import {StyleSheet, Text, View} from "react-native";
 import Button from "react-native-button";
@@ -44,4 +45,52 @@ const styles = StyleSheet.create({
 
 
 
+=======
+import React from "react";
+import {View, Text, StyleSheet} from "react-native";
+import Button from "react-native-button";
+import {Actions} from "react-native-router-flux";
+
+import fbLogin from "../../services/firebase/fbLogin";
+import fbLogout from "../../services/firebase/fbLogout";
+
+
+const FBSDK = require("react-native-fbsdk");
+const {
+  LoginButton,
+  AccessToken
+} = FBSDK;
+
+const Login = React.createClass({ //This is not a login screen component but the login button with our special login
+  render: function() {
+    return (
+      <View>
+        <LoginButton
+          readPermissions={["public_profile", "email", "user_friends"]}
+          onLoginFinished={
+            (error, result) => {
+              if (error) {
+                alert("login has error: " + result.error);
+              } else if (result.isCancelled) {
+                alert("login is cancelled.");
+              } else {
+                AccessToken.getCurrentAccessToken().then(
+                  (data) => {
+                    console.log(data);
+                    fbLogin(data.accessToken);
+                  }
+                );
+              }
+            }
+          }
+          onLogoutFinished={() => {
+            // alert("logout.");
+            fbLogout();
+          }}/>
+      </View>
+    );
+  }
+});
+
+>>>>>>> Stashed changes
 export default Login;
