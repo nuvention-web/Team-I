@@ -10,7 +10,7 @@ const firebaseConfig = {
   authDomain: keys.authDomain, // Auth with popup/redirect
   databaseURL: keys.databaseURL, // Realtime Database
   storageBucket: keys.storageBucket, // Storage
-  messagingSenderId: "123456789"                  // Cloud Messaging
+  messagingSenderId: "123456789"       // Cloud Messaging
 };
 
 const fb = firebase.initializeApp(firebaseConfig);

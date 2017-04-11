@@ -106,9 +106,6 @@ class EventPage extends Component {
   	}
 }
 
-EventPage.propTypes = {
-  navigator: PropTypes.object.isRequired,
-};
 
 const styles = StyleSheet.create({
   leftRowBack: {

@@ -1,8 +1,14 @@
 // app/components/Profile.ios.js
 
 import React, { Component, PropTypes } from "react";
-import { View, Text, StyleSheet, Button, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, Platform } from "react-native";
 import CreateEvent from "../createEvent/createEvent";
+import Button from "react-native-button";
+import {Actions} from "react-native-router-flux";
+
+
+import Login from "../login/login";
+
 
 class Profile extends Component {
 
@@ -38,23 +44,27 @@ class Profile extends Component {
     if (this.state.eventName === "none") {
       temp = (<Button
           style={styles.eventButton}
-          onPress={()=>this.props.navigator.push({name: "CreateEvent", getEvent: this.getEvent})}
+          onPress={Actions.CreateEvent}
           title="Create Event"
           accessibilityLabel="Create Event"
-        />);
+        >
+        Create Event
+      </Button>);
     }
     //If has event - take to event page? - button
     else {
       temp = (<Button
           style={styles.eventButton}
-          onPress={()=>this.props.navigator.push({name: "EventPage", getEvent: this.getEvent})}
+          onPress={Actions.EventPage}
           title={this.state.eventName}
           accessibilityLabel="Got to my Event"
-        />);
+        >
+          Event Name
+        </Button>);
     }
 
     return (
-      <ScrollView>
+      <ScrollView style = {styles.viewContainer}>
           <View style={{flex: 1, flexDirection: "row"}}>
             <Image source={ryanMain} style={styles.mainImage}/>
             <View style={{flex: 1, flexDirection: "column"}}>
@@ -65,15 +75,16 @@ class Profile extends Component {
           <Text style={styles.title}>Bio: </Text>
           <Text style={styles.bio}> I'm Ryan Gosling.</Text>
           {temp}
+          <Login />
      </ScrollView>
     );
   }
 }
 
-Profile.propTypes = {
-  navigator: PropTypes.object.isRequired,
-  // eventName: PropTypes.string.isRequired
-};
+// Profile.propTypes = {
+//   navigator: PropTypes.object.isRequired,
+//   // eventName: PropTypes.string.isRequired
+// };
 
 export default Profile;
 
@@ -95,7 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     marginLeft: 40,
-    paddingBottom: 200
+    paddingBottom: 100
   },
   title: {
     fontSize: 20,
@@ -105,6 +116,10 @@ const styles = StyleSheet.create({
   },
   eventButton: {
     // marginTop:100
+  },
+  viewContainer: {
+    ...Platform.select({ios: {top: 129},android: {top: 119}}),
   }
+
 
 });
