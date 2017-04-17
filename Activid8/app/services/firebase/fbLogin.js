@@ -6,10 +6,20 @@ const {
   GraphRequestManager,
 } = FBSDK;
 
+function _responseInfoCallback(error: ?Object, result: ?Object) {
+  if (error) {
+    alert('Error fetching data: ' + error.toString());
+  } else {
+      var userRef = firebase.database().ref("Users/" + firebase.auth().currentUser.uid);
+      userRef.set({
+        name: result.name,
+        friends: result.friends,
+        picture: result.picture.data.url,
+      });
+  }
+};
 
-
-export default function fbLogin (access_token) {
-  // Build Firebase credential with the Facebook access token.
+export default function fbLogin (access_token) {// Build Firebase credential with the Facebook access token.
   var credential = firebase.auth.FacebookAuthProvider.credential(access_token);
 
   // Sign in with credential from the Google user.
@@ -18,6 +28,21 @@ export default function fbLogin (access_token) {
       console.log("Firebase Signed In Successfully");
       Actions.main({FBAccessToken: access_token});
 
+      const infoRequest = new GraphRequest(
+        '/me',
+        {
+          httpMethod: 'GET',
+          version: 'v2.5',
+          parameters: {
+            'fields': {
+              'string' : 'name,friends,picture'
+            }
+          }
+        },
+        _responseInfoCallback,
+      );
+            
+      new GraphRequestManager().addRequest(infoRequest).start();
     },
       
 

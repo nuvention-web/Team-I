@@ -93,7 +93,6 @@ const Home = React.createClass({
       getEvents();
       var numPushed = 0;
       eventRef.on('value', (dataSnapshot) => {
-        console.log("here");
         dataSnapshot.forEach((child) => {
           Cards.push({
             name: child.val().name,

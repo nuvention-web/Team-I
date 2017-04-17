@@ -14,7 +14,6 @@ const {
 } = FBSDK;
 
 const Login = React.createClass({ //This is not a login screen component but the login button with our special login
-  
   render: function() {
     return (
       <View>
