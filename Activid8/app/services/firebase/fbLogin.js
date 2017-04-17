@@ -1,5 +1,12 @@
 import * as firebase from "firebase";
 import {Actions} from "react-native-router-flux";
+const FBSDK = require('react-native-fbsdk');
+const {
+  GraphRequest,
+  GraphRequestManager,
+} = FBSDK;
+
+
 
 export default function fbLogin (access_token) {
   // Build Firebase credential with the Facebook access token.
@@ -9,7 +16,11 @@ export default function fbLogin (access_token) {
   firebase.auth().signInWithCredential(credential).then(
     function(){
       console.log("Firebase Signed In Successfully");
-      Actions.main({FBAccessToken: access_token});},
+      Actions.main({FBAccessToken: access_token});
+
+    },
+      
+
     function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -20,5 +31,6 @@ export default function fbLogin (access_token) {
       var credential = error.credential;
       console.log(error);
       // ...
-    });
-}
+    }
+  );  
+};

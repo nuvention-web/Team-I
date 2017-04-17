@@ -1,10 +1,14 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView, Alert} from "react-native";
+import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
+import getEvents from "../../services/firebase/getEvents";
+
 
 const eventRef = firebaseApp().database().ref("Events");
 const userRef = firebaseApp().database().ref("Users/neil01");
+
+
 class Card extends Component{
   constructor(props){
     super(props);
@@ -75,7 +79,6 @@ var Cards2 = [
 
 const Home = React.createClass({
 
-
     getInitialState(){
       return{
         cardsLoading: true,
@@ -87,8 +90,10 @@ const Home = React.createClass({
           swipedCards = userSnapshot.val().swipedCards;
       });
 
+      getEvents();
       var numPushed = 0;
       eventRef.on('value', (dataSnapshot) => {
+        console.log("here");
         dataSnapshot.forEach((child) => {
           Cards.push({
             name: child.val().name,
@@ -152,9 +157,11 @@ const Home = React.createClass({
   render() {
     if(this.state.cardsLoading){
       return(
-        <Text>
-          loading cards...
-        </Text>
+        <View style={styles.container}>
+	        <Text>
+	          loading cards...
+	        </Text>
+				</View>
       )
     }
     else{
@@ -236,7 +243,8 @@ const styles = StyleSheet.create({
   container:{
     backgroundColor:"#fff",
     width:350,
-    height: 450
+    height: 450,
+    ...Platform.select({ios: {top: 129},android: {top: 70}})
   },
 });
 
