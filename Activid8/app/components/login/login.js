@@ -28,7 +28,8 @@ const Login = React.createClass({ //This is not a login screen component but the
               } else {
                 AccessToken.getCurrentAccessToken().then(
                   (data) => {
-                    console.log(data);
+                    console.log(data.userID);
+                    console.log("data^");
                     fbLogin(data.accessToken);
                   }
                 );

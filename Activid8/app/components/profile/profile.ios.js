@@ -19,7 +19,7 @@ class Profile extends Component {
     };
   }
 
-  getEvent(eventName){
+ // getEvent(eventName){
     //ideally this funciton should update state here - but for some reason it is called
     //by children and does not have access to this.state.
     // console.log("HERE");
@@ -28,7 +28,7 @@ class Profile extends Component {
     // // this.setState({eventName: eventName});
     // // state.eventName =  eventName;
     // // setEventName(eventName);
-  }
+//  }
 
   setEventName(eventName){
     this.setState({eventName: eventName});
