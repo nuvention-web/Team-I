@@ -1,18 +1,8 @@
 import firebaseApp from "./firebaseService";
-import fbLogin from "./fbLogin.js"
-const FBSDK = require("react-native-fbsdk");
-const {
-  LoginButton,
-  AccessToken
-} = FBSDK;
 
-console.log("test");
-export default function sendEvent (eventName, eventLocation, eventDate) {
-  AccessToken.getCurrentAccessToken().then(
-    (data) => {
+export default function sendEvent (eventName, eventLocation, eventDate, userID) {
   var db = firebaseApp().database();
-  var id = data.userID           
-  var ref = db.ref("Events/" + id) //Add user ID here to make each event a User's
+  var ref = db.ref("Events/" + userID); //Add user ID here to make each event a User's
   var t = Math.round(new Date().getTime()/1000);
   var tmp = {};
   tmp.timeCreated = t;
@@ -20,5 +10,4 @@ export default function sendEvent (eventName, eventLocation, eventDate) {
   tmp.eventLocation = eventLocation;
   tmp.eventDate = eventDate;
   ref.update(tmp);
-  })
 }

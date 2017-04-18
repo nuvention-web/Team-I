@@ -1,16 +1,10 @@
 import React from "react";
-import {View, Image, StyleSheet} from "react-native";
-import Button from "react-native-button";
-import {Actions} from "react-native-router-flux";
-
+import {View, Text, Image, StyleSheet} from "react-native";
+import Login from "../login/login";
 import checkAccessToken from "../../services/facebook/checkAccessToken";
 
 
-const FBSDK = require("react-native-fbsdk");
-const { AccessToken } = FBSDK;
-
-
-class Launch extends React.Component {
+class LoginScreen extends React.Component {
   componentWillMount(){
     checkAccessToken();
   }
@@ -22,6 +16,10 @@ class Launch extends React.Component {
           source={require("../../imgs/muse.png")}
           style={styles.image}
         />
+        <Text style={styles.text}>
+          WELCOME TO MUSE
+        </Text>
+        <Login />
       </View>
     );
   }
@@ -37,7 +35,11 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 100,
+  },
+  text: {
+    color: "white",
+    fontSize: 14,
+    paddingBottom: 25
   }
 });
-
-module.exports = Launch;
+module.exports = LoginScreen;

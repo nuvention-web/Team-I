@@ -13,6 +13,8 @@ import CreateEvent from "./components/createEvent/createEvent";
 import EventPage from "./components/eventPage/eventPage";
 import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
+import LoginScreen from "./components/loginScreen/loginScreen";
+
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
 const reducerCreate = params => {
@@ -55,8 +57,8 @@ export default class Activid8 extends Component {
     return (
     <Router createReducer={reducerCreate} getSceneStyle={getSceneStyle}>
       <Scene key="root" hideNavBar hideTabBar>
-        <Scene key="launch" component={Launch} title="Launch" initial type={ActionConst.RESET}/>
-        <Scene key="login" component={Login} direction="vertical" title="Login"/>
+        <Scene key="launch" component={Launch} title="Launch" initial/>
+        <Scene key="loginScreen" component={LoginScreen} title="Login" type={ActionConst.RESET}/>
           <Scene
             key="main"
             tabs
