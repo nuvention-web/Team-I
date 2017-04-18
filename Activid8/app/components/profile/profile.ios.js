@@ -15,7 +15,7 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventName: "Museum Date"
+      eventName: "none"
     };
   }
 
