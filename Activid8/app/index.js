@@ -65,9 +65,15 @@ export default class Activid8 extends Component {
             tabBarStyle = {styles.tabBarStyle}
             tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
           >
-            <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
-            <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
-            <Scene key="messages" component={Button} title="Messages" hideNavBar icon={TabIcon} />
+            <Scene key="myProfile" component={(props) => <Profile {...props} />}
+              title="Profile" hideNavBar icon={TabIcon} />
+
+            <Scene key="home" component={(props) => <Home {...props} />}
+              title="Home" hideNavBar icon={TabIcon} initial />
+
+            <Scene key="messages" component={(props) => <Button {...props} />}
+              title="Messages" hideNavBar icon={TabIcon} />
+
           </Scene>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
@@ -80,11 +86,6 @@ export default class Activid8 extends Component {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1,
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   tabBarStyle: {
     backgroundColor: "white",
     ...Platform.select({

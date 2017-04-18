@@ -5,10 +5,7 @@ import { View, Text, StyleSheet, Image, ScrollView, Platform } from "react-nativ
 import CreateEvent from "../createEvent/createEvent";
 import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
-
-
 import Login from "../login/login";
-
 
 class Profile extends Component {
 
@@ -40,11 +37,14 @@ class Profile extends Component {
     const ryan2 = require("../../imgs/ryan2.jpg");
     var temp;
 
+    console.log("IN PROFILE COMPONENT");
+    console.log(this.props);
+
     ///IF no event - create event - button
     if (this.state.eventName === "none") {
       temp = (<Button
           style={styles.eventButton}
-          onPress={Actions.CreateEvent}
+          onPress={()=>{Actions.CreateEvent();}}
           title="Create Event"
           accessibilityLabel="Create Event"
         >
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginTop: 20,
-    color: "#FF851B",
+    color: "#70C1B3",
     marginLeft: 20
   },
   eventButton: {

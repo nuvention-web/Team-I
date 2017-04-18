@@ -32,7 +32,7 @@ const Home = React.createClass({
     getEvents();
     var numPushed = 0;
     eventRef.on("value", (dataSnapshot) => {
-      console.log("here");
+      // console.log("here");
       dataSnapshot.forEach((child) => {
         Cards.push({
           name: child.val().name,
@@ -94,6 +94,8 @@ const Home = React.createClass({
   },
 
   render() {
+    console.log("IN HOME COMPONENT");
+    console.log(this.props);
     if(this.state.cardsLoading){
       return(
         <View style={styles.container}>
