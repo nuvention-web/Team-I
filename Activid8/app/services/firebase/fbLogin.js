@@ -10,6 +10,10 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
   if (error) {
     alert('Error fetching data: ' + error.toString());
   } else {
+      Actions.main({
+        MainPicture: result.picture.data.url,
+        Name: result.name,
+      })
       var userRef = firebase.database().ref("Users/" + firebase.auth().currentUser.uid);
       userRef.set({
         name: result.name,
@@ -35,7 +39,7 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
           version: 'v2.5',
           parameters: {
             'fields': {
-              'string' : 'name,friends,picture'
+              'string' : 'name,friends,picture,photos'
             }
           }
         },

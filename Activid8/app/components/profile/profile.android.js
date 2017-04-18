@@ -17,6 +17,8 @@ class Profile extends Component {
     this.state = {
       eventName: "Museum Date"
     };
+    const name 			= {this.props.Name};
+  	const mainPic 		= {this.props.MainPicture};
   }
 
   getEvent(eventName){
@@ -34,10 +36,11 @@ class Profile extends Component {
     this.setState({eventName: eventName});
   }
 
-  render() {
+  render() {  	
     const ryanMain = require("../../imgs/ryanIcon.jpg");
     const ryan1 = require("../../imgs/ryan1.jpg");
     const ryan2 = require("../../imgs/ryan2.jpg");
+    
     var temp;
 
     ///IF no event - create event - button
@@ -66,13 +69,14 @@ class Profile extends Component {
     return (
       <ScrollView style = {styles.viewContainer}>
           <View style={{flex: 1, flexDirection: "row"}}>
-            <Image source={ryanMain} style={styles.mainImage}/>
+            <Image source={mainPic} style={styles.mainImage}/>
             <View style={{flex: 1, flexDirection: "column"}}>
               <Image resizeMode="cover" source={ryan1} style={styles.topImage}/>
               <Image resizeMode="cover" source={ryan2} style={styles.botImage}/>
             </View>
           </View>
           <Login />
+          <Text style={styles.title}>Name: {this.state.Name} </Text>
           <Text style={styles.title}>Bio: </Text>
           <Text style={styles.bio}> I'm Ryan Gosling.</Text>
           {temp}
