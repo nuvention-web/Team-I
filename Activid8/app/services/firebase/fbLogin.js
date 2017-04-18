@@ -8,7 +8,7 @@ export default function fbLogin (access_token) {
   // Sign in with credential from the Google user.
   firebase.auth().signInWithCredential(credential).then(
     function(){
-      console.log("Firebase Signed In Successfully");
+      //console.log("Firebase Signed In Successfully");
       Actions.main({FBAccessToken: access_token});},
     function(error) {
       // Handle Errors here.
@@ -22,3 +22,4 @@ export default function fbLogin (access_token) {
       // ...
     });
 }
+

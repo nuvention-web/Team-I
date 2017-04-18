@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from "react";
 import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput } from "react-native";
 import sendEvent from "../../services/firebase/sendEvent";
+import * as firebase from "firebase";
 
 
 class CreateEvent extends Component {
@@ -61,6 +62,7 @@ class CreateEvent extends Component {
       sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
       Alert.alert("Submitted Event");
       this.props.route.getEvent(this.state.eventName);
+      console.log(this.state.eventName)
       this.props.navigator.pop();
     }
   };
@@ -138,9 +140,9 @@ class Heading extends React.Component {
   }
 }
 
-CreateEvent.propTypes = {
-  navigator: PropTypes.object.isRequired
-};
+//CreateEvent.propTypes = {
+  //navigator: PropTypes.object.isRequired
+//};
 
 export default CreateEvent;
 
