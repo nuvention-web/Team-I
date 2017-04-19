@@ -36,11 +36,20 @@ const Login = React.createClass({ //This is not a login screen component but the
             }
           }
           onLogoutFinished={() => {
-            // alert("logout.");
             fbLogout();
-          }}/>
+          }}
+          style={styles.loginButton}
+          />
       </View>
     );
+  }
+});
+
+
+const styles = StyleSheet.create({
+  loginButton: {
+    width: 200,
+    height: 25
   }
 });
 

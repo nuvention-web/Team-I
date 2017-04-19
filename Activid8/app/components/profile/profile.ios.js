@@ -5,21 +5,18 @@ import { View, Text, StyleSheet, Image, ScrollView, Platform } from "react-nativ
 import CreateEvent from "../createEvent/createEvent";
 import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
-
-
 import Login from "../login/login";
-
 
 class Profile extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      eventName: "Museum Date"
+      eventName: "none"
     };
   }
 
-  getEvent(eventName){
+ // getEvent(eventName){
     //ideally this funciton should update state here - but for some reason it is called
     //by children and does not have access to this.state.
     // console.log("HERE");
@@ -28,7 +25,7 @@ class Profile extends Component {
     // // this.setState({eventName: eventName});
     // // state.eventName =  eventName;
     // // setEventName(eventName);
-  }
+//  }
 
   setEventName(eventName){
     this.setState({eventName: eventName});
@@ -40,11 +37,14 @@ class Profile extends Component {
     const ryan2 = require("../../imgs/ryan2.jpg");
     var temp;
 
+    console.log("IN PROFILE COMPONENT");
+    console.log(this.props);
+
     ///IF no event - create event - button
     if (this.state.eventName === "none") {
       temp = (<Button
           style={styles.eventButton}
-          onPress={Actions.CreateEvent}
+          onPress={()=>{Actions.CreateEvent();}}
           title="Create Event"
           accessibilityLabel="Create Event"
         >
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginTop: 20,
-    color: "#FF851B",
+    color: "#70C1B3",
     marginLeft: 20
   },
   eventButton: {

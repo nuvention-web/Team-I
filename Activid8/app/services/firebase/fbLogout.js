@@ -7,7 +7,7 @@ export default function fbLogout () {
   // Sign-out successful.
     console.log("Firebase Logged Out Successfully");
     // Actions.launch; // bring back to launch screen
-    Actions.launch();
+    Actions.loginScreen();
   }, function(error) {
     // Handle Errors here.
     var errorCode = error.code;

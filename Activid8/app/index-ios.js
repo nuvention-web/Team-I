@@ -13,6 +13,8 @@ import CreateEvent from "./components/createEvent/createEvent";
 import EventPage from "./components/eventPage/eventPage";
 import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
+import LoginScreen from "./components/loginScreen/loginScreen";
+
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
 const reducerCreate = params => {
@@ -55,17 +57,23 @@ export default class Activid8 extends Component {
     return (
     <Router createReducer={reducerCreate} getSceneStyle={getSceneStyle}>
       <Scene key="root" hideNavBar hideTabBar>
-        <Scene key="launch" component={Launch} title="Launch" initial type={ActionConst.RESET}/>
-        <Scene key="login" component={Login} direction="vertical" title="Login"/>
+        <Scene key="launch" component={Launch} title="Launch" initial/>
+        <Scene key="loginScreen" component={LoginScreen} title="Login" type={ActionConst.RESET}/>
           <Scene
             key="main"
             tabs
             tabBarStyle = {styles.tabBarStyle}
             tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
           >
-            <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
-            <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
-            <Scene key="messages" component={Button} title="Messages" hideNavBar icon={TabIcon} />
+            <Scene key="myProfile" component={(props) => <Profile {...props} />}
+              title="Profile" hideNavBar icon={TabIcon} />
+
+            <Scene key="home" component={(props) => <Home {...props} />}
+              title="Home" hideNavBar icon={TabIcon} initial />
+
+            <Scene key="messages" component={(props) => <Button {...props} />}
+              title="Messages" hideNavBar icon={TabIcon} />
+
           </Scene>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
@@ -78,11 +86,6 @@ export default class Activid8 extends Component {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1,
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   tabBarStyle: {
     backgroundColor: "white",
     ...Platform.select({
