@@ -9,16 +9,23 @@ import {Actions} from "react-native-router-flux";
 
 import Login from "../login/login";
 
-
+var user = {}
 class Profile extends Component {
 
   constructor(props) {
     super(props);
+    this.state ={
+      loggedIn: false
+    }
+    user ={
+      name: this.props.Name,
+      mainPic: this.props.MainPicture,
+    }
     this.state = {
+      loggedIn: true,   //This needs to happen after user is declared because otherwise it will try to render a null user
       eventName: "Museum Date"
-    };
-    const name 			= {this.props.Name};
-  	const mainPic 		= {this.props.MainPicture};
+    }
+    console.log(user);
   }
 
   getEvent(eventName){
@@ -65,24 +72,25 @@ class Profile extends Component {
           Event Name
         </Button>);
     }
-
-    return (
-      <ScrollView style = {styles.viewContainer}>
-          <View style={{flex: 1, flexDirection: "row"}}>
-            <Image source={mainPic} style={styles.mainImage}/>
-            <View style={{flex: 1, flexDirection: "column"}}>
-              <Image resizeMode="cover" source={ryan1} style={styles.topImage}/>
-              <Image resizeMode="cover" source={ryan2} style={styles.botImage}/>
+    if(this.state.loggedIn){
+      return (
+        <ScrollView style = {styles.viewContainer}>
+            <View style={{flex: 1, flexDirection: "row"}}>
+              <Image source={user.mainPic} style={styles.mainImage}/>
+              <View style={{flex: 1, flexDirection: "column"}}>
+                <Image resizeMode="cover" source={ryan1} style={styles.topImage}/>
+                <Image resizeMode="cover" source={ryan2} style={styles.botImage}/>
+              </View>
             </View>
-          </View>
-          <Login />
-          <Text style={styles.title}>Name: {this.state.Name} </Text>
-          <Text style={styles.title}>Bio: </Text>
-          <Text style={styles.bio}> I'm Ryan Gosling.</Text>
-          {temp}
-          
-     </ScrollView>
-    );
+            <Login />
+            <Text style={styles.title}>Name: {user.name} </Text>
+            <Text style={styles.title}>Bio: </Text>
+            <Text style={styles.bio}> I'm Ryan Gosling.</Text>
+            {temp}
+            
+        </ScrollView>
+      );
+    }
   }
 }
 

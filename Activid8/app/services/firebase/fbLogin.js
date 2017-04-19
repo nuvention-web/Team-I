@@ -10,14 +10,13 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
   if (error) {
     alert('Error fetching data: ' + error.toString());
   } else {
-      Actions.main({
+      Actions.myProfile({
         MainPicture: result.picture.data.url,
         Name: result.name,
       })
       var userRef = firebase.database().ref("Users/" + firebase.auth().currentUser.uid);
       userRef.set({
         name: result.name,
-        friends: result.friends,
         picture: result.picture.data.url,
       });
   }
