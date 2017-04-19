@@ -76,18 +76,19 @@ class Profile extends Component {
       return (
         <ScrollView style = {styles.viewContainer}>
             <View style={{flex: 1, flexDirection: "row"}}>
-              <Image source={user.mainPic} style={styles.mainImage}/>
+              <Image source={ryanMain} style={styles.mainImage}/>
               <View style={{flex: 1, flexDirection: "column"}}>
                 <Image resizeMode="cover" source={ryan1} style={styles.topImage}/>
                 <Image resizeMode="cover" source={ryan2} style={styles.botImage}/>
               </View>
             </View>
-            <Login />
-            <Text style={styles.title}>Name: {user.name} </Text>
+            
+            <Text style={styles.title}>Name: </Text>
+            <Text> {user.name}</Text>
             <Text style={styles.title}>Bio: </Text>
             <Text style={styles.bio}> I'm Ryan Gosling.</Text>
             {temp}
-            
+            <Login />
         </ScrollView>
       );
     }
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     // marginTop:100
   },
   viewContainer: {
-    ...Platform.select({ios: {top: 129},android: {top: 119}}),
+    ...Platform.select({ios: {top: 129},android: {top: 69}}),
   }
 
 

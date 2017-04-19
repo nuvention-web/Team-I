@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 import {Actions} from "react-native-router-flux";
+import getUserID from "../facebook/getUserID";
 const FBSDK = require('react-native-fbsdk');
 const {
   GraphRequest,
@@ -14,11 +15,14 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
         MainPicture: result.picture.data.url,
         Name: result.name,
       })
-      var userRef = firebase.database().ref("Users/" + firebase.auth().currentUser.uid);
-      userRef.set({
-        name: result.name,
-        picture: result.picture.data.url,
-      });
+      getUserID().then((userID)=>{
+        var userRef = firebase.database().ref("Users/" + userID);
+        userRef.set({
+          name: result.name,
+          picture: result.picture.data.url,
+        });
+      })
+
   }
 };
 
