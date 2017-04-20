@@ -11,16 +11,21 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
   if (error) {
     alert('Error fetching data: ' + error.toString());
   } else {
+    /*
       Actions.myProfile({
         MainPicture: result.picture.data.url,
         Name: result.name,
       })
+      */
       getUserID().then((userID)=>{
         var userRef = firebase.database().ref("Users/" + userID);
         userRef.set({
           name: result.name,
           picture: result.picture.data.url,
         });
+        Actions.home({
+          ID: userID,
+        })
       })
 
   }

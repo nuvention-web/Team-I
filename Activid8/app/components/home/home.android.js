@@ -7,9 +7,6 @@ import Card from "../card/card";
 import NoMoreCards from "../card/nomorecards";
 
 
-const eventRef = firebaseApp().database().ref("Events");
-const userRef = firebaseApp().database().ref("Users/neil01");
-
 var swipedCards = [];
 var Cards = [];
 var Cards2 = [
@@ -17,7 +14,6 @@ var Cards2 = [
 ];
 
 const Home = React.createClass({
-
   getInitialState(){
     return{
       cardsLoading: true,
@@ -25,33 +21,42 @@ const Home = React.createClass({
   },
 
   componentWillMount() {
+    const eventRef = firebaseApp().database().ref("Events");
+    const userRef = firebaseApp().database().ref("Users/" + this.props.ID);
+    console.log(this.props);
+    /*
     userRef.on("value", (userSnapshot) => {
-      swipedCards = userSnapshot.val().swipedCards;
+      console.log(userSnapshot.val());
+      if(userSnapshot.val().swipedCards != null){
+        swipedCards = userSnapshot.val().swipedCards;
+      };
     });
-
-    getEvents();
+    */
     var numPushed = 0;
+    
+
     eventRef.on("value", (dataSnapshot) => {
-      // console.log("here");
+      console.log(dataSnapshot.val());
       dataSnapshot.forEach((child) => {
-        Cards.push({
-          name: child.val().name,
-          age: child.val().age,
-          bio: child.val().bio,
-          eventTitle: child.val().eventName,
-          eventLocation: child.val().eventLocation,
-          eventDate: child.val().eventDate,
-          image: child.val().img,
+        var card = {};
+        var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
+        card.eventTitle = child.val().eventName;
+        card.eventLocation = child.val().eventLocation;
+        card.eventDate = child.val().eventDate;
+        console.log(card);
+        cardOwnerRef.on("value", (ownerSnapshot) => {
+          card.name = ownerSnapshot.val().name;
         });
+        console.log(card);
+        Cards.push(card);
         numPushed++;
       });
-      this.setState({
-        cardsLoading: false,
-        cards: Cards,
-        outOfCards: false
-      });
-      console.log(numPushed);
-      console.log(Cards);
+    });
+    console.log(Cards);
+    this.setState({
+      cardsLoading: false,
+      cards: Cards,
+      outOfCards: false
     });
   },
 
@@ -94,8 +99,8 @@ const Home = React.createClass({
   },
 
   render() {
-    console.log("IN HOME COMPONENT");
-    console.log(this.props);
+    //console.log("IN HOME COMPONENT");
+    //console.log(this.props);
     if(this.state.cardsLoading){
       return(
         <View style={styles.container}>
