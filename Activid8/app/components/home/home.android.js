@@ -34,7 +34,6 @@ const Home = React.createClass({
     */
     var numPushed = 0;
     
-
     eventRef.on("value", (dataSnapshot) => {
       console.log(dataSnapshot.val());
       dataSnapshot.forEach((child) => {
