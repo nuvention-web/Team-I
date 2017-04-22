@@ -17,13 +17,13 @@ class Profile extends Component {
     this.state ={
       loggedIn: false
     }
-    user ={
+    user = {
       name: this.props.Name,
       mainPic: this.props.MainPicture,
     }
     this.state = {
       loggedIn: true,   //This needs to happen after user is declared because otherwise it will try to render a null user
-      eventName: "Museum Date"
+      eventName: "none"
     }
     console.log(user);
   }
@@ -44,6 +44,7 @@ class Profile extends Component {
   }
 
   render() {  	
+    console.log(this.state.eventName);
     const ryanMain = require("../../imgs/ryanIcon.jpg");
     const ryan1 = require("../../imgs/ryan1.jpg");
     const ryan2 = require("../../imgs/ryan2.jpg");
@@ -69,7 +70,7 @@ class Profile extends Component {
           title={this.state.eventName}
           accessibilityLabel="Got to my Event"
         >
-          Event Name
+          {this.state.eventName}
         </Button>);
     }
     if(this.state.loggedIn){
@@ -120,7 +121,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     marginLeft: 40,
-    paddingBottom: 100
   },
   title: {
     fontSize: 20,

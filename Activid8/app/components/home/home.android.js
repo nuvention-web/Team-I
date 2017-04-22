@@ -35,18 +35,16 @@ const Home = React.createClass({
     var numPushed = 0;
     
     eventRef.on("value", (dataSnapshot) => {
-      console.log(dataSnapshot.val());
       dataSnapshot.forEach((child) => {
         var card = {};
         var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
         card.eventTitle = child.val().eventName;
         card.eventLocation = child.val().eventLocation;
         card.eventDate = child.val().eventDate;
-        console.log(card);
         cardOwnerRef.on("value", (ownerSnapshot) => {
           card.name = ownerSnapshot.val().name;
+          card.image = ownerSnapshot.val().picture;
         });
-        console.log(card);
         Cards.push(card);
         numPushed++;
       });
@@ -60,6 +58,7 @@ const Home = React.createClass({
   },
 
   handleYup (card) {
+    const userRef = firebaseApp().database().ref("Users/" + this.props.ID);
     var swipedCard = Cards.shift();
     swipedCards.push(swipedCard);
 
