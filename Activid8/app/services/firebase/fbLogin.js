@@ -18,14 +18,12 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
       })
       */
       getUserID().then((userID)=>{
-        var userRef = firebase.database().ref("Users/" + userID);
+        this.userID = userID;
+        userRef = firebase.database().ref("Users/" + userID);
         userRef.set({
           name: result.name,
           picture: result.picture.data.url,
         });
-        Actions.home({
-          ID: userID,
-        })
       })
 
   }
@@ -33,12 +31,13 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
 
 export default function fbLogin (access_token) {// Build Firebase credential with the Facebook access token.
   var credential = firebase.auth.FacebookAuthProvider.credential(access_token);
-
+  var userRef;
+  var userID;
   // Sign in with credential from the Google user.
   firebase.auth().signInWithCredential(credential).then(
     function(){
       console.log("Firebase Signed In Successfully");
-      Actions.main({FBAccessToken: access_token});
+      //Actions.main({});
 
       const infoRequest = new GraphRequest(
         '/me',
@@ -55,6 +54,11 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
       );
             
       new GraphRequestManager().addRequest(infoRequest).start();
+      Actions.main({
+          ID: userID,
+          Name: "test",
+          FBAccessToken: this.access_token
+        })
     },
       
 

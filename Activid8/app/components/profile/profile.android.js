@@ -48,7 +48,7 @@ class Profile extends Component {
     const ryanMain = require("../../imgs/ryanIcon.jpg");
     const ryan1 = require("../../imgs/ryan1.jpg");
     const ryan2 = require("../../imgs/ryan2.jpg");
-    
+    console.log(this.props);
     var temp;
 
     ///IF no event - create event - button
@@ -84,7 +84,7 @@ class Profile extends Component {
               </View>
             </View>
             
-            <Text style={styles.title}>Name: </Text>
+            <Text style={styles.title}>Name: {this.props.Name}</Text>
             <Text> {user.name}</Text>
             <Text style={styles.title}>Bio: </Text>
             <Text style={styles.bio}> I'm Ryan Gosling.</Text>
