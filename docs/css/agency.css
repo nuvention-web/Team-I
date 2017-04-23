@@ -15,7 +15,7 @@ body {
 }
 p {
   font-size: 14px;
-  line-height: 1.75;
+  /*line-height: 1.75;*/
 }
 p.large {
   font-size: 16px;
@@ -42,7 +42,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
 }
@@ -59,7 +59,7 @@ h6 {
   color: white;
   background-color: #70C1B3;
   border-color: #70C1B3;
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
 }
@@ -103,7 +103,7 @@ fieldset[disabled] .btn-primary.active {
   color: white;
   background-color: #70C1B3;
   border-color: #70C1B3;
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
   border-radius: 3px;
@@ -152,7 +152,7 @@ fieldset[disabled] .btn-xl.active {
 }
 .navbar-custom .navbar-brand {
   color: #70C1B3;
-  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
 }
 .navbar-custom .navbar-brand:hover,
 .navbar-custom .navbar-brand:focus,
@@ -166,7 +166,7 @@ fieldset[disabled] .btn-xl.active {
 .navbar-custom .navbar-toggle {
   background-color: #70C1B3;
   border-color: #70C1B3;
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   text-transform: uppercase;
   color: white;
   font-size: 12px;
@@ -246,16 +246,16 @@ header .intro-text {
   padding-bottom: 50px;
 }
 header .intro-text .intro-lead-in {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   font-size: 22px;
-  line-height: 22px;
+  /*line-height: 100%;*/
   margin-bottom: 25px;
 }
 header .intro-text .intro-heading {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   font-weight: 100;
   font-size: 50px;
-  line-height: 20px;
+  /*line-height: 100%;*/
   margin-bottom: 25px;
 }
 @media (min-width: 768px) {
@@ -267,16 +267,16 @@ header .intro-text .intro-heading {
     font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
     /*font-style: italic;*/
     font-size: 40px;
-    line-height: 40px;
-    /*margin-bottom: 25px;*/
+    /*line-height: 100%;*/
+    margin-bottom: 25px;
   }
   header .intro-text .intro-heading {
     font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
     /*text-transform: uppercase;*/
-    font-weight: 100;
+    font-weight: 200;
     font-size: 25px;
-    line-height: 50px;
-    /*margin-bottom: 50px;*/
+    line-height: 100%;
+    margin-bottom: 50px;
   }
 }
 section {
@@ -289,7 +289,7 @@ section h2.section-heading {
 }
 section h3.section-subheading {
   font-size: 16px;
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   text-transform: none;
   font-style: italic;
   font-weight: 400;
@@ -356,7 +356,7 @@ section h3.section-subheading {
   margin: 0;
 }
 #portfolio .portfolio-item .portfolio-caption p {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Futura", "Trebuchet MS", Arial, sans-serif;
   font-style: italic;
   font-size: 16px;
   margin: 0;
@@ -432,7 +432,7 @@ section h3.section-subheading {
 .timeline > li .timeline-image h4 {
   font-size: 10px;
   margin-top: 12px;
-  line-height: 14px;
+  line-height: 100%;
 }
 .timeline > li.timeline-inverted > .timeline-panel {
   float: right;
@@ -511,7 +511,7 @@ section h3.section-subheading {
   .timeline > li .timeline-image h4 {
     font-size: 18px;
     margin-top: 30px;
-    line-height: 26px;
+    /*line-height: 26px;*/
   }
   .timeline > li.timeline-inverted > .timeline-panel {
     padding: 0 20px 20px;
@@ -564,14 +564,14 @@ footer {
   text-align: center;
 }
 footer span.copyright {
-  line-height: 40px;
+  /*line-height: 40px;*/
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   text-transform: none;
 }
 footer ul.quicklinks {
   margin-bottom: 0;
-  line-height: 40px;
+  /*line-height: 40px;*/
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   text-transform: none;
@@ -586,7 +586,7 @@ ul.social-buttons li a {
   width: 40px;
   border-radius: 100%;
   font-size: 20px;
-  line-height: 40px;
+  /*line-height: 40px;*/
   color: white;
   outline: none;
   -webkit-transition: all 0.3s;
