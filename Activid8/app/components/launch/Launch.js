@@ -7,7 +7,9 @@ import checkAccessToken from "../../services/facebook/checkAccessToken";
 
 
 const FBSDK = require("react-native-fbsdk");
-const { AccessToken } = FBSDK;
+const { 
+  AccessToken,
+} = FBSDK;
 
 
 class Launch extends React.Component {

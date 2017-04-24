@@ -18,7 +18,7 @@ const Login = React.createClass({ //This is not a login screen component but the
     return (
       <View>
         <LoginButton
-          readPermissions={["public_profile", "email", "user_friends"]}
+          readPermissions={["public_profile", "email", "user_friends", "user_photos"]}
           onLoginFinished={
             (error, result) => {
               if (error) {
