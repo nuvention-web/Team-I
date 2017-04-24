@@ -1,30 +1,7 @@
 import * as firebase from "firebase";
 import {Actions} from "react-native-router-flux";
 import getUserID from "../facebook/getUserID";
-const FBSDK = require('react-native-fbsdk');
-const {
-  GraphRequest,
-  GraphRequestManager,
-} = FBSDK;
-
-function _responseInfoCallback(error: ?Object, result: ?Object) {
-  if (error) {
-    alert('Error fetching data: ' + error.toString());
-  } else {
-      Actions.myProfile({
-        MainPicture: result.picture.data.url,
-        Name: result.name,
-      })
-      getUserID().then((userID)=>{
-        var userRef = firebase.database().ref("Users/" + userID);
-        userRef.set({
-          name: result.name,
-          picture: result.picture.data.url,
-        });
-      })
-
-  }
-};
+import getFirebaseSelf from "./getFirebaseSelf";
 
 export default function fbLogin (access_token) {// Build Firebase credential with the Facebook access token.
   var credential = firebase.auth.FacebookAuthProvider.credential(access_token);
@@ -33,26 +10,15 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
   firebase.auth().signInWithCredential(credential).then(
     function(){
       console.log("Firebase Signed In Successfully");
-      Actions.main({FBAccessToken: access_token});
-
-      const infoRequest = new GraphRequest(
-        '/me',
-        {
-          httpMethod: 'GET',
-          version: 'v2.5',
-          parameters: {
-            'fields': {
-              'string' : 'name,friends,picture,photos'
-            }
-          }
-        },
-        _responseInfoCallback,
-      );
-            
-      new GraphRequestManager().addRequest(infoRequest).start();
+      getFirebaseSelf().then((userObj)=>{
+        Actions.main({
+          FBAccessToken: access_token,
+          userObj: userObj
+        });
+      },(err)=>{
+        console.log(err);
+      });
     },
-      
-
     function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -64,5 +30,5 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
       console.log(error);
       // ...
     }
-  );  
+  );
 };
