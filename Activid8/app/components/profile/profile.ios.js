@@ -1,125 +1,149 @@
-// app/components/Profile.ios.js
-
-import React, { Component, PropTypes } from "react";
-import { View, Text, StyleSheet, Image, ScrollView, Platform } from "react-native";
-import CreateEvent from "../createEvent/createEvent";
-import Button from "react-native-button";
+import React, {Component} from "react";
+import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
+import SwipeCards from "react-native-swipe-cards";
+import firebaseApp from "../../services/firebase/firebaseService";
+import getEvents from "../../services/firebase/getEvents";
+import Card from "../card/card";
+import NoMoreCards from "../card/nomorecards";
 import {Actions} from "react-native-router-flux";
-import Login from "../login/login";
+import getUserID from "../../services/facebook/getUserID";
 
-class Profile extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      eventName: "none"
+var swipedCards = [];
+var Cards = []
+var userRef;
+const Home = React.createClass({
+  getInitialState(){
+    return{
+      cardsLoading: true,
     };
-  }
+  },
 
- // getEvent(eventName){
-    //ideally this funciton should update state here - but for some reason it is called
-    //by children and does not have access to this.state.
-    // console.log("HERE");
-    // console.log(eventName);
-    // console.log(this);
-    // // this.setState({eventName: eventName});
-    // // state.eventName =  eventName;
-    // // setEventName(eventName);
-//  }
+  componentWillMount() {
+    Cards = [];
+    //var Cards2 = [];
+    getUserID().then((userID)=>{
+      this.setState({
+        ID: userID,
+      });
+    });
+    const eventRef = firebaseApp().database().ref("Events");
+    userRef = firebaseApp().database().ref("Users/" + this.state.ID);
+    console.log(userRef);
+    var numPushed = 0;
+    
+    eventRef.on("value", (dataSnapshot) => {
+      dataSnapshot.forEach((child) => {
+        var card = {};
+        var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
+        console.log(child.val().host);
+        card.eventTitle = child.val().eventName;
+        card.eventLocation = child.val().eventLocation;
+        card.host = child.val().host;
+        card.eventDate = child.val().eventDate;
+        cardOwnerRef.on("value", (ownerSnapshot) => {
+          card.name = ownerSnapshot.val().name;
+          card.image = ownerSnapshot.val().picture;
+        });
+        Cards.push(card);
+        numPushed++;
+      });
+    });
+    this.setState({
+      cardsLoading: false,
+      cards: Cards,
+      outOfCards: false
+    });
+  },
 
-  setEventName(eventName){
-    this.setState({eventName: eventName});
-  }
+  handleYup (card) {
+    var swipedCard = Cards.shift();
+    swipedCards.push(swipedCard);
 
+    var tmp = {};
+    tmp.swipedCards = swipedCards;
+    userRef.update(tmp);
+
+    var eventRef = firebaseApp().database().ref("Events/" + card.host);
+    var eventTemp = {};
+    var guests = [];
+
+    guests.push(this.state.ID);
+    eventTemp.guests = guests;
+    eventRef.update(eventTemp);
+
+    console.log("Events/" + card.host);
+
+    Alert.alert("The user has been notified.");
+
+  },
+
+  handleNope (card) {
+    var swipedCard = Cards.shift();
+    //console.log("Swiped No and: " + Cards);
+
+  },
+/*
+  cardRemoved (index) {
+    //console.log("The index is {index}");
+
+    let CARD_REFRESH_LIMIT = 3;
+
+    if (this.state.cards.length - index <= CARD_REFRESH_LIMIT + 1) {
+      //console.log("There are only {this.state.cards.length - index - 1} cards left.");
+
+      if (!this.state.outOfCards) {
+        //console.log("Adding {Cards2.length} more cards");
+
+        this.setState({
+          cards: this.state.cards.concat(Cards2),
+          outOfCards: true
+        });
+      }
+    }
+  },
+*/
   render() {
-    const ryanMain = require("../../imgs/ryanIcon.jpg");
-    const ryan1 = require("../../imgs/ryan1.jpg");
-    const ryan2 = require("../../imgs/ryan2.jpg");
-    var temp;
-
-    console.log("IN PROFILE COMPONENT");
-    console.log(this.props);
-
-    ///IF no event - create event - button
-    if (this.state.eventName === "none") {
-      temp = (<Button
-          style={styles.eventButton}
-          onPress={()=>{Actions.CreateEvent();}}
-          title="Create Event"
-          accessibilityLabel="Create Event"
-        >
-        Create Event
-      </Button>);
+    //console.log("IN HOME COMPONENT");
+    if(this.state.cardsLoading){
+      return(
+        <View style={styles.container}>
+          <Text>
+            loading cards...
+          </Text>
+        </View>
+      );
     }
-    //If has event - take to event page? - button
-    else {
-      temp = (<Button
-          style={styles.eventButton}
-          onPress={Actions.EventPage}
-          title={this.state.eventName}
-          accessibilityLabel="Got to my Event"
-        >
-          Event Name
-        </Button>);
-    }
+    else{
+      //console.log("Rendering: " + Cards);
+      return (
+        <View style={styles.container}>
+        <SwipeCards
+          cards={this.state.cards}
+          loop={false}
 
-    return (
-      <ScrollView style = {styles.viewContainer}>
-          <View style={{flex: 1, flexDirection: "row"}}>
-            <Image source={ryanMain} style={styles.mainImage}/>
-            <View style={{flex: 1, flexDirection: "column"}}>
-              <Image resizeMode="cover" source={ryan1} style={styles.topImage}/>
-              <Image resizeMode="cover" source={ryan2} style={styles.botImage}/>
-            </View>
-          </View>
-          <Text style={styles.title}>Bio: </Text>
-          <Text style={styles.bio}> I'm Ryan Gosling.</Text>
-          {temp}
-          <Login />
-     </ScrollView>
-    );
+          renderCard={(cardData) => <Card {...cardData} />}
+          renderNoMoreCards={() => <NoMoreCards />}
+          showYup={true}
+          showNope={true}
+
+          handleYup={this.handleYup}
+          handleNope={this.handleNope}
+          cardRemoved={this.cardRemoved}
+        />
+      </View>
+      );
+    }
   }
-}
-
-// Profile.propTypes = {
-//   navigator: PropTypes.object.isRequired,
-//   // eventName: PropTypes.string.isRequired
-// };
-
-export default Profile;
-
+});
 
 const styles = StyleSheet.create({
-  mainImage: {
-    width: 250,
-    height: 250
+  container:{
+    backgroundColor:"#fff",
+    width:350,
+    height: 450,
+    ...Platform.select({ios: {top: 129},android: {top: 69}})
   },
-  topImage: {
-    width: 125,
-    height: 125
-  },
-  botImage: {
-    width: 125,
-    height: 125
-  },
-  bio: {
-    fontSize: 14,
-    marginTop: 5,
-    marginLeft: 40,
-    paddingBottom: 100
-  },
-  title: {
-    fontSize: 20,
-    marginTop: 20,
-    color: "#70C1B3",
-    marginLeft: 20
-  },
-  eventButton: {
-    // marginTop:100
-  },
-  viewContainer: {
-    ...Platform.select({ios: {top: 129},android: {top: 119}}),
-  }
-
-
 });
+
+
+export default Home;

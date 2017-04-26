@@ -12,6 +12,9 @@ export default function sendEvent (eventName, eventLocation, eventDate) {
     tmp.eventName = eventName;
     tmp.eventLocation = eventLocation;
     tmp.eventDate = eventDate;
+    tmp.host = userID;
+    tmp.guests = [];
+    tmp.accepted_guest = "";
     ref.update(tmp);
     Actions.pop();
   }, (err)=>{console.log(err);});

@@ -5,19 +5,13 @@ import firebaseApp from "../../services/firebase/firebaseService";
 import getEvents from "../../services/firebase/getEvents";
 import Card from "../card/card";
 import NoMoreCards from "../card/nomorecards";
-
-
-const eventRef = firebaseApp().database().ref("Events");
-const userRef = firebaseApp().database().ref("Users/neil01");
+import {Actions} from "react-native-router-flux";
+import getUserID from "../../services/facebook/getUserID";
 
 var swipedCards = [];
-var Cards = [];
-var Cards2 = [
-  {name: "10", image: "https://media.giphy.com/media/12b3E4U9aSndxC/giphy.gif"},
-];
-
+var Cards = []
+var userRef;
 const Home = React.createClass({
-
   getInitialState(){
     return{
       cardsLoading: true,
@@ -25,33 +19,39 @@ const Home = React.createClass({
   },
 
   componentWillMount() {
-    userRef.on("value", (userSnapshot) => {
-      swipedCards = userSnapshot.val().swipedCards;
+    Cards = [];
+    //var Cards2 = [];
+    getUserID().then((userID)=>{
+      this.setState({
+        ID: userID,
+      });
     });
-
-    getEvents();
+    const eventRef = firebaseApp().database().ref("Events");
+    userRef = firebaseApp().database().ref("Users/" + this.state.ID);
+    console.log(userRef);
     var numPushed = 0;
+    
     eventRef.on("value", (dataSnapshot) => {
-      // console.log("here");
       dataSnapshot.forEach((child) => {
-        Cards.push({
-          name: child.val().name,
-          age: child.val().age,
-          bio: child.val().bio,
-          eventTitle: child.val().eventName,
-          eventLocation: child.val().eventLocation,
-          eventDate: child.val().eventDate,
-          image: child.val().img,
+        var card = {};
+        var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
+        console.log(child.val().host);
+        card.eventTitle = child.val().eventName;
+        card.eventLocation = child.val().eventLocation;
+        card.host = child.val().host;
+        card.eventDate = child.val().eventDate;
+        cardOwnerRef.on("value", (ownerSnapshot) => {
+          card.name = ownerSnapshot.val().name;
+          card.image = ownerSnapshot.val().picture;
         });
+        Cards.push(card);
         numPushed++;
       });
-      this.setState({
-        cardsLoading: false,
-        cards: Cards,
-        outOfCards: false
-      });
-      console.log(numPushed);
-      console.log(Cards);
+    });
+    this.setState({
+      cardsLoading: false,
+      cards: Cards,
+      outOfCards: false
     });
   },
 
@@ -63,27 +63,36 @@ const Home = React.createClass({
     tmp.swipedCards = swipedCards;
     userRef.update(tmp);
 
+    var eventRef = firebaseApp().database().ref("Events/" + card.host);
+    var eventTemp = {};
+    var guests = [];
+
+    guests.push(this.state.ID);
+    eventTemp.guests = guests;
+    eventRef.update(eventTemp);
+
+    console.log("Events/" + card.host);
+
     Alert.alert("The user has been notified.");
-    console.log(swipedCards);
-    console.log("Swiped Yes and: " + Cards);
+
   },
 
   handleNope (card) {
     var swipedCard = Cards.shift();
-    console.log("Swiped No and: " + Cards);
+    //console.log("Swiped No and: " + Cards);
 
   },
-
+/*
   cardRemoved (index) {
-    console.log("The index is {index}");
+    //console.log("The index is {index}");
 
     let CARD_REFRESH_LIMIT = 3;
 
     if (this.state.cards.length - index <= CARD_REFRESH_LIMIT + 1) {
-      console.log("There are only {this.state.cards.length - index - 1} cards left.");
+      //console.log("There are only {this.state.cards.length - index - 1} cards left.");
 
       if (!this.state.outOfCards) {
-        console.log("Adding {Cards2.length} more cards");
+        //console.log("Adding {Cards2.length} more cards");
 
         this.setState({
           cards: this.state.cards.concat(Cards2),
@@ -92,10 +101,9 @@ const Home = React.createClass({
       }
     }
   },
-
+*/
   render() {
-    console.log("IN HOME COMPONENT");
-    console.log(this.props);
+    //console.log("IN HOME COMPONENT");
     if(this.state.cardsLoading){
       return(
         <View style={styles.container}>
@@ -106,7 +114,7 @@ const Home = React.createClass({
       );
     }
     else{
-      console.log("Rendering: " + Cards);
+      //console.log("Rendering: " + Cards);
       return (
         <View style={styles.container}>
         <SwipeCards

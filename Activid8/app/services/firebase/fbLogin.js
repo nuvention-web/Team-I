@@ -3,9 +3,16 @@ import {Actions} from "react-native-router-flux";
 import getUserID from "../facebook/getUserID";
 import getFirebaseSelf from "./getFirebaseSelf";
 
+const FBSDK = require('react-native-fbsdk');
+const {
+  GraphRequest,
+  GraphRequestManager,
+} = FBSDK;
+
 export default function fbLogin (access_token) {// Build Firebase credential with the Facebook access token.
   var credential = firebase.auth.FacebookAuthProvider.credential(access_token);
-
+  var userRef;
+  var userID;
   // Sign in with credential from the Google user.
   firebase.auth().signInWithCredential(credential).then(
     function(){
