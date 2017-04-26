@@ -9,9 +9,8 @@ import {Actions} from "react-native-router-flux";
 import getUserID from "../../services/facebook/getUserID";
 
 var swipedCards = [];
-var Cards = [];
-var Cards2 = [];
-
+var Cards = []
+var userRef;
 const Home = React.createClass({
   getInitialState(){
     return{
@@ -20,20 +19,23 @@ const Home = React.createClass({
   },
 
   componentWillMount() {
+    Cards = [];
+    //var Cards2 = [];
     getUserID().then((userID)=>{
       this.setState({
         ID: userID,
       });
     });
     const eventRef = firebaseApp().database().ref("Events");
-    const userRef = firebaseApp().database().ref("Users/" + this.state.ID);
-    console.log(this.state.ID);
+    userRef = firebaseApp().database().ref("Users/" + this.state.ID);
+    console.log(userRef);
     var numPushed = 0;
     
     eventRef.on("value", (dataSnapshot) => {
       dataSnapshot.forEach((child) => {
         var card = {};
         var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
+        console.log(child.val().host);
         card.eventTitle = child.val().eventName;
         card.eventLocation = child.val().eventLocation;
         card.host = child.val().host;
@@ -63,7 +65,10 @@ const Home = React.createClass({
 
     var eventRef = firebaseApp().database().ref("Events/" + card.host);
     var eventTemp = {};
-    eventTemp.guest = this.state.ID;
+    var guests = [];
+
+    guests.push(this.state.ID);
+    eventTemp.guests = guests;
     eventRef.update(eventTemp);
 
     console.log("Events/" + card.host);
@@ -77,7 +82,7 @@ const Home = React.createClass({
     //console.log("Swiped No and: " + Cards);
 
   },
-
+/*
   cardRemoved (index) {
     //console.log("The index is {index}");
 
@@ -96,7 +101,7 @@ const Home = React.createClass({
       }
     }
   },
-
+*/
   render() {
     //console.log("IN HOME COMPONENT");
     if(this.state.cardsLoading){
@@ -109,7 +114,7 @@ const Home = React.createClass({
       );
     }
     else{
-      console.log("Rendering: " + Cards);
+      //console.log("Rendering: " + Cards);
       return (
         <View style={styles.container}>
         <SwipeCards

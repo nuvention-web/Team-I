@@ -1,37 +1,13 @@
 import * as firebase from "firebase";
 import {Actions} from "react-native-router-flux";
 import getUserID from "../facebook/getUserID";
-<<<<<<< HEAD
+import getFirebaseSelf from "./getFirebaseSelf";
+
 const FBSDK = require('react-native-fbsdk');
 const {
   GraphRequest,
   GraphRequestManager,
 } = FBSDK;
-
-function _responseInfoCallback(error: ?Object, result: ?Object) {
-  if (error) {
-    alert('Error fetching data: ' + error.toString());
-  } else {
-    /*
-      Actions.myProfile({
-        MainPicture: result.picture.data.url,
-        Name: result.name,
-      })
-      */
-      getUserID().then((userID)=>{
-        this.userID = userID;
-        userRef = firebase.database().ref("Users/" + userID);
-        userRef.set({
-          name: result.name,
-          picture: result.picture.data.url,
-        });
-      })
-
-  }
-};
-=======
-import getFirebaseSelf from "./getFirebaseSelf";
->>>>>>> refs/remotes/origin/master
 
 export default function fbLogin (access_token) {// Build Firebase credential with the Facebook access token.
   var credential = firebase.auth.FacebookAuthProvider.credential(access_token);
@@ -41,30 +17,6 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
   firebase.auth().signInWithCredential(credential).then(
     function(){
       console.log("Firebase Signed In Successfully");
-<<<<<<< HEAD
-      //Actions.main({});
-
-      const infoRequest = new GraphRequest(
-        '/me',
-        {
-          httpMethod: 'GET',
-          version: 'v2.5',
-          parameters: {
-            'fields': {
-              'string' : 'name,friends,picture,photos'
-            }
-          }
-        },
-        _responseInfoCallback,
-      );
-            
-      new GraphRequestManager().addRequest(infoRequest).start();
-      Actions.main({
-          ID: userID,
-          Name: "test",
-          FBAccessToken: this.access_token
-        })
-=======
       getFirebaseSelf().then((userObj)=>{
         Actions.main({
           FBAccessToken: access_token,
@@ -73,7 +25,6 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
       },(err)=>{
         console.log(err);
       });
->>>>>>> refs/remotes/origin/master
     },
     function(error) {
       // Handle Errors here.
