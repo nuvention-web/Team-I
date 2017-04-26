@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import {Actions} from "react-native-router-flux";
 import getUserID from "../facebook/getUserID";
+<<<<<<< HEAD
 const FBSDK = require('react-native-fbsdk');
 const {
   GraphRequest,
@@ -28,6 +29,9 @@ function _responseInfoCallback(error: ?Object, result: ?Object) {
 
   }
 };
+=======
+import getFirebaseSelf from "./getFirebaseSelf";
+>>>>>>> refs/remotes/origin/master
 
 export default function fbLogin (access_token) {// Build Firebase credential with the Facebook access token.
   var credential = firebase.auth.FacebookAuthProvider.credential(access_token);
@@ -37,6 +41,7 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
   firebase.auth().signInWithCredential(credential).then(
     function(){
       console.log("Firebase Signed In Successfully");
+<<<<<<< HEAD
       //Actions.main({});
 
       const infoRequest = new GraphRequest(
@@ -59,9 +64,17 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
           Name: "test",
           FBAccessToken: this.access_token
         })
+=======
+      getFirebaseSelf().then((userObj)=>{
+        Actions.main({
+          FBAccessToken: access_token,
+          userObj: userObj
+        });
+      },(err)=>{
+        console.log(err);
+      });
+>>>>>>> refs/remotes/origin/master
     },
-      
-
     function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -73,5 +86,5 @@ export default function fbLogin (access_token) {// Build Firebase credential wit
       console.log(error);
       // ...
     }
-  );  
+  );
 };
