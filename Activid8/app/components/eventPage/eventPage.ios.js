@@ -47,7 +47,7 @@ class EventPage extends Component {
   }
 
   render() {
-    const taylor = require("../../imgs/taylor.jpg");
+    // const taylor = require("../../imgs/taylor.jpg");
 
     if (!this.state.profile){
       var temp = (
@@ -68,7 +68,7 @@ class EventPage extends Component {
                 </View>
                 <TouchableHighlight onPress={this.onPressProfile}>
                     <View style={styles.rowFront}>
-                      <Image source={taylor} style={styles.listImage}/>
+                      {/* <Image source={taylor} style={styles.listImage}/> */}
                       <View style={{paddingLeft: 5, justifyContent: "center"}}>
                           <Text style={styles.rowFrontText}>Taylor, 26</Text>
                       </View>

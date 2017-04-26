@@ -47,7 +47,7 @@ class EventPage extends Component {
   }
 
   render() {
-    const taylor = require("../../imgs/taylor.jpg");
+    // const taylor = require("../../imgs/taylor.jpg");
 
     if (!this.state.profile){
       var temp = (

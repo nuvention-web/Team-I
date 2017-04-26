@@ -8,6 +8,8 @@ export default function newFirebaseUser () {
       var userRef = firebase.database().ref("Users/" + facebookUserObject.userID);
       facebookUserObject.bio = "Write Something Exciting Here!";
       facebookUserObject.interestedIn = "women"; //Default interestedIn
+      facebookUserObject.age = "20"; //Default Age
+      facebookUserObject.gender = "man"; //Default Age
       userRef.set(facebookUserObject).then((res)=>{
         resolve(facebookUserObject);
       },(err)=>{reject(err);});

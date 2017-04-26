@@ -8,8 +8,8 @@ export default function getuserID (){
     AccessToken.getCurrentAccessToken().then(
                 (data) => {
                   if(data){
-                    console.log("In Get User ID: ");
-                    console.log(data);
+                    // console.log("In Get User ID: ");
+                    // console.log(data);
                     resolve(data.userID);
                   }
                   else {

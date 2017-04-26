@@ -24,6 +24,8 @@ export default function getFacebookSelf () {
           alert("Error Getting Self Facebook data: " + error.toString());
           reject("Error fetching Self User data");
         } else {
+          // console.log("In FACEBOOK SELF");
+          // console.log(result.user_birthday);
           userObj.name = result.name;
           userObj.picture = result.picture.data.url;
           userObj.userID = result.id;

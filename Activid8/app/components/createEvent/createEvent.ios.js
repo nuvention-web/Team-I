@@ -1,8 +1,9 @@
 // app/components/CreateEvent.ios.js
 
 import React, { Component, PropTypes } from "react";
-import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput } from "react-native";
+import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput, Platform} from "react-native";
 import sendEvent from "../../services/firebase/sendEvent";
+import {Actions} from "react-native-router-flux";
 // import getEvent from "../../services/firebase/getEvents";
 
 
@@ -75,7 +76,7 @@ class CreateEvent extends Component {
     console.log(this.props);
 
     return (
-      <View style={styles.fullView}>
+      <View style = {styles.viewContainer}>
         <Text style={styles.title}> Create Event</Text>
         <WithLabel label="What?*">
           <TextInput
@@ -108,7 +109,13 @@ class CreateEvent extends Component {
           title="Create Event"
           accessibilityLabel="Create Event"
         />
-        </View>
+
+        <Button
+          onPress={()=>{Actions.pop();}}
+          title="Go Back"
+          accessibilityLabel="Go Back"
+        />
+      </View>
     );
   }
 }
@@ -191,6 +198,9 @@ var styles = StyleSheet.create({
   title : {
     fontSize: 32,
     bottom: 10,
-    color: "#f23c33"
+    color: "#70C1B3"
+  },
+  viewContainer: {
+    ...Platform.select({ios: {top: 59},android: {top: 49}}),
   }
 });

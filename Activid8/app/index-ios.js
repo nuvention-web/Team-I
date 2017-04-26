@@ -14,13 +14,19 @@ import EventPage from "./components/eventPage/eventPage";
 import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
 import LoginScreen from "./components/loginScreen/loginScreen";
+import editProfile from "./components/editProfile/editProfile";
+
 
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
 const reducerCreate = params => {
   const defaultReducer = new Reducer(params);
   return (state, action) => {
-    // console.log("ACTION:", action);
+    console.log("ACTION:", action);
+    // if (action.type === "REACT_NATIVE_ROUTER_FLUX_JUMP"){
+    //   console.log(state);
+    // }
+    console.log(state);
     return defaultReducer(state, action);
   };
 };
@@ -66,12 +72,10 @@ export default class Activid8 extends Component {
             tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
           >
             <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
-
             <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
-
             <Scene key="messages" component={Button} title="Messages" hideNavBar icon={TabIcon} />
-
           </Scene>
+          <Scene key="editProfile" component={editProfile} title="editProfile" hideNavBar/>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
       </Scene>
@@ -79,7 +83,6 @@ export default class Activid8 extends Component {
     );
   }
 }
-
 
 
 const styles = StyleSheet.create({

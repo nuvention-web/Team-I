@@ -5,14 +5,16 @@ import newFirebaseUser from "./newFirebaseUser";
 
 //Gets services/firebase/Self - gets User information from firebase
 //IF new user - pulls some default facebook info and reuploads to Firebase
-export default function getFirebaseSelf (userID) {
+export default function getFirebaseSelf () {
   return new Promise(function(resolve, reject) {
-
     getUserID().then((userID)=>{
       var userRef = firebaseApp().database().ref("Users/"+userID);
       userRef.on("value", function(snapshot) {
         var exists = (snapshot.val() !== null);
-        if (exists) resolve(snapshot.val());
+        if (exists) {
+          // console.log(snapshot.val());
+          resolve(snapshot.val());
+        }
         else {
           console.log("New User");
           newFirebaseUser().then((userObj)=>{resolve(userObj);},

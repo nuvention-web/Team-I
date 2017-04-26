@@ -28,14 +28,13 @@ const Home = React.createClass({
     });
     const eventRef = firebaseApp().database().ref("Events");
     userRef = firebaseApp().database().ref("Users/" + this.state.ID);
-    console.log(userRef);
+    // console.log(userRef);
     var numPushed = 0;
-    
+
     eventRef.on("value", (dataSnapshot) => {
       dataSnapshot.forEach((child) => {
         var card = {};
         var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
-        console.log(child.val().host);
         card.eventTitle = child.val().eventName;
         card.eventLocation = child.val().eventLocation;
         card.host = child.val().host;
