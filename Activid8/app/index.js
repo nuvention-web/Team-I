@@ -13,12 +13,20 @@ import CreateEvent from "./components/createEvent/createEvent";
 import EventPage from "./components/eventPage/eventPage";
 import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
+import LoginScreen from "./components/loginScreen/loginScreen";
+import editProfile from "./components/editProfile/editProfile";
+import Messaging from "./components/messaging/messaging";
+
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
 const reducerCreate = params => {
   const defaultReducer = new Reducer(params);
   return (state, action) => {
-    // console.log("ACTION:", action);
+    console.log("ACTION:", action);
+    // if (action.type === "REACT_NATIVE_ROUTER_FLUX_JUMP"){
+    //   console.log(state);
+    // }
+    console.log(state);
     return defaultReducer(state, action);
   };
 };
@@ -55,8 +63,8 @@ export default class Activid8 extends Component {
     return (
     <Router createReducer={reducerCreate} getSceneStyle={getSceneStyle}>
       <Scene key="root" hideNavBar hideTabBar>
-        <Scene key="launch" component={Launch} title="Launch" initial type={ActionConst.RESET}/>
-        <Scene key="login" component={Login} direction="vertical" title="Login"/>
+        <Scene key="launch" component={Launch} title="Launch" initial/>
+        <Scene key="loginScreen" component={LoginScreen} title="Login" type={ActionConst.RESET}/>
           <Scene
             key="main"
             tabs
@@ -65,8 +73,9 @@ export default class Activid8 extends Component {
           >
             <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
             <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
-            <Scene key="messages" component={Button} title="Messages" hideNavBar icon={TabIcon} />
+            <Scene key="messages" component={Messaging} title="Messages" hideNavBar icon={TabIcon} />
           </Scene>
+          <Scene key="editProfile" component={editProfile} title="editProfile" hideNavBar/>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
       </Scene>
@@ -76,16 +85,13 @@ export default class Activid8 extends Component {
 }
 
 
-
 const styles = StyleSheet.create({
-  container: { flex: 1,
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   tabBarStyle: {
     backgroundColor: "white",
     ...Platform.select({
+      ios: {
+        top: 64,
+      },
       android: {
         top: 0,
       },
