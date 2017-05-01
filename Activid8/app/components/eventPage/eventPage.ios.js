@@ -1,7 +1,8 @@
 import React, {	Component, PropTypes} from "react";
 import { AppRegistry, ListView, Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
-
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
+import {Actions} from "react-native-router-flux";
+
 
 class EventPage extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class EventPage extends Component {
     if (!this.state.profile){
       var temp = (
         <View>
-        <Text style={{padding: 20, fontSize: 18, color: "#FF851B", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
+        <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
         <SwipeRow
                 leftOpenValue={75}
                 tension={4}
@@ -84,7 +85,7 @@ class EventPage extends Component {
           <Button
               onPress={this.onPressProfile}
               title="Go back"
-              color="#FF8900"
+              color="#70C1B3"
               accessibilityLabel="Back"
             />
           <View style={{justifyContent: 'center',
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 20,
     textAlign: 'justify',
-    color: "#FF8900"
+    color: "#70C1B3"
   },
 });
 

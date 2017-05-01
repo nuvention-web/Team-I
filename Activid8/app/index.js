@@ -22,11 +22,11 @@ import TabIcon from "./components/tabIcon/tabIcon.js";
 const reducerCreate = params => {
   const defaultReducer = new Reducer(params);
   return (state, action) => {
-    console.log("ACTION:", action);
+    // console.log("ACTION:", action);
     // if (action.type === "REACT_NATIVE_ROUTER_FLUX_JUMP"){
     //   console.log(state);
     // }
-    console.log(state);
+    // console.log(state);
     return defaultReducer(state, action);
   };
 };

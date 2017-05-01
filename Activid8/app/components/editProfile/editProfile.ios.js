@@ -105,7 +105,7 @@ class editProfile extends Component {
                 // Actions.pop({ refresh: { refreshme: true } });
                 // Actions.myProfile({type: "reset"});
                 // Actions.pop({ type: "refresh" })
-                Actions.pop({ refresh: { test: true }})          
+                Actions.pop({ refresh: { refreshing: true }})          
               }, (err)=> {console.log(err);});
             }}
             accessibilityLabel="Save Changes"
