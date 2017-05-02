@@ -6,6 +6,8 @@ import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
 import Login from "../login/login";
 import getFirebaseUser from "../../services/firebase/getFirebaseUser";
+import handlePressMatch from "../../services/firebase/handlePressMatch";
+
 
 
 class matchProfile extends Component {
@@ -42,6 +44,19 @@ class matchProfile extends Component {
       });
   }
 
+  pressMatch (matchID){
+    handlePressMatch(matchID).then(
+      (val)=> {
+        console.log(val);
+        Actions.messages();
+      },
+      (err)=>{
+        console.log(err);
+      }
+    );
+  }
+
+
   render() {
 
     return (
@@ -68,6 +83,14 @@ class matchProfile extends Component {
                 accessibilityLabel="Back"
               >
                 Back
+            </Button>
+            <Button
+                containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                style={{fontSize: 14, color: "white"}}
+                onPress={() => {this.pressMatch(this.state.userObj.userID);}}
+                accessibilityLabel="Match"
+              >
+                Match with {this.state.userObj.name}
             </Button>
           </View>
      </ScrollView>

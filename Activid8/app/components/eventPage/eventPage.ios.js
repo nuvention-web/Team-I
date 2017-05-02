@@ -4,6 +4,7 @@ import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
 import getGuests from "../../services/firebase/getGuests";
+import handlePressMatch from "../../services/firebase/handlePressMatch";
 
 
 class EventPage extends Component {
@@ -50,7 +51,15 @@ class EventPage extends Component {
       [
         {text: "OK", onPress: () => {
           console.log(this);
-          Alert.alert(userObj.name + " has been notified. You can now message them!");
+          handlePressMatch(userObj.userID).then(
+            (val)=> {
+              console.log(val);
+              Alert.alert(userObj.name + " has been notified. You can now message them!");
+            },
+            (err)=>{
+              console.log(err);
+              Alert.alert("An unexpected error has happened, please try again later.");
+            });
         }},
         {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
       ],
