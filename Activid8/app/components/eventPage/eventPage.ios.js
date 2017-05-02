@@ -55,6 +55,10 @@ class EventPage extends Component {
             (val)=> {
               console.log(val);
               Alert.alert(userObj.name + " has been notified. You can now message them!");
+              Actions.pop();
+              setTimeout(()=>{
+                Actions.messages();
+              });
             },
             (err)=>{
               console.log(err);

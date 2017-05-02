@@ -48,7 +48,10 @@ class matchProfile extends Component {
     handlePressMatch(matchID).then(
       (val)=> {
         console.log(val);
-        Actions.messages();
+        Actions.pop({popNum: 2});
+        setTimeout(()=>{
+          Actions.messages();
+        });
       },
       (err)=>{
         console.log(err);
