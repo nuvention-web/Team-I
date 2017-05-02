@@ -2,14 +2,13 @@ import React, {Component} from "react";
 import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import firebaseApp from "../../services/firebase/firebaseService";
-import getEvents from "../../services/firebase/getEvents";
 import Card from "../card/card";
 import NoMoreCards from "../card/nomorecards";
 import {Actions} from "react-native-router-flux";
 import getUserID from "../../services/facebook/getUserID";
 
 var swipedCards = [];
-var Cards = []
+var Cards = [];
 var userRef;
 const Home = React.createClass({
   getInitialState(){
@@ -30,7 +29,7 @@ const Home = React.createClass({
     userRef = firebaseApp().database().ref("Users/" + this.state.ID);
     console.log(userRef);
     var numPushed = 0;
-    
+
     eventRef.on("value", (dataSnapshot) => {
       dataSnapshot.forEach((child) => {
         var card = {};

@@ -9,41 +9,33 @@ import getGuests from "../../services/firebase/getGuests";
 class EventPage extends Component {
   constructor(props) {
   	super(props);
-    this.state = {matches: []};
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {matches: [{name: "aaaa 23"}, {name: "bbbb 22"}]};
   }
 
   componentWillMount() {
     getGuests(this.props.eventObj).then(
       (guests)=>{
         console.log(guests);
+        this.setState({matches: guests});
       },
       (err)=>{
         console.log(err);
       });
   }
 
-  onPressMatch(){
-    Alert.alert(
-      "Confirm Match",
-      "Congratulations, you have agreed to go out on your event with Taylor!",
-      [
-        {text: "OK", onPress: () => {
-          console.log(this);
-          Alert.alert("Taylor has been notified. You can now message her!");
-        }},
-        {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
-      ],
-      { cancelable: false }
-    );
-  }
 
-  onPressRemove(){
+  deleteRow(secId, rowId, rowMap) {
     Alert.alert(
       "Confirm Delete",
       "Removing a suitor will not show them again for this event.",
       [
         {text: "OK", onPress: () => {
           console.log("OK Pressed");
+          rowMap[`${secId}${rowId}`].closeRow();
+          const newData = [...this.state.matches];
+          newData.splice(rowId, 1);
+          this.setState({matches: newData});
         }},
         {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
       ],
@@ -51,37 +43,53 @@ class EventPage extends Component {
     );
   }
 
-
+  onPressMatch(userObj){
+    Alert.alert(
+      "Confirm Match",
+      "Congratulations, you have agreed to go out on your event with " + userObj.name + " !",
+      [
+        {text: "OK", onPress: () => {
+          console.log(this);
+          Alert.alert(userObj.name + " has been notified. You can now message them!");
+        }},
+        {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
+      ],
+      { cancelable: false }
+    );
+  }
 
   render() {
-
-
   		return (
       <View>
       <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
-      <SwipeRow
-              leftOpenValue={75}
-              tension={4}
-              rightOpenValue={-75}
-              >
-              <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
-                  <TouchableHighlight style={styles.rightRowBack} onPress={this.onPressMatch}>
-                          <Text style={styles.rightRowBackText}>Match</Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight style={styles.leftRowBack} onPress={this.onPressRemove}>
-                      <Text style={styles.leftRowBackText}>Remove</Text>
-                  </TouchableHighlight>
-              </View>
-              <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: "10207417484470250"});}}>
-                  <View style={styles.rowFront}>
-                    {/* <Image source={taylor} style={styles.listImage}/> */}
-                    <View style={{paddingLeft: 5, justifyContent: "center"}}>
-                        <Text style={styles.rowFrontText}>Taylor, 26</Text>
-                    </View>
 
-                  </View>
-              </TouchableHighlight>
-          </SwipeRow>
+          <SwipeListView
+            	dataSource={this.ds.cloneWithRows(this.state.matches)}
+            	renderRow={ (data, secId, rowId, rowMap) => (
+                <SwipeRow
+                      leftOpenValue={75}
+                      tension={4}
+                      rightOpenValue={-75}
+                      >
+                      <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
+                          <TouchableHighlight style={styles.rightRowBack} onPress={_ => this.onPressMatch(data)}>
+                                  <Text style={styles.rightRowBackText}>Match</Text>
+                          </TouchableHighlight>
+                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(secId, rowId, rowMap)}>
+                              <Text style={styles.leftRowBackText}>Remove</Text>
+                          </TouchableHighlight>
+                      </View>
+                      <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: data.userID});}}>
+                          <View style={styles.rowFront}>
+                            <Image source={{uri: data.picture}} style={styles.listImage}/>
+                            <View style={{paddingLeft: 5, justifyContent: "center"}}>
+                                <Text style={styles.rowFrontText}>{data.name}</Text>
+                            </View>
+                          </View>
+                      </TouchableHighlight>
+                  </SwipeRow>
+            	)}
+            />
 
           <Button
               containerStyle={{marginRight: 20, marginTop: 10, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}

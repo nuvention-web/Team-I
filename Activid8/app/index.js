@@ -15,7 +15,7 @@ import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
 import LoginScreen from "./components/loginScreen/loginScreen";
 import editProfile from "./components/editProfile/editProfile";
-import Messaging from "./components/messaging/messaging";
+import Messaging from "./components/messages/messages";
 import matchProfile from "./components/matchProfile/matchProfile";
 
 import TabIcon from "./components/tabIcon/tabIcon.js";
