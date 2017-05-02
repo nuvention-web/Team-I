@@ -15,18 +15,19 @@ import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
 import LoginScreen from "./components/loginScreen/loginScreen";
 import editProfile from "./components/editProfile/editProfile";
-import Messaging from "./components/messaging/messaging";
+import Messaging from "./components/messages/messages";
+import matchProfile from "./components/matchProfile/matchProfile";
 
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
 const reducerCreate = params => {
   const defaultReducer = new Reducer(params);
   return (state, action) => {
-    console.log("ACTION:", action);
+    // console.log("ACTION:", action);
     // if (action.type === "REACT_NATIVE_ROUTER_FLUX_JUMP"){
     //   console.log(state);
     // }
-    console.log(state);
+    // console.log(state);
     return defaultReducer(state, action);
   };
 };
@@ -78,6 +79,7 @@ export default class Activid8 extends Component {
           <Scene key="editProfile" component={editProfile} title="editProfile" hideNavBar/>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
+          <Scene key="matchProfile" component={matchProfile} title="Profile" hideNavBar/>
       </Scene>
     </Router>
     );
