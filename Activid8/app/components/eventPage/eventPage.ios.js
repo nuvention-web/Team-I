@@ -1,13 +1,25 @@
 import React, {	Component, PropTypes} from "react";
-import { AppRegistry, ListView, Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
+import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
+import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
+import getGuests from "../../services/firebase/getGuests";
 
 
 class EventPage extends Component {
   constructor(props) {
   	super(props);
-    this.state = {profile: false};
+    this.state = {matches: []};
+  }
+
+  componentWillMount() {
+    getGuests(this.props.eventObj).then(
+      (guests)=>{
+        console.log(guests);
+      },
+      (err)=>{
+        console.log(err);
+      });
   }
 
   onPressMatch(){
@@ -40,70 +52,46 @@ class EventPage extends Component {
   }
 
 
-  onPressProfile = () =>{
-    this.setState(
-      {profile: !this.state.profile}
-    );
-    // this..navigator.push({name: "otherProfile"});
-  }
 
   render() {
-    // const taylor = require("../../imgs/taylor.jpg");
 
-    if (!this.state.profile){
-      var temp = (
-        <View>
-        <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
-        <SwipeRow
-                leftOpenValue={75}
-                tension={4}
-                rightOpenValue={-75}
-                >
-                <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
-                    <TouchableHighlight style={styles.rightRowBack} onPress={this.onPressMatch}>
-                            <Text style={styles.rightRowBackText}>Match</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.leftRowBack} onPress={this.onPressRemove}>
-                        <Text style={styles.leftRowBackText}>Remove</Text>
-                    </TouchableHighlight>
-                </View>
-                <TouchableHighlight onPress={this.onPressProfile}>
-                    <View style={styles.rowFront}>
-                      {/* <Image source={taylor} style={styles.listImage}/> */}
-                      <View style={{paddingLeft: 5, justifyContent: "center"}}>
-                          <Text style={styles.rowFrontText}>Taylor, 26</Text>
-                      </View>
 
+  		return (
+      <View>
+      <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
+      <SwipeRow
+              leftOpenValue={75}
+              tension={4}
+              rightOpenValue={-75}
+              >
+              <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
+                  <TouchableHighlight style={styles.rightRowBack} onPress={this.onPressMatch}>
+                          <Text style={styles.rightRowBackText}>Match</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight style={styles.leftRowBack} onPress={this.onPressRemove}>
+                      <Text style={styles.leftRowBackText}>Remove</Text>
+                  </TouchableHighlight>
+              </View>
+              <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: "10207417484470250"});}}>
+                  <View style={styles.rowFront}>
+                    {/* <Image source={taylor} style={styles.listImage}/> */}
+                    <View style={{paddingLeft: 5, justifyContent: "center"}}>
+                        <Text style={styles.rowFrontText}>Taylor, 26</Text>
                     </View>
-                </TouchableHighlight>
-            </SwipeRow>
-          </View>);
-    }
-    else {
-      var temp = (
-        <ScrollView>
+
+                  </View>
+              </TouchableHighlight>
+          </SwipeRow>
+
           <Button
-              onPress={this.onPressProfile}
-              title="Go back"
-              color="#70C1B3"
-              accessibilityLabel="Back"
-            />
-          <View style={{justifyContent: 'center',
-          alignItems: 'center',}}>
-            <Image style={styles.thumbnail} source={taylor} />
-          </View>
-          <Text style = {styles.titleText}>Name:</Text>
-          <Text style = {styles.detailText}>Taylor</Text>
-          <Text style = {styles.titleText}>Age:</Text>
-          <Text style = {styles.detailText}>26</Text>
-          <Text style = {styles.titleText}>Bio:</Text>
-          <Text style = {styles.detailText}>Hi there! Looking for a partner to go on adventures and to write songs about once we break up. lol.{"\n"} </Text>
-
-      </ScrollView>
-      );
-    }
-
-  		return (<View>{temp}</View>);
+              containerStyle={{marginRight: 20, marginTop: 10, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={()=>{Actions.pop();}}
+              accessibilityLabel="Go Back"
+            >
+              Go Back
+          </Button>
+        </View>);
   	}
 }
 
@@ -153,35 +141,10 @@ const styles = StyleSheet.create({
   	color: "black",
     fontSize: 18
   },
-  listImage: {
-    // top: 3,
-    width: 40,
-    height: 40,
-    borderRadius: 20
-  },
-  thumbnail: {
-    // flex: 1,
-
-    width: 240,
-    height: 240,
-  },
-  detailText: {
-    fontSize: 16,
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 25,
-    paddingRight: 20,
-    textAlign: 'justify'
-  },
-  titleText: {
-    fontSize: 18,
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 15,
-    paddingRight: 20,
-    textAlign: 'justify',
-    color: "#70C1B3"
-  },
 });
 
 export default EventPage;
+
+EventPage.propTypes = {
+  eventObj: React.PropTypes.object.isRequired,
+};

@@ -5,35 +5,25 @@ import { View, Text, StyleSheet, Image, ScrollView, Platform, RefreshControl} fr
 import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
 import Login from "../login/login";
-import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
-import getEventSelf from "../../services/firebase/getEventSelf";
+import getFirebaseUser from "../../services/firebase/getFirebaseUser";
 
 
-class Profile extends Component {
+class matchProfile extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      eventName: "none",
       refreshing: false,
-      eventObj: false,
+      userID: false,
       userObj: {name: "", bio: "", "picture": "http://us.kronospan-express.com/public/thumbs/600x600/decors/kronodesign/color/8100_600x600_crop_478b24840a.jpg", age: ""} //default
     };
   }
 
   _onRefresh() {
     this.setState({refreshing: true});
-    getFirebaseSelf().then(
+    getFirebaseUser(this.props.userID).then(
       (usr)=>{
-        getEventSelf(usr.userID).then(
-          (eventObj)=>{
-            console.log(eventObj);
-            this.setState({userObj: usr, eventObj: eventObj, refreshing: false});
-          },
-          (err)=>{
-            console.log(err);
-            this.setState({refreshing: false});
-          });
+        this.setState({userObj: usr, refreshing: false});
       },
       (err)=>{
         console.log(err);
@@ -43,16 +33,9 @@ class Profile extends Component {
 
 
   componentWillMount() {
-    getFirebaseSelf().then(
+    getFirebaseUser(this.props.userID).then(
       (usr)=>{
-        getEventSelf(usr.userID).then(
-          (eventObj)=>{
-            this.setState({userObj: usr, eventObj: eventObj});
-          },
-          (err)=>{
-            console.log(err);
-            this.setState({userObj: usr});
-          });
+        this.setState({userObj: usr});
       },
       (err)=>{
         console.log(err);
@@ -60,34 +43,7 @@ class Profile extends Component {
   }
 
   render() {
-    var temp;
 
-
-    ///IF no event - create event - button
-    if (this.state.eventObj === false) {
-      temp = (<Button
-          containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
-          style={{fontSize: 14, color: "white"}}
-          onPress={()=>{Actions.CreateEvent();}}
-          title="Create Event"
-          accessibilityLabel="Create Event"
-        >
-        Create Event
-      </Button>);
-    }
-    //If has event - take to event page? - button
-    else {
-      temp = (<Button
-          containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-          style={{fontSize: 14, color: "white"}}
-          onPress={()=>{Actions.EventPage({eventObj: this.state.eventObj});}}
-          title={this.state.eventObj.eventName}
-          accessibilityLabel="Got to my Event"
-        >
-          {this.state.eventObj.eventName}
-        </Button>);
-    }
-    // var
     return (
       <ScrollView
         style = {styles.viewContainer}
@@ -108,22 +64,23 @@ class Profile extends Component {
             <Button
                 containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
                 style={{fontSize: 14, color: "white"}}
-                onPress={()=>{Actions.editProfile({userObj: this.state.userObj});}}
-                accessibilityLabel="Edit Profile and Settings"
+                onPress={()=>{Actions.pop();}}
+                accessibilityLabel="Back"
               >
-                Edit Profile and Settings
+                Back
             </Button>
-            {temp}
-          </View>
-          <View style={{flex: 1, flexDirection: "row", justifyContent:"center", marginTop: 20}}>
-            <Login />
           </View>
      </ScrollView>
     );
   }
 }
 
-export default Profile;
+export default matchProfile;
+
+
+matchProfile.propTypes = {
+  userID: React.PropTypes.string.isRequired,
+};
 
 const styles = StyleSheet.create({
   mainImage: {
