@@ -28,7 +28,7 @@ export default function getFacebookSelf () {
           // console.log(result.user_birthday);
           userObj.name = result.name;
           userObj.picture = result.picture.data.url;
-          userObj.userID = result.id;
+          userObj.userID = result.id.toString();
           resolve(userObj);
         }}
     );

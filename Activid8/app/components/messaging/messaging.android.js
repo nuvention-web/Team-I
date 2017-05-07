@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
-import getEvents from "../../services/firebase/getEvents";
 import {Actions} from "react-native-router-flux";
 import getUserID from "../../services/facebook/getUserID";
 
