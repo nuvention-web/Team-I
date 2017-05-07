@@ -5,23 +5,23 @@ import getEvents from "../../services/firebase/getEvents";
 import {Actions} from "react-native-router-flux";
 import getUserID from "../../services/facebook/getUserID";
 
-import MessagingListView from "/messagingListView";
+import Messages from "../messages/messages";
 
-class Messaging extends Component {
+class MessagingListView extends Component {
 	constructor(props){
 		super(props);
 
 	}
 	render(){
 		return(
-			<ScrollView style = {styles.viewContainer}>
-				<MessagingListView/>
-			</ScrollView>
+			<View>
+				<Text> In Messaging </Text>
+			</View>
 		);
 	}
 }
 
-export default Messaging;
+export default MessagingListView;
 
 const styles = StyleSheet.create({
   viewContainer: {
