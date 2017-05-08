@@ -15,7 +15,7 @@ import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
 import LoginScreen from "./components/loginScreen/loginScreen";
 import editProfile from "./components/editProfile/editProfile";
-import Messaging from "./components/messages/messages";
+import Messaging from "./components/messaging/messaging";
 import matchProfile from "./components/matchProfile/matchProfile";
 
 import TabIcon from "./components/tabIcon/tabIcon.js";
@@ -74,7 +74,7 @@ export default class Activid8 extends Component {
           >
             <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
             <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
-            <Scene key="messages" component={Messaging} title="Messages" hideNavBar icon={TabIcon} />
+            <Scene key="messaging" component={Messaging} title="Messaging" hideNavBar icon={TabIcon} />
           </Scene>
           <Scene key="editProfile" component={editProfile} title="editProfile" hideNavBar/>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
