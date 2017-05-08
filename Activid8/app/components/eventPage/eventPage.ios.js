@@ -1,36 +1,42 @@
 import React, {	Component, PropTypes} from "react";
-import { AppRegistry, ListView, Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
-
+import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
+import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
+import {Actions} from "react-native-router-flux";
+import getGuests from "../../services/firebase/getGuests";
+import handlePressMatch from "../../services/firebase/handlePressMatch";
+
 
 class EventPage extends Component {
   constructor(props) {
   	super(props);
-    this.state = {profile: false};
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {matches: [{name: "aaaa 23"}, {name: "bbbb 22"}]};
   }
 
-  onPressMatch(){
-    Alert.alert(
-      "Confirm Match",
-      "Congratulations, you have agreed to go out on your event with Taylor!",
-      [
-        {text: "OK", onPress: () => {
-          console.log(this);
-          Alert.alert("Taylor has been notified. You can now message her!");
-        }},
-        {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
-      ],
-      { cancelable: false }
-    );
+  componentWillMount() {
+    getGuests(this.props.eventObj).then(
+      (guests)=>{
+        console.log(guests);
+        this.setState({matches: guests});
+      },
+      (err)=>{
+        console.log(err);
+      });
   }
 
-  onPressRemove(){
+
+  deleteRow(secId, rowId, rowMap) {
     Alert.alert(
       "Confirm Delete",
       "Removing a suitor will not show them again for this event.",
       [
         {text: "OK", onPress: () => {
           console.log("OK Pressed");
+          rowMap[`${secId}${rowId}`].closeRow();
+          const newData = [...this.state.matches];
+          newData.splice(rowId, 1);
+          this.setState({matches: newData});
         }},
         {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
       ],
@@ -38,71 +44,75 @@ class EventPage extends Component {
     );
   }
 
-
-  onPressProfile = () =>{
-    this.setState(
-      {profile: !this.state.profile}
+  onPressMatch(userObj){
+    Alert.alert(
+      "Confirm Match",
+      "Congratulations, you have agreed to go out on your event with " + userObj.name + " !",
+      [
+        {text: "OK", onPress: () => {
+          console.log(this);
+          handlePressMatch(userObj.userID).then(
+            (val)=> {
+              console.log(val);
+              Alert.alert(userObj.name + " has been notified. You can now message them!");
+              Actions.pop();
+              setTimeout(()=>{
+                Actions.messages();
+              });
+            },
+            (err)=>{
+              console.log(err);
+              Alert.alert("An unexpected error has happened, please try again later.");
+            });
+        }},
+        {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
+      ],
+      { cancelable: false }
     );
-    // this..navigator.push({name: "otherProfile"});
   }
 
   render() {
-    // const taylor = require("../../imgs/taylor.jpg");
+  		return (
+      <View>
+      <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
 
-    if (!this.state.profile){
-      var temp = (
-        <View>
-        <Text style={{padding: 20, fontSize: 18, color: "#FF851B", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
-        <SwipeRow
-                leftOpenValue={75}
-                tension={4}
-                rightOpenValue={-75}
-                >
-                <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
-                    <TouchableHighlight style={styles.rightRowBack} onPress={this.onPressMatch}>
-                            <Text style={styles.rightRowBackText}>Match</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={styles.leftRowBack} onPress={this.onPressRemove}>
-                        <Text style={styles.leftRowBackText}>Remove</Text>
-                    </TouchableHighlight>
-                </View>
-                <TouchableHighlight onPress={this.onPressProfile}>
-                    <View style={styles.rowFront}>
-                      {/* <Image source={taylor} style={styles.listImage}/> */}
-                      <View style={{paddingLeft: 5, justifyContent: "center"}}>
-                          <Text style={styles.rowFrontText}>Taylor, 26</Text>
+          <SwipeListView
+            	dataSource={this.ds.cloneWithRows(this.state.matches)}
+            	renderRow={ (data, secId, rowId, rowMap) => (
+                <SwipeRow
+                      leftOpenValue={75}
+                      tension={4}
+                      rightOpenValue={-75}
+                      >
+                      <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
+                          <TouchableHighlight style={styles.rightRowBack} onPress={_ => this.onPressMatch(data)}>
+                                  <Text style={styles.rightRowBackText}>Match</Text>
+                          </TouchableHighlight>
+                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(secId, rowId, rowMap)}>
+                              <Text style={styles.leftRowBackText}>Remove</Text>
+                          </TouchableHighlight>
                       </View>
-
-                    </View>
-                </TouchableHighlight>
-            </SwipeRow>
-          </View>);
-    }
-    else {
-      var temp = (
-        <ScrollView>
-          <Button
-              onPress={this.onPressProfile}
-              title="Go back"
-              color="#FF8900"
-              accessibilityLabel="Back"
+                      <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: data.userID});}}>
+                          <View style={styles.rowFront}>
+                            <Image source={{uri: data.picture}} style={styles.listImage}/>
+                            <View style={{paddingLeft: 5, justifyContent: "center"}}>
+                                <Text style={styles.rowFrontText}>{data.name}</Text>
+                            </View>
+                          </View>
+                      </TouchableHighlight>
+                  </SwipeRow>
+            	)}
             />
-          <View style={{justifyContent: 'center',
-          alignItems: 'center',}}>
-            <Image style={styles.thumbnail} source={taylor} />
-          </View>
-          <Text style = {styles.titleText}>Name:</Text>
-          <Text style = {styles.detailText}>Taylor</Text>
-          <Text style = {styles.titleText}>Age:</Text>
-          <Text style = {styles.detailText}>26</Text>
-          <Text style = {styles.titleText}>Bio:</Text>
-          <Text style = {styles.detailText}>Hi there! Looking for a partner to go on adventures and to write songs about once we break up. lol.{"\n"} </Text>
 
-      </ScrollView>
-      );
-    }
-
-  		return (<View>{temp}</View>);
+          <Button
+              containerStyle={{marginRight: 20, marginTop: 10, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={()=>{Actions.pop();}}
+              accessibilityLabel="Go Back"
+            >
+              Go Back
+          </Button>
+        </View>);
   	}
 }
 
@@ -152,35 +162,10 @@ const styles = StyleSheet.create({
   	color: "black",
     fontSize: 18
   },
-  listImage: {
-    // top: 3,
-    width: 40,
-    height: 40,
-    borderRadius: 20
-  },
-  thumbnail: {
-    // flex: 1,
-
-    width: 240,
-    height: 240,
-  },
-  detailText: {
-    fontSize: 16,
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 25,
-    paddingRight: 20,
-    textAlign: 'justify'
-  },
-  titleText: {
-    fontSize: 18,
-    paddingTop: 2,
-    paddingBottom: 2,
-    paddingLeft: 15,
-    paddingRight: 20,
-    textAlign: 'justify',
-    color: "#FF8900"
-  },
 });
 
 export default EventPage;
+
+EventPage.propTypes = {
+  eventObj: React.PropTypes.object.isRequired,
+};

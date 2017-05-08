@@ -4,7 +4,6 @@ import React, { Component, PropTypes } from "react";
 import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput, Platform} from "react-native";
 import sendEvent from "../../services/firebase/sendEvent";
 import {Actions} from "react-native-router-flux";
-// import getEvent from "../../services/firebase/getEvents";
 
 
 class editProfile extends Component {

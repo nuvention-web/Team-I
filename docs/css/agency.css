@@ -230,7 +230,7 @@ fieldset[disabled] .btn-xl.active {
 }
 
 header {
-  background-image: url('../img/header-bg.jpg');
+  background-image: url('../img/header-bg.jpeg');
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
@@ -694,4 +694,14 @@ img::-moz-selection {
 }
 body {
   webkit-tap-highlight-color: #70C1B3;
+}
+
+.social-media {
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.social-media-button {
+  padding: 25px;
+  color: white;
 }
