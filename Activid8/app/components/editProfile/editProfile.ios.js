@@ -86,8 +86,8 @@ class editProfile extends Component {
             style={styles.pickcontainer}
             selectedValue={this.state.interestedIn}
             onValueChange={(interestedIn) => this.setState({interestedIn: interestedIn})}>
-            <Picker.Item label="Men" value="men" />
-            <Picker.Item label="Women" value="women" />
+            <Picker.Item label="Men" value="man" />
+            <Picker.Item label="Women" value="woman" />
           </Picker>
           {/* </View>
         </View> */}

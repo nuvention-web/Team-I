@@ -51,6 +51,7 @@ class Card extends Component{
             <Image style={styles.thumbnail} source={{uri: this.props.image}} />
             <Text style={styles.text}>{this.props.name}, {this.props.age}</Text>
             <Text style={styles.titleText}> {this.props.eventTitle}</Text>
+            <Text style={styles.timeUnderText}>{eventDate}</Text>
             <Button
                 onPress={this.expandCard}
                 title="Details"
@@ -142,10 +143,10 @@ const styles = StyleSheet.create({
     paddingBottom: 2
   },
   titleText: {
-    fontSize: 16,
+    fontSize: 18,
     paddingTop: 5,
     paddingBottom: 10,
-    justifyContent: "center"
+    // justifyContent: "center"
   },
   mainImage: {
     width: 250,
@@ -177,13 +178,15 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 18,
-    // color: "#000000",
-    // color: "#70C1B3",
-    marginLeft: 20
+    marginLeft: 20,
+  },
+  timeUnderText: {
+    fontSize: 16,
+    marginLeft: 20,
+    color: "#70C1B3",
   },
   eventName: {
     fontSize: 18,
-    // marginTop: 20,
     color: "#70C1B3",
     marginLeft: 20
   }

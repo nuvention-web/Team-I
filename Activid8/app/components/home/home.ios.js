@@ -4,6 +4,7 @@ import SwipeCards from "react-native-swipe-cards";
 import Card from "../card/card";
 import getEventCards from "../../services/firebase/getEventCards";
 import handleSwipeRight from "../../services/firebase/handleSwipeRight";
+import handleSwipeLeft from "../../services/firebase/handleSwipeLeft";
 import NoMoreCards from "../card/nomorecards";
 import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
@@ -45,6 +46,14 @@ const Home = React.createClass({
 
   handleNope (card) {
     var swipedCard = Cards.shift();
+
+    handleSwipeLeft(card.host).then(
+      (val)=>{
+        console.log(val);
+        // Alert.alert("Swip.");
+      },
+      (err)=> {console.log(err);}
+    );
     //console.log("Swiped No and: " + Cards);
   },
 /*
@@ -113,7 +122,7 @@ const Home = React.createClass({
               accessibilityLabel="Yup">
             Yup
           </Button> */}
-          <Text style={{marginLeft: 10, padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+          <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
               Swipe right you are interested!{"\n"}
               Left to pass.
           </Text>
