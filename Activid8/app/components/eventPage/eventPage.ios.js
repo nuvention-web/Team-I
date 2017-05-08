@@ -5,6 +5,7 @@ import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
 import getGuests from "../../services/firebase/getGuests";
 import handlePressMatch from "../../services/firebase/handlePressMatch";
+import handlePressRemove from "../../services/firebase/handlePressRemove";
 
 
 class EventPage extends Component {
@@ -26,17 +27,23 @@ class EventPage extends Component {
   }
 
 
-  deleteRow(secId, rowId, rowMap) {
+  deleteRow(userObj, secId, rowId, rowMap) {
     Alert.alert(
       "Confirm Delete",
       "Removing a suitor will not show them again for this event.",
       [
         {text: "OK", onPress: () => {
-          console.log("OK Pressed");
-          rowMap[`${secId}${rowId}`].closeRow();
-          const newData = [...this.state.matches];
-          newData.splice(rowId, 1);
-          this.setState({matches: newData});
+          handlePressRemove(userObj.userID).then(
+            (val)=>{
+              console.log(val);
+              rowMap[`${secId}${rowId}`].closeRow();
+              const newData = [...this.state.matches];
+              newData.splice(rowId, 1);
+              this.setState({matches: newData});
+            },
+            (err) => {
+              console.log(err);
+            });
         }},
         {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
       ],
@@ -88,7 +95,7 @@ class EventPage extends Component {
                           <TouchableHighlight style={styles.rightRowBack} onPress={_ => this.onPressMatch(data)}>
                                   <Text style={styles.rightRowBackText}>Match</Text>
                           </TouchableHighlight>
-                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(secId, rowId, rowMap)}>
+                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(data, secId, rowId, rowMap)}>
                               <Text style={styles.leftRowBackText}>Remove</Text>
                           </TouchableHighlight>
                       </View>
