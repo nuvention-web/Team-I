@@ -16,23 +16,33 @@ class Card extends Component{
   }
 
   render() {
+
+    var eventDate = formatDate(new Date(this.props.eventDate));
+
+
     if(this.state.expanded){
       return (
-          <ScrollView>
-            <Image style={styles.thumbnail} source={{uri: this.props.image}} />
-            <Text style = {styles.detailText}>Name: {this.props.name}</Text>
-            <Text style = {styles.detailText}>Age: {this.props.age} </Text>
-            <Text style = {styles.detailText}>Bio: {this.props.bio} </Text>
-            <Text style = {styles.detailText}>Event: {this.props.eventTitle}</Text>
-            <Text style = {styles.detailText}>Event Location: {this.props.eventLocation}</Text>
-            <Text style = {styles.detailText}>Event Date: {this.props.eventDate}</Text>
+          <View style={styles.expandedCard}>
+
+            <View style={{justifyContent: "center", alignItems: "center"}}>
+              <Image source={{uri: this.props.image}} style={styles.mainImage}/>
+            </View>
+            <Text style={styles.name}>{this.props.name}, <Text style={styles.age}>{this.props.age}</Text></Text>
+            <Text style={styles.time}>{eventDate}</Text>
+
+            <Text style={styles.eventName}>Event: <Text style={{color: "#000000"}}> {this.props.eventTitle}</Text></Text>
+            <Text style={styles.eventName}>Location: <Text style={{color: "#000000"}}>{this.props.eventLocation}</Text></Text>
+            <Text style={styles.eventName}>Bio: </Text>
+
+
+            <Text style={styles.bio}> {this.props.bio}</Text>
             <Button
                 onPress={this.expandCard}
-                title="Go back"
-                color="#FF8900"
-                accessibilityLabel="Learn more about this event"
-              />
-            </ScrollView>
+                title="Back"
+                color="#70C1B3"
+                accessibilityLabel="Learn more about this event"/>
+
+          </View>
         );
     }
     else{
@@ -44,7 +54,7 @@ class Card extends Component{
             <Button
                 onPress={this.expandCard}
                 title="Details"
-                color="#FF8900"
+                color="#70C1B3"
                 accessibilityLabel="Learn more about this event"/>
             </View>
         );
@@ -52,10 +62,49 @@ class Card extends Component{
   }
 }
 
+
+function formatDate(date) {
+  var nowTime = new Date();
+  var dayNames = [
+    "Monday", "Tuesday", "Wednesday",
+    "Thursday", "Friday", "Saturday", "Sunday"
+  ];
+  var diff = daydiff(nowTime, date);
+  var hours = date.getHours();
+  var hours = (hours+24-2)%24;
+  var minutes = (date.getMinutes()<10?'0':'') + date.getMinutes();
+  var mid='am';
+  if(hours==0) //At 00 hours we need to show 12 am
+    hours=12;
+  else if(hours>12)
+  {
+  hours=hours%12;
+  mid='pm';
+  }
+
+  if (diff == 0) // Today
+      return "Today at " +  hours + ":" + minutes +  mid;
+  else if (diff == 1) // Tomorrow
+      return "Tomorrow at " + hours + ":" + minutes + mid;
+  else if (diff > 7) { // Next week
+    var day = date.getDate();
+    return "Next "+dayNames[day-1]+" at " + hours + ":" + minutes + mid;
+  }
+  else {
+    var day = date.getDate();
+    return dayNames[day-1]+" at " + hours + ":" + minutes + mid;
+  }
+}
+
+function daydiff(first, second) {
+    return Math.round((second-first)/(1000*60*60*24));
+}
+
+
 const styles = StyleSheet.create({
   card: {
     width: 300,
-    height: 400,
+    height: 450,
     alignItems: "center",
     borderRadius: 5,
     borderColor: "black",
@@ -64,15 +113,14 @@ const styles = StyleSheet.create({
     elevation: 1,
     paddingBottom: 10
   },
-
   expandedCard: {
     width: 300,
-    height: 800,
-    alignItems: "center",
-    borderRadius: 5,
-    borderColor: "black",
+    height: 450,
+    // alignItems: "center",
+    // borderRadius: 5,
+    // borderColor: "black",
     backgroundColor: "white",
-    borderWidth: 1,
+    // borderWidth: 1,
     elevation: 1,
     paddingBottom: 10
   },
@@ -99,6 +147,46 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     justifyContent: "center"
   },
+  mainImage: {
+    width: 250,
+    height: 250
+  },
+  name: {
+    fontSize: 24,
+    marginTop: 20,
+    color: "#70C1B3",
+    marginLeft: 20
+  },
+  age: {
+    fontSize: 24,
+    marginTop: 20,
+    color: "#70C1B3",
+    marginLeft: 20
+  },
+  bio: {
+    fontSize: 14,
+    marginTop: 5,
+    marginLeft: 40,
+    // paddingBottom: 50
+  },
+  title: {
+    fontSize: 20,
+    marginTop: 20,
+    color: "#70C1B3",
+    marginLeft: 20
+  },
+  time: {
+    fontSize: 18,
+    // color: "#000000",
+    // color: "#70C1B3",
+    marginLeft: 20
+  },
+  eventName: {
+    fontSize: 18,
+    // marginTop: 20,
+    color: "#70C1B3",
+    marginLeft: 20
+  }
 });
 
 

@@ -55,15 +55,18 @@ class editProfile extends Component {
         style={{height: 40, borderColor: "gray", borderWidth: 1, marginLeft: 20, marginRight: 20}}
         onChangeText={(age) => this.setState({age})}
         value={this.state.age}
+        keyboardType={'number-pad'}
+        maxLength={2}
         />
 
         <Text style={styles.header}> Bio: </Text>
         <TextInput
         multiline = {true}
-        numberOfLines = {4}
+        numberOfLines = {3}
         style={{height: 100, borderColor: "gray", borderWidth: 1, marginLeft: 20, marginRight: 20}}
         onChangeText={(bio) => this.setState({bio})}
         value={this.state.bio}
+        maxLength={140}
         />
 
         {/* <View style={{flex: 1, flexDirection: "row"}}>
@@ -105,7 +108,7 @@ class editProfile extends Component {
                 // Actions.pop({ refresh: { refreshme: true } });
                 // Actions.myProfile({type: "reset"});
                 // Actions.pop({ type: "refresh" })
-                Actions.pop({ refresh: { refreshing: true }})          
+                Actions.pop({ refresh: { refreshing: true }})
               }, (err)=> {console.log(err);});
             }}
             accessibilityLabel="Save Changes"
