@@ -1,4 +1,4 @@
-import React, {	Component, PropTypes} from "react";
+import React, { Component, PropTypes} from "react";
 import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
 import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
@@ -9,7 +9,7 @@ import handlePressMatch from "../../services/firebase/handlePressMatch";
 
 class EventPage extends Component {
   constructor(props) {
-  	super(props);
+    super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {matches: [{name: "aaaa 23"}, {name: "bbbb 22"}]};
   }
@@ -57,7 +57,7 @@ class EventPage extends Component {
               Alert.alert(userObj.name + " has been notified. You can now message them!");
               Actions.pop();
               setTimeout(()=>{
-                Actions.messages();
+                Actions.messaging();
               });
             },
             (err)=>{
@@ -72,13 +72,13 @@ class EventPage extends Component {
   }
 
   render() {
-  		return (
+      return (
       <View>
       <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
 
           <SwipeListView
-            	dataSource={this.ds.cloneWithRows(this.state.matches)}
-            	renderRow={ (data, secId, rowId, rowMap) => (
+              dataSource={this.ds.cloneWithRows(this.state.matches)}
+              renderRow={ (data, secId, rowId, rowMap) => (
                 <SwipeRow
                       leftOpenValue={75}
                       tension={4}
@@ -101,7 +101,7 @@ class EventPage extends Component {
                           </View>
                       </TouchableHighlight>
                   </SwipeRow>
-            	)}
+              )}
             />
 
           <Button
@@ -113,7 +113,7 @@ class EventPage extends Component {
               Go Back
           </Button>
         </View>);
-  	}
+    }
 }
 
 
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   leftRowBackText: {
-  	marginLeft: 100,
+    marginLeft: 100,
     fontSize: 16,
   },
   rightRowBack: {
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     borderTopColor:"orange",
   },
   rowFrontText: {
-  	color: "black",
+    color: "black",
     fontSize: 18
   },
 });
