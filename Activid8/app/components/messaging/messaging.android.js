@@ -22,42 +22,28 @@ class Messages extends Component {
   		super(props);
       this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
-        refreshing: false,
-        eventList: [],
+        refreshing: false
       };
   	}
 
 
 
     componentWillMount(){
-      var eventList = [];
       this.setState({refreshing: true});
       getMatchedGuests().then(
-        (guests)=>{
-          for(var i in guests){
-            getFirebaseUser(guests[i]).then(
-              (guest)=>{
-                eventList.push(guest);
-                console.log(guest);
-              },
-              (err)=>{
-                console.log(err);
-              }
-            );
-          }
-          console.log("hi");
+        (guestList)=>{
           this.setState({
-              eventList: eventList, 
+              guestList: guestList,
               refreshing: false
           });
-          console.log(eventList);
-          console.log("hi");
+          console.log(this.state.guestList);
         },
         (err)=>{
           console.log(err);
           this.setState({refreshing: false});
         }
       );
+      
     }
     onMessagePress(guest){
       Actions.chatBox({guestObj: guest});
@@ -70,7 +56,7 @@ class Messages extends Component {
   	render(){
       if(this.state.refreshing){
         return(
-          <View style={{marginTop: 59}}><Text>Loading...</Text></View>
+          <View style={{marginTop: 89}}><Text>Loading...</Text></View>
         )
       }
 
@@ -79,7 +65,7 @@ class Messages extends Component {
         <View style={styles.container}>
           <View style={styles.listContainer}>
             <ListView
-              dataSource={this.ds.cloneWithRows(this.state.eventList)}
+              dataSource={this.ds.cloneWithRows(this.state.guestList)}
               renderRow={(rowData) =>
                 <TouchableHighlight onPress={() => this.onMessagePress(rowData)}>
                   <View style={styles.listItem}>
