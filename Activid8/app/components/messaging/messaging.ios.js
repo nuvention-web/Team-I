@@ -14,24 +14,38 @@ import {
 import firebaseApp from "../../services/firebase/firebaseService";
 import getEventSelf from "../../services/firebase/getEventSelf";
 import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
+import getFirebaseUser from "../../services/firebase/getFirebaseUser";
 import {Actions} from "react-native-router-flux";
 var PULLDOWN_DISTANCE = 40;
 class Messages extends Component {
     constructor(props){
       super(props);
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      var eventList = [];
+      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
-        dataSource: ds.cloneWithRows(['row 1', 'row 2', 'row 3', 'row 4', 'row 5']),
+        refreshing: false,
+        dataSource: ds.cloneWithRows([]),
       };
     }
 
+
+
     componentWillMount(){
+      this.setState({refreshing: true});
       getFirebaseSelf().then(
       (usr)=>{
         getEventSelf(usr.userID).then(
           (eventObj)=>{
-            console.log(eventObj);
-            this.setState({userObj: usr, eventObj: eventObj, refreshing: false});
+            getFirebaseUser(eventObj.accepted_guest).then(
+              (accepted_guest) =>{
+                eventList.push({accepted_guest})
+                this.setState({
+                  dataSource: ds.cloneWithRows(eventList), 
+                  refreshing: false
+                });
+                console.log(eventList);
+              }
+            )
           },
           (err)=>{
             console.log(err);
@@ -43,6 +57,9 @@ class Messages extends Component {
         this.setState({refreshing: false});
       });
     }
+    onMessagePress(){
+      Alert.alert("Talking with this user");
+    }
 
     render(){
       return(
@@ -51,14 +68,13 @@ class Messages extends Component {
             <ListView
               dataSource={this.state.dataSource}
               renderRow={(rowData) =>
-                <TouchableHighlight onPress={() => this.onChannelPress(rowData.channel_url)}>
+                <TouchableHighlight onPress={() => this.onMessagePress(rowData.userID)}>
                   <View style={styles.listItem}>
                     <View style={styles.listIcon}>
-                      <Image style={styles.channelIcon} source={{uri: rowData.cover_img_url}} />
+                      <Image style={styles.channelIcon} source={{uri: rowData.picture}} />
                     </View>
                     <View style={styles.listInfo}>
                       <Text style={styles.titleLabel}># {rowData.name}</Text>
-                      <Text style={styles.memberLabel}>{rowData.member_count} members</Text>
                     </View>
                   </View>
                 </TouchableHighlight>
