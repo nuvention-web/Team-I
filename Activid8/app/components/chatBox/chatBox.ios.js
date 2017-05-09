@@ -74,7 +74,23 @@ class ChatBox extends Component {
       this.setState({message: ''});
     }
 
+    onBackPress(){
+      Actions.pop();
+    }
+
     render(){
+      var list = this.state.messageList.map((item, index) => {
+        console.log(item);
+        return (
+          <View
+            style={styles.messageContainer}
+            key={index}
+            >
+            <Text style={styles.messageLabel}> : {item}</Text>
+          </View>
+        );
+      });
+
       return(
         <View style={styles.container}>
           <View style={styles.topContainer}>
@@ -86,11 +102,16 @@ class ChatBox extends Component {
               <Text style={{color: '#fff'}}>&lt; Back</Text>
             </TouchableHighlight>
           </View>
-
           <View style={styles.chatContainer}>
-            <Text style={{color: '#000'}}>Chat</Text>
+            <ScrollView
+              ref={(c) => this._scrollView = c}
+              onScroll={this.handleScroll}
+              scrollEventThrottle={16}
+              onContentSizeChange={(e) => {}}
+            >
+            {list}
+            </ScrollView>
           </View>
-
           <View style={styles.inputContainer}>
             <View style={styles.textContainer}>
               <TextInput
@@ -168,4 +189,9 @@ var styles = StyleSheet.create({
       alignSelf: 'center',
       backgroundColor: '#ffffff'
     },
+    messageContainer:{
+      margin: 10,
+      paddingTop: 5,
+      paddingBottom: 5
+    }
   });
