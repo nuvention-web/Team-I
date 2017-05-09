@@ -1,11 +1,13 @@
 // app/components/Profile.ios.js
 
 import React, { Component, PropTypes } from "react";
-import { View, Text, StyleSheet, Image, ScrollView, Platform } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, Platform, RefreshControl} from "react-native";
 import Button from "react-native-button";
 import {Actions} from "react-native-router-flux";
 import Login from "../login/login";
 import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
+import getEventSelf from "../../services/firebase/getEventSelf";
+
 
 class Profile extends Component {
 
@@ -13,56 +15,56 @@ class Profile extends Component {
     super(props);
     this.state = {
       eventName: "none",
-      refreshme: false,
+      refreshing: false,
+      eventObj: false,
       userObj: {name: "", bio: "", "picture": "http://us.kronospan-express.com/public/thumbs/600x600/decors/kronodesign/color/8100_600x600_crop_478b24840a.jpg", age: ""} //default
     };
   }
 
- // getEvent(eventName){
-    //ideally this funciton should update state here - but for some reason it is called
-    //by children and does not have access to this.state.
-    // console.log("HERE");
-    // console.log(eventName);
-    // console.log(this);
-    // // this.setState({eventName: eventName});
-    // // state.eventName =  eventName;
-    // // setEventName(eventName);
-//  }
-
-  // setEventName(eventName){
-  //   this.setState({eventName: eventName});
-  // }
-  componentWillReceiveProps(nextProps)
- {
-    console.log("componentWillReceiveProps");
+  _onRefresh() {
+    this.setState({refreshing: true});
     getFirebaseSelf().then(
       (usr)=>{
-        this.setState({userObj: usr});
-        console.log("Done");
+        getEventSelf(usr.userID).then(
+          (eventObj)=>{
+            console.log(eventObj);
+            this.setState({userObj: usr, eventObj: eventObj, refreshing: false});
+          },
+          (err)=>{
+            console.log(err);
+            this.setState({refreshing: false});
+          });
       },
-      (err)=>{console.log(err);});
+      (err)=>{
+        console.log(err);
+        this.setState({refreshing: false});
+      });
   }
+
 
   componentWillMount() {
     getFirebaseSelf().then(
       (usr)=>{
-        this.setState({userObj: usr});
-        console.log("Done");
+        getEventSelf(usr.userID).then(
+          (eventObj)=>{
+            this.setState({userObj: usr, eventObj: eventObj});
+          },
+          (err)=>{
+            console.log(err);
+            this.setState({userObj: usr});
+          });
       },
-      (err)=>{console.log(err);});
+      (err)=>{
+        console.log(err);
+      });
   }
 
   render() {
     var temp;
 
-    console.log(this.state);
-    if (this.state.refreshme){
-      this.componentWillMount();
-      this.setState({refreshme: false});
-    }
 
     ///IF no event - create event - button
-    if (this.state.eventName === "none") {
+    if (this.state.eventObj === false) {
       temp = (<Button
           containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
           style={{fontSize: 14, color: "white"}}
@@ -78,16 +80,24 @@ class Profile extends Component {
       temp = (<Button
           containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
           style={{fontSize: 14, color: "white"}}
-          onPress={Actions.EventPage}
-          title={this.state.eventName}
+          onPress={()=>{Actions.EventPage({eventObj: this.state.eventObj});}}
+          title={this.state.eventObj.eventName}
           accessibilityLabel="Got to my Event"
         >
-          Event Name
+          {this.state.eventObj.eventName}
         </Button>);
     }
     // var
     return (
-      <ScrollView style = {styles.viewContainer}>
+      <ScrollView
+        style = {styles.viewContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh.bind(this)}
+            title="Loading..."
+          />}
+        >
           <View style={{justifyContent: "center", alignItems: "center"}}>
             <Image source={{uri: this.state.userObj.picture}} style={styles.mainImage}/>
           </View>
@@ -148,11 +158,6 @@ const styles = StyleSheet.create({
   //   // marginTop:100
   // },
   viewContainer: {
-    ...Platform.select({
-      ios: {
-        top: 129},
-      android: {
-        top: 59}
-    }),
+    ...Platform.select({ios: {top: 129},android: {top: 59}}),
   }
 });
