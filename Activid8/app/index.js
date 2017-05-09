@@ -78,8 +78,8 @@ export default class Activid8 extends Component {
           </Scene>
           <Scene key="editProfile" component={editProfile} title="editProfile" hideNavBar/>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
-          <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
-          <Scene key="matchProfile" component={matchProfile} title="Profile" hideNavBar/>
+          <Scene key="EventPage" clone component={EventPage} title="Your Event" hideNavBar/>
+          <Scene key="matchProfile" clone component={matchProfile} title="Profile" hideNavBar/>
       </Scene>
     </Router>
     );

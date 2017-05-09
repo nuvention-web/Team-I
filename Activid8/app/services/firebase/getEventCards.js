@@ -50,14 +50,14 @@ export default function getEventCards () {
 
 //Check based on gender/interestedIn preferences
 function matchPossible(user1, user2, guests){
-  if (typeof guests === "undefined"){
-    if (user1.gender === user2.interestedIn && user2.gender === user1.interestedIn && user1.userID !== user2.userID){
+  if (typeof guests === "undefined"){ //case if card is new and has no guest attribute
+    if (user1.gender === user2.interestedIn && user2.gender === user1.interestedIn && user1.userID !== user2.userID){  //match possible
       return true;
     }
     else return false;
   }
   else if (typeof guests[user1.userID] === "undefined"){ //check guests if have already swiped on
-    if (user1.gender === user2.interestedIn && user2.gender === user1.interestedIn && user1.userID !== user2.userID){
+    if (user1.gender === user2.interestedIn && user2.gender === user1.interestedIn && user1.userID !== user2.userID){ //match possible
       return true;
     }
     else return false;
