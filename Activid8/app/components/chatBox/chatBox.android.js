@@ -1,11 +1,28 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
+import {
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  Button, 
+  ScrollView, 
+  Alert, 
+  Platform, 
+  Dimensions,
+  TouchableHighlight,
+  TextInput,
+  } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
 import {Actions} from "react-native-router-flux";
 
-class Messages extends Component {
+var windowSize = Dimensions.get('window');
+
+class ChatBox extends Component {
   	constructor(props){
   		super(props);
+      this.state = {
+        message: ""
+      };
   	}
 
   	render(){
@@ -45,7 +62,7 @@ class Messages extends Component {
   	}
 }
 
-export default Messages;
+export default ChatBox;
 
 
 var styles = StyleSheet.create({
@@ -60,7 +77,7 @@ var styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
-      backgroundColor: '#6E5BAA',
+      backgroundColor: '#70C1B3',
       paddingTop: 20,
     },
     chatContainer: {
@@ -73,7 +90,7 @@ var styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
-      backgroundColor: '#6E5BAA'
+      backgroundColor: '#70C1B3'
     },
     textContainer: {
       flex: 1,
@@ -94,7 +111,7 @@ var styles = StyleSheet.create({
       paddingLeft: 10,
       paddingTop: 5,
       height: 32,
-      borderColor: '#6E5BAA',
+      borderColor: '#70C1B3',
       borderWidth: 1,
       borderRadius: 2,
       alignSelf: 'center',

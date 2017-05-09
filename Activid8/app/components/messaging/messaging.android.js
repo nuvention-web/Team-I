@@ -59,8 +59,8 @@ class Messages extends Component {
         }
       );
     }
-    onMessagePress(){
-      Alert.alert("Talking with this user");
+    onMessagePress(user){
+      Actions.chatBox({userObj: user});
     }
 
     getMessageList(){
@@ -81,7 +81,7 @@ class Messages extends Component {
             <ListView
               dataSource={this.ds.cloneWithRows(this.state.eventList)}
               renderRow={(rowData) =>
-                <TouchableHighlight onPress={() => this.onMessagePress(rowData.userID)}>
+                <TouchableHighlight onPress={() => this.onMessagePress(rowData)}>
                   <View style={styles.listItem}>
                     <View style={styles.listIcon}>
                       <Image style={styles.channelIcon} source={{uri: rowData.picture}} />

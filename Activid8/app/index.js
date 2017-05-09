@@ -17,6 +17,7 @@ import LoginScreen from "./components/loginScreen/loginScreen";
 import editProfile from "./components/editProfile/editProfile";
 import Messaging from "./components/messaging/messaging";
 import matchProfile from "./components/matchProfile/matchProfile";
+import ChatBox from "./components/chatBox/chatBox";
 
 import TabIcon from "./components/tabIcon/tabIcon.js";
 
@@ -80,6 +81,7 @@ export default class Activid8 extends Component {
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
           <Scene key="EventPage" component={EventPage} title="Your Event" hideNavBar/>
           <Scene key="matchProfile" component={matchProfile} title="Profile" hideNavBar/>
+          <Scene key="chatBox" component={ChatBox} title="Chat Box" hideNavBar/>
       </Scene>
     </Router>
     );
