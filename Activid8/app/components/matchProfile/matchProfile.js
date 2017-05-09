@@ -50,7 +50,7 @@ class matchProfile extends Component {
         console.log(val);
         Actions.pop({popNum: 2});
         setTimeout(()=>{
-          Actions.messages();
+          Actions.messaging();
         });
       },
       (err)=>{

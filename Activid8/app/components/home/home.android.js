@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
-import firebaseApp from "../../services/firebase/firebaseService";
 import Card from "../card/card";
+import getEventCards from "../../services/firebase/getEventCards";
+import handleSwipeRight from "../../services/firebase/handleSwipeRight";
 import NoMoreCards from "../card/nomorecards";
 import {Actions} from "react-native-router-flux";
-import getUserID from "../../services/facebook/getUserID";
 
 var swipedCards = [];
 var Cards = [];
@@ -18,68 +18,32 @@ const Home = React.createClass({
   },
 
   componentWillMount() {
-    Cards = [];
-    //var Cards2 = [];
-    getUserID().then((userID)=>{
+    getEventCards().then((Cards)=>{
+      console.log(Cards);
       this.setState({
-        ID: userID,
+        cardsLoading: false,
+        cards: Cards,
+        outOfCards: false
       });
-    });
-    const eventRef = firebaseApp().database().ref("Events");
-    userRef = firebaseApp().database().ref("Users/" + this.state.ID);
-    console.log(userRef);
-    var numPushed = 0;
-
-    eventRef.on("value", (dataSnapshot) => {
-      dataSnapshot.forEach((child) => {
-        var card = {};
-        var cardOwnerRef = firebaseApp().database().ref("Users/" + child.val().host);
-        console.log(child.val().host);
-        card.eventTitle = child.val().eventName;
-        card.eventLocation = child.val().eventLocation;
-        card.host = child.val().host;
-        card.eventDate = child.val().eventDate;
-        cardOwnerRef.on("value", (ownerSnapshot) => {
-          card.name = ownerSnapshot.val().name;
-          card.image = ownerSnapshot.val().picture;
-        });
-        Cards.push(card);
-        numPushed++;
-      });
-    });
-    this.setState({
-      cardsLoading: false,
-      cards: Cards,
-      outOfCards: false
-    });
+    }, (err)=> {console.log(err);});
   },
 
   handleYup (card) {
     var swipedCard = Cards.shift();
     swipedCards.push(swipedCard);
 
-    var tmp = {};
-    tmp.swipedCards = swipedCards;
-    userRef.update(tmp);
-
-    var eventRef = firebaseApp().database().ref("Events/" + card.host);
-    var eventTemp = {};
-    var guests = [];
-
-    guests.push(this.state.ID);
-    eventTemp.guests = guests;
-    eventRef.update(eventTemp);
-
-    console.log("Events/" + card.host);
-
-    Alert.alert("The user has been notified.");
-
+    handleSwipeRight(card.host).then(
+      (val)=>{
+        console.log(val);
+        Alert.alert("The user has been notified.");
+      },
+      (err)=> {console.log(err);}
+    );
   },
 
   handleNope (card) {
     var swipedCard = Cards.shift();
     //console.log("Swiped No and: " + Cards);
-
   },
 /*
   cardRemoved (index) {
@@ -109,7 +73,7 @@ const Home = React.createClass({
           <Text>
             loading cards...
           </Text>
-  			</View>
+        </View>
       );
     }
     else{
