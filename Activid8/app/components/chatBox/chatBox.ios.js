@@ -1,11 +1,77 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
+import {
+  StyleSheet, 
+  Text, 
+  View, 
+  Image, 
+  Button, 
+  ScrollView, 
+  Alert, 
+  Platform, 
+  Dimensions,
+  TouchableHighlight,
+  TextInput,
+  } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
+import getMessages from "../../services/firebase/getMessages";
+import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
+import getUserID from "../../services/facebook/getUserID";
 import {Actions} from "react-native-router-flux";
 
-class Messages extends Component {
+var windowSize = Dimensions.get('window');
+
+class ChatBox extends Component {
     constructor(props){
       super(props);
+      this.state = {
+        message: "",
+        messageList: [],
+        user: {}
+      };
+    }
+    componentWillMount(){
+      getFirebaseSelf().then(
+        (user)=>{
+          this.setState({user: user});
+          getMessages(user.userID).then(
+            (messages)=>{
+              console.log(user.userID);
+              this.setState({
+                messageList: messages
+              });
+            },
+            (error)=>{
+              console.log(error);
+            }
+          );
+        },
+        (error)=>{
+          console.log(error);
+        });
+      console.log(this.state);
+    }
+
+    onSendPress(){
+      console.log(this.state.messageList);
+      var textObj = {};
+      var text = this.state.message;
+      var textArr = this.state.messageList;
+      textArr.push(this.state.user.name + ": " + text);
+      this.setState({messageList: textArr});
+      textObj.messages = textArr;
+      getUserID().then(
+        (userID)=>{
+          var eventRef = firebaseApp().database().ref("Events/" + userID);
+          eventRef.update(textObj).then(
+            (val) => {
+              console.log("Successfully sent the message");
+            },
+            (err) => {
+              console.log(err);
+              reject(err);
+            });
+        })
+      this.setState({message: ''});
     }
 
     render(){
@@ -20,9 +86,11 @@ class Messages extends Component {
               <Text style={{color: '#fff'}}>&lt; Back</Text>
             </TouchableHighlight>
           </View>
+
           <View style={styles.chatContainer}>
             <Text style={{color: '#000'}}>Chat</Text>
           </View>
+
           <View style={styles.inputContainer}>
             <View style={styles.textContainer}>
               <TextInput
@@ -45,7 +113,7 @@ class Messages extends Component {
     }
 }
 
-export default Messages;
+export default ChatBox;
 
 
 var styles = StyleSheet.create({
@@ -60,7 +128,7 @@ var styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
-      backgroundColor: '#6E5BAA',
+      backgroundColor: '#70C1B3',
       paddingTop: 20,
     },
     chatContainer: {
@@ -73,7 +141,7 @@ var styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
-      backgroundColor: '#6E5BAA'
+      backgroundColor: '#70C1B3'
     },
     textContainer: {
       flex: 1,
@@ -94,7 +162,7 @@ var styles = StyleSheet.create({
       paddingLeft: 10,
       paddingTop: 5,
       height: 32,
-      borderColor: '#6E5BAA',
+      borderColor: '#70C1B3',
       borderWidth: 1,
       borderRadius: 2,
       alignSelf: 'center',

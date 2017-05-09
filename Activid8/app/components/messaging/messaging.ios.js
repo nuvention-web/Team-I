@@ -13,78 +13,92 @@ import {
 } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
 import getEventSelf from "../../services/firebase/getEventSelf";
-import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
+import getMatchedGuests from "../../services/firebase/getMatchedGuests";
 import getFirebaseUser from "../../services/firebase/getFirebaseUser";
 import {Actions} from "react-native-router-flux";
 var PULLDOWN_DISTANCE = 40;
 class Messages extends Component {
     constructor(props){
       super(props);
-      var eventList = [];
-      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+      this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.state = {
         refreshing: false,
-        dataSource: ds.cloneWithRows([]),
+        eventList: [],
       };
     }
 
 
 
     componentWillMount(){
+      var eventList = [];
       this.setState({refreshing: true});
-      getFirebaseSelf().then(
-      (usr)=>{
-        getEventSelf(usr.userID).then(
-          (eventObj)=>{
-            getFirebaseUser(eventObj.accepted_guest).then(
-              (accepted_guest) =>{
-                eventList.push({accepted_guest})
-                this.setState({
-                  dataSource: ds.cloneWithRows(eventList), 
-                  refreshing: false
-                });
-                console.log(eventList);
+      getMatchedGuests().then(
+        (guests)=>{
+          for(var i in guests){
+            getFirebaseUser(guests[i]).then(
+              (guest)=>{
+                eventList.push(guest);
+                console.log(guest);
+              },
+              (err)=>{
+                console.log(err);
               }
-            )
-          },
-          (err)=>{
-            console.log(err);
-            this.setState({refreshing: false});
+            );
+          }
+          console.log("hi");
+          this.setState({
+              eventList: eventList, 
+              refreshing: false
           });
-      },
-      (err)=>{
-        console.log(err);
-        this.setState({refreshing: false});
-      });
+          console.log(eventList);
+          console.log("hi");
+        },
+        (err)=>{
+          console.log(err);
+          this.setState({refreshing: false});
+        }
+      );
     }
-    onMessagePress(){
-      Alert.alert("Talking with this user");
+    onMessagePress(guest){
+      Actions.chatBox({guestObj: guest});
+    }
+
+    getMessageList(){
+
     }
 
     render(){
-      return(
+      if(this.state.refreshing){
+        return(
+          <View style={{marginTop: 59}}><Text>Loading...</Text></View>
+        )
+      }
+
+      else {
+        return(
         <View style={styles.container}>
           <View style={styles.listContainer}>
             <ListView
-              dataSource={this.state.dataSource}
+              dataSource={this.ds.cloneWithRows(this.state.eventList)}
               renderRow={(rowData) =>
-                <TouchableHighlight onPress={() => this.onMessagePress(rowData.userID)}>
+                <TouchableHighlight onPress={() => this.onMessagePress(rowData)}>
                   <View style={styles.listItem}>
                     <View style={styles.listIcon}>
                       <Image style={styles.channelIcon} source={{uri: rowData.picture}} />
                     </View>
                     <View style={styles.listInfo}>
-                      <Text style={styles.titleLabel}># {rowData.name}</Text>
+                      <Text style={styles.titleLabel}>{rowData.name}</Text>
                     </View>
                   </View>
                 </TouchableHighlight>
               }
-              onEndReached={() => this.getChannelList(this.state.next)}
+              onEndReached={() => this.getMessageList()}
               onEndReachedThreshold={PULLDOWN_DISTANCE}
             />
           </View>
         </View>
-        );
+        );      
+      }
     }
 }
 
