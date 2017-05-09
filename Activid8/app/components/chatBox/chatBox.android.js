@@ -13,6 +13,9 @@ import {
   TextInput,
   } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
+import getMessages from "../../services/firebase/getMessages";
+import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
+import getUserID from "../../services/facebook/getUserID";
 import {Actions} from "react-native-router-flux";
 
 var windowSize = Dimensions.get('window');
@@ -21,9 +24,55 @@ class ChatBox extends Component {
   	constructor(props){
   		super(props);
       this.state = {
-        message: ""
+        message: "",
+        messageList: [],
+        user: {}
       };
   	}
+    componentWillMount(){
+      getFirebaseSelf().then(
+        (user)=>{
+          this.setState({user: user});
+          getMessages(user.userID).then(
+            (messages)=>{
+              console.log(user.userID);
+              this.setState({
+                messageList: messages
+              });
+            },
+            (error)=>{
+              console.log(error);
+            }
+          );
+        },
+        (error)=>{
+          console.log(error);
+        });
+      console.log(this.state);
+    }
+
+    onSendPress(){
+      console.log(this.state.messageList);
+      var textObj = {};
+      var text = this.state.message;
+      var textArr = this.state.messageList;
+      textArr.push(this.state.user.name + ": " + text);
+      this.setState({messageList: textArr});
+      textObj.messages = textArr;
+      getUserID().then(
+        (userID)=>{
+          var eventRef = firebaseApp().database().ref("Events/" + userID);
+          eventRef.update(textObj).then(
+            (val) => {
+              console.log("Successfully sent the message");
+            },
+            (err) => {
+              console.log(err);
+              reject(err);
+            });
+        })
+      this.setState({message: ''});
+    }
 
   	render(){
   		return(
@@ -37,9 +86,11 @@ class ChatBox extends Component {
 	            <Text style={{color: '#fff'}}>&lt; Back</Text>
 	          </TouchableHighlight>
 	        </View>
+
 	        <View style={styles.chatContainer}>
 	          <Text style={{color: '#000'}}>Chat</Text>
 	        </View>
+
 	        <View style={styles.inputContainer}>
 	          <View style={styles.textContainer}>
 	            <TextInput

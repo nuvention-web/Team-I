@@ -59,8 +59,8 @@ class Messages extends Component {
         }
       );
     }
-    onMessagePress(user){
-      Actions.chatBox({userObj: user});
+    onMessagePress(guest){
+      Actions.chatBox({guestObj: guest});
     }
 
     getMessageList(){
