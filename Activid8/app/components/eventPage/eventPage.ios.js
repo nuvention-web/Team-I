@@ -57,8 +57,65 @@ class EventPage extends Component {
 
 
   render() {
-
+    var temp;
     var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+
+    if (this.state.eventObj === false) {
+      temp = (
+        <View>
+          <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+              No Matches yet{"\n"}
+          </Text>
+          <Button
+            containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
+            style={{fontSize: 14, color: "white"}}
+            onPress={()=>{Actions.CreateEvent();}}
+            title="Create Event"
+            accessibilityLabel="Create Event"
+          >
+          Create Event
+        </Button>
+      </View>
+
+      );
+    }
+    else {
+
+      temp = (
+            <View>
+            <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+                No Matches yet{"\n"}
+            </Text>
+            <Text style={styles.title}> Event Name: </Text>
+            <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
+            <Text style={styles.title}> Event Location: </Text>
+            <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
+            <Text style={styles.title}> Event Date: </Text>
+            <Text style={styles.subtitle}> {eventDate} </Text>
+            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+              <Button
+                  containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                  style={{fontSize: 14, color: "white"}}
+                  onPress={()=>{Actions.editEvent({eventObj: this.state.eventObj});}}
+                  accessibilityLabel="Go Back"
+                >
+                  Edit Event
+              </Button>
+              <Button
+                  containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                  style={{fontSize: 14, color: "white"}}
+                  onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
+                  title={this.state.eventObj.eventName}
+                  accessibilityLabel="Got to my Event"
+                >
+                  Match List
+              </Button>
+            </View>
+          </View>
+
+      );
+    }
+
 
   	return (
       <ScrollView
@@ -70,33 +127,8 @@ class EventPage extends Component {
             title="Loading..."
           />}
         >
-          <Text style={styles.title}> Event Name: </Text>
-          <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
-          <Text style={styles.title}> Event Location: </Text>
-          <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
-          <Text style={styles.title}> Event Date: </Text>
-          <Text style={styles.subtitle}> {eventDate} </Text>
-
-          <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
-            <Button
-                containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-                style={{fontSize: 14, color: "white"}}
-                // onPress={()=>{Actions.pop();}}
-                accessibilityLabel="Go Back"
-              >
-                Edit Event
-            </Button>
-            <Button
-                containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-                style={{fontSize: 14, color: "white"}}
-                onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
-                title={this.state.eventObj.eventName}
-                accessibilityLabel="Got to my Event"
-              >
-                Match List
-            </Button>
-          </View>
-         </ScrollView>
+          {temp}
+      </ScrollView>
   );
   }
 }
@@ -132,7 +164,6 @@ function formatDate(date) {
   }
   else {
     var day = date.getDay();
-    console.log(day);
     return dayNames[day]+" at " + hours + ":" + minutes + mid;
   }
 }
@@ -162,7 +193,3 @@ const styles = StyleSheet.create({
 });
 
 export default EventPage;
-
-EventPage.propTypes = {
-  // eventObj: React.PropTypes.object.isRequired,
-};
