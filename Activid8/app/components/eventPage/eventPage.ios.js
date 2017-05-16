@@ -58,7 +58,9 @@ class EventPage extends Component {
 
   render() {
 
-  		return (
+    var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+
+  	return (
       <ScrollView
         style = {styles.viewContainer}
         refreshControl={
@@ -68,33 +70,94 @@ class EventPage extends Component {
             title="Loading..."
           />}
         >
-          <Button
-              containerStyle={{marginRight: 20, marginTop: 10, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-              style={{fontSize: 14, color: "white"}}
-              // onPress={()=>{Actions.pop();}}
-              accessibilityLabel="Go Back"
-            >
-              Edit Event
-          </Button>
-          <Button
-              containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-              style={{fontSize: 14, color: "white"}}
-              onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
-              title={this.state.eventObj.eventName}
-              accessibilityLabel="Got to my Event"
-            >
-              Match List
+          <Text style={styles.title}> Event Name: </Text>
+          <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
+          <Text style={styles.title}> Event Location: </Text>
+          <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
+          <Text style={styles.title}> Event Date: </Text>
+          <Text style={styles.subtitle}> {eventDate} </Text>
+
+          <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+            <Button
+                containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                style={{fontSize: 14, color: "white"}}
+                // onPress={()=>{Actions.pop();}}
+                accessibilityLabel="Go Back"
+              >
+                Edit Event
             </Button>
+            <Button
+                containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                style={{fontSize: 14, color: "white"}}
+                onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
+                title={this.state.eventObj.eventName}
+                accessibilityLabel="Got to my Event"
+              >
+                Match List
+            </Button>
+          </View>
          </ScrollView>
   );
   }
 }
 
 
+
+function formatDate(date) {
+  var nowTime = new Date();
+  var dayNames = [
+    "Sunday", "Monday", "Tuesday", "Wednesday",
+    "Thursday", "Friday", "Saturday"
+  ];
+  var diff = daydiff(nowTime, date);
+  var hours = date.getHours();
+  var hours = (hours+24-2)%24;
+  var minutes = (date.getMinutes()<10?"0":"") + date.getMinutes();
+  var mid="am";
+  if(hours==0) //At 00 hours we need to show 12 am
+    hours=12;
+  else if(hours>12)
+  {
+    hours=hours%12;
+    mid="pm";
+  }
+
+  if (diff == 0) // Today
+    return "Today at " +  hours + ":" + minutes +  mid;
+  else if (diff == 1) // Tomorrow
+    return "Tomorrow at " + hours + ":" + minutes + mid;
+  else if (diff > 7) { // Next week
+    var day = date.getDay();
+    return "Next "+dayNames[day]+" at " + hours + ":" + minutes + mid;
+  }
+  else {
+    var day = date.getDay();
+    console.log(day);
+    return dayNames[day]+" at " + hours + ":" + minutes + mid;
+  }
+}
+
+function daydiff(first, second) {
+  return Math.round((second-first)/(1000*60*60*24));
+}
+
+
 const styles = StyleSheet.create({
+  title:{
+    fontSize: 20,
+    marginTop: 20,
+    color: "#70C1B3",
+    marginLeft: 20
+  },
+  subtitle:{
+    fontSize: 18,
+    // marginTop: 20,
+    color: "#000",
+    marginLeft: 40
+  },
   viewContainer: {
     backgroundColor: "#fff",
-    ...Platform.select({ios: {top: 100},android: {top: 119}}),
+    ...Platform.select({ios: {top: 70},android: {top: 119}}),
   }
 });
 

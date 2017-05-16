@@ -67,8 +67,8 @@ class Card extends Component{
 function formatDate(date) {
   var nowTime = new Date();
   var dayNames = [
-    "Monday", "Tuesday", "Wednesday",
-    "Thursday", "Friday", "Saturday", "Sunday"
+    "Sunday", "Monday", "Tuesday", "Wednesday",
+    "Thursday", "Friday", "Saturday"
   ];
   var diff = daydiff(nowTime, date);
   var hours = date.getHours();
@@ -88,11 +88,11 @@ function formatDate(date) {
   else if (diff == 1) // Tomorrow
       return "Tomorrow at " + hours + ":" + minutes + mid;
   else if (diff > 7) { // Next week
-    var day = date.getDate();
+    var day = date.getDay();
     return "Next "+dayNames[day-1]+" at " + hours + ":" + minutes + mid;
   }
   else {
-    var day = date.getDate();
+    var day = date.getDay();
     return dayNames[day-1]+" at " + hours + ":" + minutes + mid;
   }
 }
