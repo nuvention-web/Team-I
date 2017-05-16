@@ -58,13 +58,12 @@ class EventPage extends Component {
 
   render() {
     var temp;
-    var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
 
     if (this.state.eventObj === false) {
       temp = (
         <View>
           <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
-              No Matches yet{"\n"}
+              Create an event below to be discoverable by other users!
           </Text>
           <Button
             containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
@@ -81,10 +80,13 @@ class EventPage extends Component {
     }
     else {
 
+      var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+      var matchCount = getNumberOfMatches(this.state.eventObj);
+
       temp = (
             <View>
             <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
-                No Matches yet{"\n"}
+                You have {matchCount} potential matches. {"\n"} Swipe through them in the Match List!
             </Text>
             <Text style={styles.title}> Event Name: </Text>
             <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
@@ -108,7 +110,7 @@ class EventPage extends Component {
                   title={this.state.eventObj.eventName}
                   accessibilityLabel="Got to my Event"
                 >
-                  Match List
+                  Match List ({matchCount})!
               </Button>
             </View>
           </View>
@@ -172,6 +174,21 @@ function daydiff(first, second) {
   return Math.round((second-first)/(1000*60*60*24));
 }
 
+
+function getNumberOfMatches(eventObj){
+  count = 0;
+  donecount = 0;
+  console.log(eventObj.guests);
+  for (var key in eventObj.guests) {
+    if (eventObj.guests[key] == true){
+      count++;
+      donecount++;
+      if (donecount == Object.keys(eventObj.guests).length){
+        return count;
+      }
+    }
+  }
+}
 
 const styles = StyleSheet.create({
   title:{
