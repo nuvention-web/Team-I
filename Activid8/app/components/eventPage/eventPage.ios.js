@@ -1,5 +1,5 @@
-import React, {	Component, PropTypes} from "react";
-import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
+import React, { Component, PropTypes} from "react";
+import { AppRegistry, ListView, ScrollView, Platform, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
 import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
@@ -72,13 +72,14 @@ class EventPage extends Component {
   }
 
   render() {
-  		return (
-      <View>
+    return (
+      <View style={styles.viewContainer}>
       <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
 
           <SwipeListView
-            	dataSource={this.ds.cloneWithRows(this.state.matches)}
-            	renderRow={ (data, secId, rowId, rowMap) => (
+              dataSource={this.ds.cloneWithRows(this.state.matches)}
+              enableEmptySections={true}
+              renderRow={ (data, secId, rowId, rowMap) => (
                 <SwipeRow
                       leftOpenValue={75}
                       tension={4}
