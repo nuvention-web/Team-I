@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     ...Platform.select({
       ios: {
-        top: 64,
+        top: 20,
       },
       android: {
         top: 0,

@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
     marginLeft: 40,
+    marginRight: 20,
     paddingBottom: 50
   },
   title: {
@@ -158,6 +159,6 @@ const styles = StyleSheet.create({
   //   // marginTop:100
   // },
   viewContainer: {
-    ...Platform.select({ios: {top: 129},android: {top: 119}}),
+    ...Platform.select({ios: {top: 100},android: {top: 119}}),
   }
 });

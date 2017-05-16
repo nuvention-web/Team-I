@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     height: 450,
   },
   container:{
-    ...Platform.select({ios: {top: 129},android: {top: 69}})
+    ...Platform.select({ios: {top: 100},android: {top: 69}})
   },
 
 });

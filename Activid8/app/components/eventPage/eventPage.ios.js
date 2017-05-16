@@ -1,5 +1,5 @@
 import React, { Component, PropTypes} from "react";
-import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
+import {Platform, AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
 import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
@@ -121,7 +121,7 @@ class EventPage extends Component {
               Go Back
           </Button>
         </View>);
-    }
+  }
 }
 
 
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     backgroundColor: "#fff",
-    ...Platform.select({ios: {top: 129},android: {top: 119}}),
+    ...Platform.select({ios: {top: 100},android: {top: 119}}),
   }
 });
 
