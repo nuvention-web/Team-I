@@ -22,20 +22,6 @@ class editProfile extends Component {
   }
 
 
-  saveUser = () => {
-    // var userObj = JSON.parse(JSON.stringify(this.props.userObj));
-    var userObj = {};
-    userObj.age = this.state.age;
-    userObj.bio = this.state.bio;
-    userObj.gender = this.state.age;
-    userObj.interestedIn = this.state.interestedIn;
-    saveFirebaseUser(userObj).then((val)=>{
-      console.log(val);
-      console.log("Successfully updated user");
-    }, (err)=> {console.log(err);});
-
-  }
-
   render() {
 
     return (
@@ -48,7 +34,7 @@ class editProfile extends Component {
           style={{height: 40, borderColor: "gray", borderWidth: 1, marginLeft: 20, marginRight: 20}}
           onChangeText={(age) => this.setState({age})}
           value={this.state.age}
-          keyboardType={'number-pad'}
+          keyboardType={"number-pad"}
           maxLength={2}
           />
 
@@ -92,8 +78,7 @@ class editProfile extends Component {
                 userObj.interestedIn = this.state.interestedIn;
                 saveFirebaseUser(userObj).then((val)=>{
                   console.log("Successfully updated user");
-
-                  Actions.pop({ refresh: { refreshing: true }})
+                  Actions.pop({ refresh: { refreshing: true }});
                 }, (err)=> {console.log(err);});
               }}
               accessibilityLabel="Save Changes"

@@ -15,6 +15,10 @@ import Login from "./components/login/login.js";
 import Launch from "./components/launch/Launch.js";
 import LoginScreen from "./components/loginScreen/loginScreen";
 import editProfile from "./components/editProfile/editProfile";
+import EditEvent from "./components/editEvent/editEvent";
+
+import MatchList from "./components/matchList/matchList";
+
 import Messaging from "./components/messaging/messaging";
 import matchProfile from "./components/matchProfile/matchProfile";
 import ChatBox from "./components/chatBox/chatBox";
@@ -74,12 +78,16 @@ export default class Activid8 extends Component {
             tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
           >
             <Scene key="myProfile" component={Profile} title="Profile" hideNavBar icon={TabIcon} />
+            <Scene key="myEvent" component={EventPage} title="My Event" hideNavBar icon={TabIcon} />
             <Scene key="home" component={Home} title="Home" hideNavBar icon={TabIcon} initial />
             <Scene key="messaging" component={Messaging} title="Messaging" hideNavBar icon={TabIcon} />
           </Scene>
-          <Scene key="editProfile" component={editProfile} title="editProfile" hideNavBar/>
+          <Scene key="editProfile" component={editProfile} title="Edit Profile" hideNavBar/>
+          <Scene key="editEvent" component={EditEvent} title="Edit Event" hideNavBar/>
+
+          <Scene key="matchList" clone component={MatchList} title="Match List" hideNavBar/>
           <Scene key="CreateEvent" component={CreateEvent} title="Create an Event" hideNavBar/>
-          <Scene key="EventPage" clone component={EventPage} title="Your Event" hideNavBar/>
+          {/* <Scene key="EventPage" clone component={EventPage} title="Your Event" hideNavBar/> */}
           <Scene key="matchProfile" clone component={matchProfile} title="Profile" hideNavBar/>
           <Scene key="chatBox" component={ChatBox} title="Chat Box" hideNavBar/>
       </Scene>
@@ -101,7 +109,7 @@ const styles = StyleSheet.create({
       },
     }),
     height: 65,
-    padding: 16,
+    // padding: 10,
   },
   tabBarSelectedItemStyle: {
     backgroundColor: "#ddd",
