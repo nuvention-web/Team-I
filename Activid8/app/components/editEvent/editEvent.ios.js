@@ -114,7 +114,7 @@ class EditEvent extends Component {
           </View>
 
           <Button
-              containerStyle={{marginTop: 65, marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+              containerStyle={{marginTop: 65, marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#c1707e"}}
               style={{fontSize: 14, color: "white"}}
               onPress={()=>{Actions.pop();}}
               title="Delete Event"
