@@ -6,6 +6,7 @@ import sendEvent from "../../services/firebase/sendEvent";
 import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
 import saveFirebaseEvent from "../../services/firebase/saveFirebaseEvent";
+import removeFirebaseEvent from "../../services/firebase/removeFirebaseEvent";
 
 class EditEvent extends Component {
 
@@ -116,7 +117,12 @@ class EditEvent extends Component {
           <Button
               containerStyle={{marginTop: 65, marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#c1707e"}}
               style={{fontSize: 14, color: "white"}}
-              onPress={()=>{Actions.pop();}}
+              onPress={()=>{
+                removeFirebaseEvent().then((val)=>{
+                  console.log(val);
+                  Actions.pop({ refresh: { refreshing: true }});
+                }, (err)=> {console.log(err);});
+              }}
               title="Delete Event"
               accessibilityLabel="Delete Event"
             >
