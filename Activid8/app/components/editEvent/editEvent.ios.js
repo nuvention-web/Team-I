@@ -5,7 +5,7 @@ import { View, Alert, Text, StyleSheet, Picker, TextInput, Platform, TouchableWi
 import sendEvent from "../../services/firebase/sendEvent";
 import {Actions} from "react-native-router-flux";
 import Button from "react-native-button";
-import saveFirebaseUser from "../../services/firebase/saveFirebaseUser";
+import saveFirebaseEvent from "../../services/firebase/saveFirebaseEvent";
 
 class EditEvent extends Component {
 
@@ -17,7 +17,6 @@ class EditEvent extends Component {
       eventLocation: this.props.eventObj.eventLocation,
     };
   }
-
 
   onDateChange = (date) => {
     this.setState({eventDate: date});
@@ -48,40 +47,6 @@ class EditEvent extends Component {
       };
     });
   };
-
-  onButtonPress = () => {
-    console.log(this.props);
-    // if(this.state.eventName === 'none'){
-    //   Alert.alert("Please enter your Event's name");
-    // }
-    // else if(this.state.eventLocation === 'none'){
-    //   Alert.alert("Please enter your Event's location");
-    // }
-    // else{
-    //
-    //   sendEvent(this.state.eventName, this.state.eventLocation, this.state.date.toString())
-    //   Alert.alert("Submitted Event");
-    //   // this.props.route.getEvent(this.state.eventName);
-    //   console.log(this.state.eventName)
-    //   // this.props.navigator.pop();
-    //   // Actions.
-    // }
-  };
-
-
-  saveEvent = () => {
-    // var userObj = JSON.parse(JSON.stringify(this.props.userObj));
-    var eventObj = {};
-    eventObj.eventName = this.state.eventName;
-    eventObj.eventDate = this.state.eventDate;
-    eventObj.eventLocation = this.state.eventLocation;
-
-    // saveFirebaseUser(userObj).then((val)=>{
-    //   console.log(val);
-    //   console.log("Successfully updated user");
-    // }, (err)=> {console.log(err);});
-
-  }
 
   render() {
 
@@ -117,17 +82,6 @@ class EditEvent extends Component {
             timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
             onDateChange={this.onDateChange}
           />
-          <Button
-            onPress={this.onButtonPress}
-            title="Save Event"
-            accessibilityLabel="Save Event"
-          />
-
-          <Button
-            onPress={()=>{Actions.pop();}}
-            title="Go Back"
-            accessibilityLabel="Go Back"
-          />
 
           <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
             <Button
@@ -142,11 +96,19 @@ class EditEvent extends Component {
             <Button
                 containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
                 style={{fontSize: 14, color: "white"}}
-                onPress={()=>{Actions.pop();}}
-                title="Save Event"
-                accessibilityLabel="Save Event"
+                onPress={()=>{
+                  var eventObj = {};
+                  eventObj.eventName = this.state.eventName;
+                  eventObj.eventDate = this.state.eventDate;
+                  eventObj.eventLocation = this.state.eventLocation;
+                  saveFirebaseEvent(eventObj).then((val)=>{
+                    console.log("Successfully updated user");
+                    Actions.pop({ refresh: { refreshing: true }});
+                  }, (err)=> {console.log(err);});
+                }}
+                accessibilityLabel="Save Changes"
               >
-                Save Event
+                Save Changes
             </Button>
 
           </View>
