@@ -11,8 +11,10 @@ export default function getGuests (eventObj) {
     else {
       console.log(eventObj.guests);
       var promises = [];
-      for (var i = 0; i < eventObj.guests.length; ++i) {
-        promises.push(getFirebaseUser(eventObj.guests[i]));
+
+      for (var guestID in eventObj.guests) {
+        if(eventObj.guests[guestID] === true)
+          promises.push(getFirebaseUser(guestID));
       }
       Promise.all(promises).then(
         (users)=>{

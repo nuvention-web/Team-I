@@ -1,15 +1,16 @@
-import React, {	Component, PropTypes} from "react";
+import React, { Component, PropTypes} from "react";
 import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
 import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
 import getGuests from "../../services/firebase/getGuests";
 import handlePressMatch from "../../services/firebase/handlePressMatch";
+import handlePressRemove from "../../services/firebase/handlePressRemove";
 
 
 class EventPage extends Component {
   constructor(props) {
-  	super(props);
+    super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {matches: [{name: "aaaa 23"}, {name: "bbbb 22"}]};
   }
@@ -26,17 +27,23 @@ class EventPage extends Component {
   }
 
 
-  deleteRow(secId, rowId, rowMap) {
+  deleteRow(userObj, secId, rowId, rowMap) {
     Alert.alert(
       "Confirm Delete",
       "Removing a suitor will not show them again for this event.",
       [
         {text: "OK", onPress: () => {
-          console.log("OK Pressed");
-          rowMap[`${secId}${rowId}`].closeRow();
-          const newData = [...this.state.matches];
-          newData.splice(rowId, 1);
-          this.setState({matches: newData});
+          handlePressRemove(userObj.userID).then(
+            (val)=>{
+              console.log(val);
+              rowMap[`${secId}${rowId}`].closeRow();
+              const newData = [...this.state.matches];
+              newData.splice(rowId, 1);
+              this.setState({matches: newData});
+            },
+            (err) => {
+              console.log(err);
+            });
         }},
         {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
       ],
@@ -57,7 +64,7 @@ class EventPage extends Component {
               Alert.alert(userObj.name + " has been notified. You can now message them!");
               Actions.pop();
               setTimeout(()=>{
-                Actions.messages();
+                Actions.messaging();
               });
             },
             (err)=>{
@@ -73,12 +80,13 @@ class EventPage extends Component {
 
   render() {
   		return (
-      <View>
+      <View style = {styles.viewContainer}>
       <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
 
           <SwipeListView
-            	dataSource={this.ds.cloneWithRows(this.state.matches)}
-            	renderRow={ (data, secId, rowId, rowMap) => (
+              enableEmptySections={true}
+              dataSource={this.ds.cloneWithRows(this.state.matches)}
+              renderRow={ (data, secId, rowId, rowMap) => (
                 <SwipeRow
                       leftOpenValue={75}
                       tension={4}
@@ -88,7 +96,7 @@ class EventPage extends Component {
                           <TouchableHighlight style={styles.rightRowBack} onPress={_ => this.onPressMatch(data)}>
                                   <Text style={styles.rightRowBackText}>Match</Text>
                           </TouchableHighlight>
-                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(secId, rowId, rowMap)}>
+                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(data, secId, rowId, rowMap)}>
                               <Text style={styles.leftRowBackText}>Remove</Text>
                           </TouchableHighlight>
                       </View>
@@ -101,7 +109,7 @@ class EventPage extends Component {
                           </View>
                       </TouchableHighlight>
                   </SwipeRow>
-            	)}
+              )}
             />
 
           <Button
@@ -113,7 +121,7 @@ class EventPage extends Component {
               Go Back
           </Button>
         </View>);
-  	}
+    }
 }
 
 
@@ -124,12 +132,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent:"center",
     alignItems: "center",
-    backgroundColor:"#FF4136",
+    backgroundColor:"#c1707e",
     paddingTop: 15,
     paddingBottom: 50,
   },
   leftRowBackText: {
-  	marginLeft: 100,
+    marginLeft: 100,
     fontSize: 16,
   },
   rightRowBack: {
@@ -138,7 +146,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent:"center",
     alignItems: "center",
-    backgroundColor:"#2ECC40",
+    backgroundColor:"#70c18b",
     paddingTop: 15,
     paddingBottom: 50,
   },
@@ -159,9 +167,13 @@ const styles = StyleSheet.create({
     borderTopColor:"orange",
   },
   rowFrontText: {
-  	color: "black",
+    color: "black",
     fontSize: 18
   },
+  viewContainer: {
+    backgroundColor: "#fff",
+    ...Platform.select({ios: {top: 129},android: {top: 119}}),
+  }
 });
 
 export default EventPage;
