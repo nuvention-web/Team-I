@@ -84,10 +84,10 @@ class ChatBox extends Component {
         console.log(item);
         return (
           <View
-            style={styles.messageContainer}
+            style={styles.messageContainerSelf}
             key={index}
             >
-            <Text style={styles.messageLabel}> : {item.message}</Text>
+            <Text style={styles.textSelf}> {item.message}</Text>
           </View>
         );
       });
@@ -145,13 +145,20 @@ var styles = StyleSheet.create({
       alignItems: 'stretch',
       backgroundColor: '#ffffff'
     },
+    textSelf:{
+      textAlign: 'right',
+    },
+    textOther:{
+      textAlign: 'left',
+    },
     topContainer: {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
       backgroundColor: '#70C1B3',
-      paddingTop: 20,
+      paddingTop: 13,
+      marginBottom: 10,
     },
     chatContainer: {
       flex: 11,
@@ -190,9 +197,17 @@ var styles = StyleSheet.create({
       alignSelf: 'center',
       backgroundColor: '#ffffff'
     },
-    messageContainer:{
+    messageContainerSelf:{
       margin: 10,
       paddingTop: 5,
-      paddingBottom: 5
+      paddingBottom: 5,
+      paddingLeft: 13,
+      paddingRight: 13,
+
+      width: windowSize.width - (windowSize.width * .25),
+      alignSelf: 'flex-end',
+      justifyContent: 'center',
+      backgroundColor: '#70C1B3',
+      borderRadius: 10,
     }
   });
