@@ -119,10 +119,6 @@ var styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 15
   },
-  channelIcon: {
-    width: 30,
-    height: 30
-  },
   listInfo: {
     flex: 1,
     justifyContent: 'flex-start'

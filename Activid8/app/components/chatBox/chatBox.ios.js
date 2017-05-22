@@ -24,8 +24,9 @@ class ChatBox extends Component {
     constructor(props){
       super(props);
       this.state = {
-        message: "",
-        messageList: [],
+        textObject: {},
+        textContent: "",
+        textList: [],
         user: {}
       };
     }
@@ -37,7 +38,7 @@ class ChatBox extends Component {
             (messages)=>{
               console.log(user.userID);
               this.setState({
-                messageList: messages
+                textList: messages
               });
             },
             (error)=>{
@@ -48,21 +49,21 @@ class ChatBox extends Component {
         (error)=>{
           console.log(error);
         });
-      console.log(this.state);
     }
 
     onSendPress(){
-      console.log(this.state.messageList);
-      var textObj = {};
-      var text = this.state.message;
-      var textArr = this.state.messageList;
-      textArr.push(this.state.user.name + ": " + text);
-      this.setState({messageList: textArr});
-      textObj.messages = textArr;
+      var updateObject = {};
+      var textObject = this.state.textObject;
+      textObject.name = this.state.user.name;
+      textObject.message = this.state.textContent;
+      var textArr = this.state.textList;
+      textArr.push(textObject);
+      this.setState({textList: textArr});
+      updateObject.messages = textArr;
       getUserID().then(
         (userID)=>{
           var eventRef = firebaseApp().database().ref("Events/" + userID);
-          eventRef.update(textObj).then(
+          eventRef.update(updateObject).then(
             (val) => {
               console.log("Successfully sent the message");
             },
@@ -71,7 +72,7 @@ class ChatBox extends Component {
               reject(err);
             });
         })
-      this.setState({message: ''});
+      this.setState({message: {}});
     }
 
     onBackPress(){
@@ -79,14 +80,14 @@ class ChatBox extends Component {
     }
 
     render(){
-      var list = this.state.messageList.map((item, index) => {
+      var list = this.state.textList.map((item, index) => {
         console.log(item);
         return (
           <View
             style={styles.messageContainer}
             key={index}
             >
-            <Text style={styles.messageLabel}> : {item}</Text>
+            <Text style={styles.messageLabel}> : {item.message}</Text>
           </View>
         );
       });
@@ -117,7 +118,7 @@ class ChatBox extends Component {
               <TextInput
                 style={styles.input}
                 value={this.state.message}
-                onChangeText={(text) => this.setState({message: text})}
+                onChangeText={(text) => this.setState({textContent: text})}
                 />
             </View>
             <View style={styles.sendContainer}>
