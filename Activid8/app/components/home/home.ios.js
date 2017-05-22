@@ -1,11 +1,14 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, Button, ScrollView, Alert, Platform} from "react-native";
+import {StyleSheet, Text, View, Image, ScrollView, Alert, Platform} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import Card from "../card/card";
 import getEventCards from "../../services/firebase/getEventCards";
 import handleSwipeRight from "../../services/firebase/handleSwipeRight";
+import handleSwipeLeft from "../../services/firebase/handleSwipeLeft";
 import NoMoreCards from "../card/nomorecards";
 import {Actions} from "react-native-router-flux";
+import Button from "react-native-button";
+
 
 var swipedCards = [];
 var Cards = [];
@@ -43,6 +46,14 @@ const Home = React.createClass({
 
   handleNope (card) {
     var swipedCard = Cards.shift();
+
+    handleSwipeLeft(card.host).then(
+      (val)=>{
+        console.log(val);
+        // Alert.alert("Swip.");
+      },
+      (err)=> {console.log(err);}
+    );
     //console.log("Swiped No and: " + Cards);
   },
 /*
@@ -80,32 +91,59 @@ const Home = React.createClass({
       //console.log("Rendering: " + Cards);
       return (
         <View style={styles.container}>
-        <SwipeCards
-          cards={this.state.cards}
-          loop={false}
+        <View style={styles.swipecontainer}>
+          <SwipeCards
+            cards={this.state.cards}
+            loop={false}
 
-          renderCard={(cardData) => <Card {...cardData} />}
-          renderNoMoreCards={() => <NoMoreCards />}
-          showYup={true}
-          showNope={true}
+            renderCard={(cardData) => <Card {...cardData} />}
+            renderNoMoreCards={() => <NoMoreCards />}
+            showYup={true}
+            showNope={true}
 
-          handleYup={this.handleYup}
-          handleNope={this.handleNope}
-          cardRemoved={this.cardRemoved}
-        />
-      </View>
+            handleYup={this.handleYup}
+            handleNope={this.handleNope}
+            cardRemoved={this.cardRemoved}
+          />
+        </View>
+        <View>
+        {/* <View style={{flex: 1, flexDirection: "row", alignItems: "center", marginTop: 30}}> */}
+          {/* <Button
+              containerStyle={{width: 70, marginRight: 25, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#c1707e"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={() => {console.log("aaa");}}
+              accessibilityLabel="Nope">
+            Swipe
+          </Button>
+          <Button
+              containerStyle={{width: 70, marginLeft: 150, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70c18b"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={() => {console.log("aaa");}}
+              accessibilityLabel="Yup">
+            Yup
+          </Button> */}
+          <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+              Swipe right you are interested!{"\n"}
+              Left to pass.
+          </Text>
+        </View>
+        </View>
+
       );
     }
   }
 });
 
 const styles = StyleSheet.create({
-  container:{
+  swipecontainer:{
     backgroundColor:"#fff",
     width:350,
     height: 450,
-    ...Platform.select({ios: {top: 129},android: {top: 69}})
   },
+  container:{
+    ...Platform.select({ios: {top: 100},android: {top: 69}})
+  },
+
 });
 
 

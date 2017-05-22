@@ -120,8 +120,6 @@ class CreateEvent extends Component {
 }
 
 
-
-
 class WithLabel extends React.Component {
   render() {
     return (
