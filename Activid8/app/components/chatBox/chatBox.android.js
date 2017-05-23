@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableHighlight,
   TextInput,
+  KeyboardAvoidingView,
   } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
 import getMessages from "../../services/firebase/getMessages";
@@ -21,14 +22,15 @@ import {Actions} from "react-native-router-flux";
 var windowSize = Dimensions.get('window');
 
 class ChatBox extends Component {
-  	constructor(props){
-  		super(props);
+    constructor(props){
+      super(props);
       this.state = {
-        message: "",
-        messageList: [],
+        textObject: {},
+        textContent: "",
+        textList: [],
         user: {}
       };
-  	}
+    }
     componentWillMount(){
       getFirebaseSelf().then(
         (user)=>{
@@ -37,7 +39,7 @@ class ChatBox extends Component {
             (messages)=>{
               console.log(user.userID);
               this.setState({
-                messageList: messages
+                textList: messages
               });
             },
             (error)=>{
@@ -48,50 +50,71 @@ class ChatBox extends Component {
         (error)=>{
           console.log(error);
         });
-      console.log(this.state);
     }
 
     onSendPress(){
-      console.log(this.state.messageList);
-      var textObj = {};
-      var text = this.state.message;
-      var textArr = this.state.messageList;
-      textArr.push(this.state.user.name + ": " + text);
-      this.setState({messageList: textArr});
-      textObj.messages = textArr;
-      getUserID().then(
-        (userID)=>{
-          var eventRef = firebaseApp().database().ref("Events/" + userID);
-          eventRef.update(textObj).then(
-            (val) => {
-              console.log("Successfully sent the message");
-            },
-            (err) => {
-              console.log(err);
-              reject(err);
+      if(this.state.message !== undefined && this.state.message !== ""){
+        console.log(this.state.message);
+        var updateObject = {};
+        var textObject = {};
+        var date = new Date();
+        textObject.userID = this.state.user.userID;
+        textObject.name = this.state.user.name;
+        textObject.message = this.state.message;
+        textObject.time = date.toString();
+        var textArr = this.state.textList;
+        textArr.push(textObject);
+        this.setState({
+          textList: textArr,
+          message: ""});
+        updateObject.messages = textArr;
+        getUserID().then(
+          (userID)=>{
+            var eventRef = firebaseApp().database().ref("Events/" + userID);
+            eventRef.update(updateObject).then(
+              (val) => {
+                console.log("Successfully sent the message");
+              },
+              (err) => {
+                console.log(err);
+                reject(err);
             });
         })
-      this.setState({message: ''});
+      }
     }
 
     onBackPress(){
       Actions.pop();
     }
 
-  	render(){
-      var list = this.state.messageList.map((item, index) => {
-        console.log(item);
-        return (
-          <View
-            style={styles.messageContainer}
-            key={index}
-            >
-            <Text style={styles.messageLabel}> : {item}</Text>
-          </View>
-        );
+    render(){
+      var list = this.state.textList.map((item, index) => {
+        if(item.userID === this.state.user.userID){
+          return (
+            <View
+              style={styles.messageContainerSelf}
+              key={index}
+              >
+              <Text style={styles.textSelf}> {item.message}</Text>
+              <Text style={styles.textTime}> {item.time}</Text>
+            </View>
+          );          
+        }
+        else{
+          return (
+            <View
+              style={styles.messageContainerOther}
+              key={index}
+              >
+              <Text style={styles.textOther}> {item.message}</Text>
+              <Text style={styles.textTime}> {item.time}</Text>
+            </View>
+          ); 
+        }
+
       });
 
-  		return(
+      return(
         <View style={styles.container}>
           <View style={styles.topContainer}>
             <TouchableHighlight
@@ -99,11 +122,15 @@ class ChatBox extends Component {
               onPress={this.onBackPress}
               style={{marginLeft: 15}}
               >
-              <Text style={{color: '#fff'}}>&lt; Back</Text>
+              <View>
+                <Text style={{color: '#fff', fontSize: 30}}>&larr; </Text>
+              </View>
             </TouchableHighlight>
+            <Text style={styles.guestName}> {this.props.guestObj.name}</Text>
           </View>
           <View style={styles.chatContainer}>
             <ScrollView
+              style={{flex:1}}
               ref={(c) => this._scrollView = c}
               onScroll={this.handleScroll}
               scrollEventThrottle={16}
@@ -113,13 +140,15 @@ class ChatBox extends Component {
             </ScrollView>
           </View>
           <View style={styles.inputContainer}>
-            <View style={styles.textContainer}>
+            <KeyboardAvoidingView
+              style={styles.textContainer}>
               <TextInput
                 style={styles.input}
                 value={this.state.message}
+                multiline={true}
                 onChangeText={(text) => this.setState({message: text})}
                 />
-            </View>
+            </KeyboardAvoidingView>
             <View style={styles.sendContainer}>
               <TouchableHighlight
                 underlayColor={'#4e4273'}
@@ -130,8 +159,8 @@ class ChatBox extends Component {
             </View>
           </View>
         </View>
-  		);
-  	}
+      );
+    }
 }
 
 export default ChatBox;
@@ -144,13 +173,31 @@ var styles = StyleSheet.create({
       alignItems: 'stretch',
       backgroundColor: '#ffffff'
     },
+    textSelf:{
+      color: 'white',
+      fontSize: 15,
+    },
+    textOther:{
+      color: 'white',
+      fontSize: 15,
+    },
+    textTime:{
+      fontSize: 8,
+    },
     topContainer: {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
       backgroundColor: '#70C1B3',
-      paddingTop: 20,
+      paddingTop: 5,
+      marginBottom: 10,
+    },
+    guestName:{
+      color: '#ffffff',
+      fontWeight: '300',
+      fontSize: 15,
+      paddingLeft: 30,
     },
     chatContainer: {
       flex: 11,
@@ -189,9 +236,36 @@ var styles = StyleSheet.create({
       alignSelf: 'center',
       backgroundColor: '#ffffff'
     },
-    messageContainer:{
-      margin: 10,
+    messageContainerSelf:{
+      marginTop: 2,
+      marginBottom: 8,
+      marginLeft: 10,
+      marginRight: 10,
       paddingTop: 5,
-      paddingBottom: 5
+      paddingBottom: 5,
+      paddingLeft: 13,
+      paddingRight: 13,
+
+      width: windowSize.width - (windowSize.width * .25),
+      alignSelf: 'flex-end',
+      justifyContent: 'center',
+      backgroundColor: '#70C1B3',
+      borderRadius: 5,
+    },
+    messageContainerOther:{
+      marginTop: 2,
+      marginBottom: 8,
+      marginLeft: 10,
+      marginRight: 10,
+      paddingTop: 5,
+      paddingBottom: 5,
+      paddingLeft: 13,
+      paddingRight: 13,
+
+      width: windowSize.width - (windowSize.width * .25),
+      alignSelf: 'flex-start',
+      justifyContent: 'center',
+      backgroundColor: '#277F72',
+      borderRadius: 5,
     }
   });

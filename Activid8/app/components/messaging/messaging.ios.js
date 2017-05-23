@@ -69,8 +69,8 @@ class Messages extends Component {
               renderRow={(rowData) =>
                 <TouchableHighlight onPress={() => this.onMessagePress(rowData)}>
                   <View style={styles.listItem}>
-                    <View style={styles.listIcon}>
-                      <Image style={styles.channelIcon} source={{uri: rowData.picture}} />
+                    <View>
+                      <Image style={styles.listPicture} source={{uri: rowData.picture}} />
                     </View>
                     <View style={styles.listInfo}>
                       <Text style={styles.titleLabel}>{rowData.name}</Text>
@@ -109,32 +109,29 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f7f8fc',
-    borderBottomWidth: 0.5,
+    backgroundColor: '#70C1B3',
+    borderWidth: 1.0,
     borderColor: '#D0DBE4',
     padding: 5
   },
-  listIcon: {
+  listPicture: {
     justifyContent: 'flex-start',
+    margin: 5,
+    marginLeft: 15,
+    borderRadius: 15,
     paddingLeft: 10,
-    paddingRight: 15
-  },
-  channelIcon: {
-    width: 30,
-    height: 30
+    paddingRight: 15,
+    width: 50,
+    height: 50,
   },
   listInfo: {
     flex: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   titleLabel: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#60768b',
+    fontWeight: '200',
+    color: '#ffffff',
+    marginLeft: 20,
   },
-  memberLabel: {
-    fontSize: 13,
-    fontWeight: '400',
-    color: '#abb8c4',
-  }
 });
