@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableHighlight,
   TextInput,
+  KeyboardAvoidingView,
   } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
 import getMessages from "../../services/firebase/getMessages";
@@ -54,8 +55,11 @@ class ChatBox extends Component {
     onSendPress(){
       var updateObject = {};
       var textObject = this.state.textObject;
+      var date = new Date();
+      textObject.userID = this.state.user.userID;
       textObject.name = this.state.user.name;
       textObject.message = this.state.textContent;
+      textObject.time = date.toString();
       var textArr = this.state.textList;
       textArr.push(textObject);
       this.setState({textList: textArr});
@@ -82,14 +86,27 @@ class ChatBox extends Component {
     render(){
       var list = this.state.textList.map((item, index) => {
         console.log(item);
-        return (
-          <View
-            style={styles.messageContainerSelf}
-            key={index}
-            >
-            <Text style={styles.textSelf}> {item.message}</Text>
-          </View>
-        );
+        if(item.userID === this.state.user.userID){
+          return (
+            <View
+              style={styles.messageContainerSelf}
+              key={index}
+              >
+              <Text style={styles.textSelf}> {item.message}</Text>
+            </View>
+          );          
+        }
+        else{
+          return (
+            <View
+              style={styles.messageContainerOther}
+              key={index}
+              >
+              <Text style={styles.textSelf}> {item.message}</Text>
+            </View>
+          ); 
+        }
+
       });
 
       return(
@@ -100,8 +117,13 @@ class ChatBox extends Component {
               onPress={this.onBackPress}
               style={{marginLeft: 15}}
               >
-              <Text style={{color: '#fff'}}>&lt; Back</Text>
+              <View>
+                <Text style={{color: '#fff'}}>&lt; Back</Text>
+              </View>
             </TouchableHighlight>
+            <View>
+              <Text style={styles.guestName}> {this.props.guestObj.name}</Text>
+            </View>
           </View>
           <View style={styles.chatContainer}>
             <ScrollView
@@ -114,13 +136,14 @@ class ChatBox extends Component {
             </ScrollView>
           </View>
           <View style={styles.inputContainer}>
-            <View style={styles.textContainer}>
+            <KeyboardAvoidingView
+              style={styles.textContainer}>
               <TextInput
                 style={styles.input}
                 value={this.state.message}
                 onChangeText={(text) => this.setState({textContent: text})}
                 />
-            </View>
+            </KeyboardAvoidingView>
             <View style={styles.sendContainer}>
               <TouchableHighlight
                 underlayColor={'#4e4273'}
@@ -146,10 +169,10 @@ var styles = StyleSheet.create({
       backgroundColor: '#ffffff'
     },
     textSelf:{
-      textAlign: 'right',
+      color: 'white',
     },
     textOther:{
-      textAlign: 'left',
+      color: 'black',
     },
     topContainer: {
       flex: 1,
@@ -159,6 +182,11 @@ var styles = StyleSheet.create({
       backgroundColor: '#70C1B3',
       paddingTop: 13,
       marginBottom: 10,
+    },
+    guestName:{
+      color: '#ffffff',
+      fontWeight: '300',
+      fontSize: 20,
     },
     chatContainer: {
       flex: 11,
@@ -198,7 +226,10 @@ var styles = StyleSheet.create({
       backgroundColor: '#ffffff'
     },
     messageContainerSelf:{
-      margin: 10,
+      marginTop: 2,
+      marginBottom: 2,
+      marginLeft: 10,
+      marginRight: 10,
       paddingTop: 5,
       paddingBottom: 5,
       paddingLeft: 13,
@@ -208,6 +239,22 @@ var styles = StyleSheet.create({
       alignSelf: 'flex-end',
       justifyContent: 'center',
       backgroundColor: '#70C1B3',
-      borderRadius: 10,
+      borderRadius: 5,
+    },
+    messageContainerOther:{
+      marginTop: 2,
+      marginBottom: 2,
+      marginLeft: 10,
+      marginRight: 10,
+      paddingTop: 5,
+      paddingBottom: 5,
+      paddingLeft: 13,
+      paddingRight: 13,
+
+      width: windowSize.width - (windowSize.width * .25),
+      alignSelf: 'flex-start',
+      justifyContent: 'center',
+      backgroundColor: '#277F72',
+      borderRadius: 5,
     }
   });
