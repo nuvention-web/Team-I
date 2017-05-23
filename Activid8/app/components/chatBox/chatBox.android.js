@@ -53,31 +53,34 @@ class ChatBox extends Component {
     }
 
     onSendPress(){
-      var updateObject = {};
-      var textObject = {};
-      var date = new Date();
-      textObject.userID = this.state.user.userID;
-      textObject.name = this.state.user.name;
-      textObject.message = this.state.message;
-      textObject.time = date.toString();
-      var textArr = this.state.textList;
-      textArr.push(textObject);
-      this.setState({
-        textList: textArr,
-        message: ""});
-      updateObject.messages = textArr;
-      getUserID().then(
-        (userID)=>{
-          var eventRef = firebaseApp().database().ref("Events/" + userID);
-          eventRef.update(updateObject).then(
-            (val) => {
-              console.log("Successfully sent the message");
-            },
-            (err) => {
-              console.log(err);
-              reject(err);
+      if(this.state.message !== undefined && this.state.message !== ""){
+        console.log(this.state.message);
+        var updateObject = {};
+        var textObject = {};
+        var date = new Date();
+        textObject.userID = this.state.user.userID;
+        textObject.name = this.state.user.name;
+        textObject.message = this.state.message;
+        textObject.time = date.toString();
+        var textArr = this.state.textList;
+        textArr.push(textObject);
+        this.setState({
+          textList: textArr,
+          message: ""});
+        updateObject.messages = textArr;
+        getUserID().then(
+          (userID)=>{
+            var eventRef = firebaseApp().database().ref("Events/" + userID);
+            eventRef.update(updateObject).then(
+              (val) => {
+                console.log("Successfully sent the message");
+              },
+              (err) => {
+                console.log(err);
+                reject(err);
             });
         })
+      }
     }
 
     onBackPress(){
