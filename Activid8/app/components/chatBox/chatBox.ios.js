@@ -54,15 +54,17 @@ class ChatBox extends Component {
 
     onSendPress(){
       var updateObject = {};
-      var textObject = this.state.textObject;
+      var textObject = {};
       var date = new Date();
       textObject.userID = this.state.user.userID;
       textObject.name = this.state.user.name;
-      textObject.message = this.state.textContent;
+      textObject.message = this.state.message;
       textObject.time = date.toString();
       var textArr = this.state.textList;
       textArr.push(textObject);
-      this.setState({textList: textArr});
+      this.setState({
+        textList: textArr,
+        message: ""});
       updateObject.messages = textArr;
       getUserID().then(
         (userID)=>{
@@ -76,7 +78,6 @@ class ChatBox extends Component {
               reject(err);
             });
         })
-      this.setState({message: {}});
     }
 
     onBackPress(){
@@ -85,7 +86,6 @@ class ChatBox extends Component {
 
     render(){
       var list = this.state.textList.map((item, index) => {
-        console.log(item);
         if(item.userID === this.state.user.userID){
           return (
             <View
@@ -93,6 +93,7 @@ class ChatBox extends Component {
               key={index}
               >
               <Text style={styles.textSelf}> {item.message}</Text>
+              <Text style={styles.textTime}> {item.time}</Text>
             </View>
           );          
         }
@@ -102,7 +103,8 @@ class ChatBox extends Component {
               style={styles.messageContainerOther}
               key={index}
               >
-              <Text style={styles.textSelf}> {item.message}</Text>
+              <Text style={styles.textOther}> {item.message}</Text>
+              <Text style={styles.textTime}> {item.time}</Text>
             </View>
           ); 
         }
@@ -118,15 +120,14 @@ class ChatBox extends Component {
               style={{marginLeft: 15}}
               >
               <View>
-                <Text style={{color: '#fff'}}>&lt; Back</Text>
+                <Text style={{color: '#fff', fontSize: 30}}>&larr; </Text>
               </View>
             </TouchableHighlight>
-            <View>
-              <Text style={styles.guestName}> {this.props.guestObj.name}</Text>
-            </View>
+            <Text style={styles.guestName}> {this.props.guestObj.name}</Text>
           </View>
           <View style={styles.chatContainer}>
             <ScrollView
+              style={{flex:1}}
               ref={(c) => this._scrollView = c}
               onScroll={this.handleScroll}
               scrollEventThrottle={16}
@@ -141,7 +142,8 @@ class ChatBox extends Component {
               <TextInput
                 style={styles.input}
                 value={this.state.message}
-                onChangeText={(text) => this.setState({textContent: text})}
+                multiline={true}
+                onChangeText={(text) => this.setState({message: text})}
                 />
             </KeyboardAvoidingView>
             <View style={styles.sendContainer}>
@@ -170,9 +172,14 @@ var styles = StyleSheet.create({
     },
     textSelf:{
       color: 'white',
+      fontSize: 15,
     },
     textOther:{
-      color: 'black',
+      color: 'white',
+      fontSize: 15,
+    },
+    textTime:{
+      fontSize: 8,
     },
     topContainer: {
       flex: 1,
@@ -180,13 +187,14 @@ var styles = StyleSheet.create({
       justifyContent: 'flex-start',
       alignItems: 'center',
       backgroundColor: '#70C1B3',
-      paddingTop: 13,
+      paddingTop: 5,
       marginBottom: 10,
     },
     guestName:{
       color: '#ffffff',
       fontWeight: '300',
-      fontSize: 20,
+      fontSize: 15,
+      paddingLeft: 30,
     },
     chatContainer: {
       flex: 11,
@@ -227,7 +235,7 @@ var styles = StyleSheet.create({
     },
     messageContainerSelf:{
       marginTop: 2,
-      marginBottom: 2,
+      marginBottom: 8,
       marginLeft: 10,
       marginRight: 10,
       paddingTop: 5,
@@ -243,7 +251,7 @@ var styles = StyleSheet.create({
     },
     messageContainerOther:{
       marginTop: 2,
-      marginBottom: 2,
+      marginBottom: 8,
       marginLeft: 10,
       marginRight: 10,
       paddingTop: 5,
