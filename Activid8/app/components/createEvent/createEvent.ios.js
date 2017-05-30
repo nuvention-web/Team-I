@@ -1,7 +1,8 @@
 // app/components/CreateEvent.ios.js
 
 import React, { Component, PropTypes } from "react";
-import { View, Alert, Text, StyleSheet, Button, DatePickerIOS, TextInput, Platform} from "react-native";
+import { View, Alert, Text, StyleSheet, DatePickerIOS, TextInput, Platform} from "react-native";
+import Button from "react-native-button";
 import sendEvent from "../../services/firebase/sendEvent";
 import {Actions} from "react-native-router-flux";
 
@@ -103,17 +104,27 @@ class CreateEvent extends Component {
           timeZoneOffsetInMinutes={this.state.timeZoneOffsetInHours * 60}
           onDateChange={this.onDateChange}
         />
+
         <Button
+          containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
+          style={{fontSize: 14, color: "white"}}
           onPress={this.onButtonPress}
           title="Create Event"
           accessibilityLabel="Create Event"
-        />
+        >
+        Create Event
+        </Button>
 
         <Button
+          containerStyle={{marginRight: 20, marginTop:20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
+          style={{fontSize: 14, color: "white"}}
           onPress={()=>{Actions.pop();}}
           title="Go Back"
           accessibilityLabel="Go Back"
-        />
+        >
+        Go Back
+        </Button>
+
       </View>
     );
   }
@@ -172,7 +183,9 @@ var styles = StyleSheet.create({
     paddingVertical: 2,
   },
   label: {
-    fontWeight: '500',
+    // fontWeight: '500',
+    fontSize: 16,
+    paddingLeft: 20,
   },
   headingContainer: {
     paddingVertical: 6
