@@ -43,7 +43,6 @@ class Messages extends Component {
           this.setState({refreshing: false});
         }
       );
-      
     }
     onMessagePress(guest){
       Actions.chatBox({guestObj: guest});
@@ -57,6 +56,13 @@ class Messages extends Component {
       if(this.state.refreshing){
         return(
           <View style={{marginTop: 89}}><Text>Loading...</Text></View>
+        )
+      }
+      if(this.state.guestList.length === 0){
+        return(
+        <View style={styles.container}>
+          <Text style={{margin: 5}}>You currently do not have anyone you have matched with.</Text>
+        </View>
         )
       }
 

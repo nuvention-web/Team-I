@@ -12,8 +12,8 @@ export default function getFirebaseSelf () {
       var userRef = firebaseApp().database().ref("Users/"+userID);
       userRef.on("value", function(snapshot) {
         var exists = (snapshot.val().matched_users !== null);
+        var guestList = [];
         if (exists) {
-          var guestList = [];
           for(var i in snapshot.val().matched_users){
             getFirebaseUser(snapshot.val().matched_users[i]).then(
               (guest)=>{
@@ -25,8 +25,8 @@ export default function getFirebaseSelf () {
               }
             );
           }
-          resolve(guestList);
         }
+        resolve(guestList);
       }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
       });
