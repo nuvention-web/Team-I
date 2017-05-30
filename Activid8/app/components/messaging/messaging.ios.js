@@ -20,7 +20,6 @@ class Messages extends Component {
     this.setState({refreshing: true});
     getMatchedGuests().then(
       (guestList)=>{
-        console.log("HEre");
         this.setState({
           guestList: guestList,
           refreshing: false
