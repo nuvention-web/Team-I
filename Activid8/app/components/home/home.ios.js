@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {StyleSheet, Text, View, Image, ScrollView, Alert, Platform} from "react-native";
+import {StyleSheet, Text, View, Image, ScrollView, Alert, Platform, ActivityIndicator} from "react-native";
 import SwipeCards from "react-native-swipe-cards";
 import Card from "../card/card";
 import getEventCards from "../../services/firebase/getEventCards";
@@ -81,9 +81,14 @@ const Home = React.createClass({
     if(this.state.cardsLoading){
       return(
         <View style={styles.container}>
-          <Text>
-            loading cards...
+          <Text style={{color: "#70C1B3", fontSize: 20, textAlign: "center", marginTop: 60}}>
+            Loading Events
           </Text>
+          <ActivityIndicator
+          style={{marginTop: 80,}}
+          size="large"
+          color="#70C1B3"
+        />
         </View>
       );
     }

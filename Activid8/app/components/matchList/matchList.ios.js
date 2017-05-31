@@ -100,7 +100,7 @@ class MatchList extends Component {
                               <Text style={styles.leftRowBackText}>Remove</Text>
                           </TouchableHighlight>
                       </View>
-                      <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: data.userID});}}>
+                      <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: data.userID, match: true, message: false});}}>
                           <View style={styles.rowFront}>
                             <Image source={{uri: data.picture}} style={styles.listImage}/>
                             <View style={{paddingLeft: 5, justifyContent: "center"}}>

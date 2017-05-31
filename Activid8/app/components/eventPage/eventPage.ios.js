@@ -6,9 +6,9 @@ import {Actions} from "react-native-router-flux";
 import getGuests from "../../services/firebase/getGuests";
 import handlePressMatch from "../../services/firebase/handlePressMatch";
 import handlePressRemove from "../../services/firebase/handlePressRemove";
-
-import getFirebaseSelf from "../../services/firebase/getFirebaseSelf";
 import getEventSelf from "../../services/firebase/getEventSelf";
+import getFirebaseUser from "../../services/firebase/getFirebaseUser";
+
 
 class EventPage extends Component {
   constructor(props) {
@@ -16,39 +16,48 @@ class EventPage extends Component {
     this.state = {
       refreshing: false,
       eventObj: false,
+      matchObj: false,
     };
   }
 
   _onRefresh() {
     this.setState({refreshing: true});
-    getFirebaseSelf().then(
-      (usr)=>{
-        getEventSelf(usr.userID).then(
+    getEventSelf().then(
           (eventObj)=>{
             console.log(eventObj);
-            this.setState({eventObj: eventObj, refreshing: false});
+            if (typeof eventObj.accepted_guest !== "undefined"){
+              getFirebaseUser(eventObj.accepted_guest).then((matchObj)=>
+              {
+                this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false});
+              },
+              (err)=>{
+                console.log(err);
+                this.setState({eventObj: eventObj, refreshing: false});
+              });
+            }
+            else this.setState({eventObj: eventObj, refreshing: false});
           },
           (err)=>{
             console.log(err);
             this.setState({refreshing: false});
           });
-      },
-      (err)=>{
-        console.log(err);
-        this.setState({refreshing: false});
-      });
   }
 
   componentWillMount() {
-    getFirebaseSelf().then(
-      (usr)=>{
-        getEventSelf(usr.userID).then(
-          (eventObj)=>{
-            this.setState({eventObj: eventObj});
+    getEventSelf().then(
+      (eventObj)=>{
+        console.log(eventObj);
+        if (typeof eventObj.accepted_guest !== "undefined"){
+          getFirebaseUser(eventObj.accepted_guest).then((matchObj)=>
+          {
+            this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false});
           },
           (err)=>{
             console.log(err);
+            this.setState({eventObj: eventObj, refreshing: false});
           });
+        }
+        else this.setState({eventObj: eventObj, refreshing: false});
       },
       (err)=>{
         console.log(err);
@@ -59,7 +68,7 @@ class EventPage extends Component {
   render() {
     var temp;
 
-    if (this.state.eventObj === false) {
+    if (this.state.eventObj === false) { //NO EVENT
       temp = (
         <View>
           <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
@@ -79,11 +88,15 @@ class EventPage extends Component {
       );
     }
     else {
+      console.log("EVENT OBJ:");
+      console.log(this.state.eventObj);
 
-      var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
-      var matchCount = getNumberOfMatches(this.state.eventObj);
 
-      temp = (
+      if (typeof this.state.eventObj.accepted_guest === "undefined" && !this.state.matchObj){ //EVENT BUT NO ACCEPTED MATCH
+        var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+        var matchCount = getNumberOfMatches(this.state.eventObj);
+
+        temp = (
             <View>
             <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
                 You have {matchCount} potential matches. {"\n"} Swipe through them in the Match List!
@@ -115,7 +128,56 @@ class EventPage extends Component {
             </View>
           </View>
 
-      );
+        );
+      }
+      else { ///HAS AN ACCEPTED MATCH
+
+        var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+
+        temp = (
+            <View>
+            <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+                Congratulations you have accepted to go to this event with: {this.state.matchObj.name} {"\n"}
+                Message them now!
+            </Text>
+            <View style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+                <TouchableHighlight
+                  onPress={()=>{Actions.matchProfile({userID: this.state.eventObj.accepted_guest, match: false, message: true});}}
+                  activeOpacity={0.001}
+                  underlayColor="white">
+                  <Image style={styles.matchpicture} source={{uri: this.state.matchObj.picture}} />
+                </TouchableHighlight>
+            </View>
+            <Text style={styles.title}> Event Name: </Text>
+            <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
+            <Text style={styles.title}> Event Location: </Text>
+            <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
+            <Text style={styles.title}> Event Date: </Text>
+            <Text style={styles.subtitle}> {eventDate} </Text>
+            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+              <Button
+                  containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                  style={{fontSize: 14, color: "white"}}
+                  onPress={()=>{Actions.editEvent({eventObj: this.state.eventObj});}}
+                  accessibilityLabel="Go Back"
+                >
+                  Edit Event
+              </Button>
+              <Button
+                  containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                  style={{fontSize: 14, color: "white"}}
+                  onPress={()=>{Actions.matchProfile({userID: this.state.eventObj.accepted_guest, match: false, message: true});}}
+                  title={this.state.matchObj.name}
+                  accessibilityLabel="Your Match"
+                >
+                {this.state.matchObj.name}
+              </Button>
+            </View>
+          </View>);
+      }
     }
 
 
@@ -197,9 +259,16 @@ const styles = StyleSheet.create({
     color: "#70C1B3",
     marginLeft: 20
   },
+  matchpicture: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
+    borderRadius: 40,
+    width: 80,
+    height: 80,
+  },
   subtitle:{
     fontSize: 18,
-    // marginTop: 20,
     color: "#000",
     marginLeft: 40
   },
