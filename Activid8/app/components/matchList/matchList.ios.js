@@ -170,6 +170,14 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 18
   },
+  listImage: {
+    justifyContent: "flex-start",
+    marginLeft: 15,
+    marginRight: 10,
+    borderRadius: 25,
+    width: 50,
+    height: 50,
+  },
   viewContainer: {
     backgroundColor: "#fff",
     ...Platform.select({ios: {top: 100},android: {top: 119}}),
