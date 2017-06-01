@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import {
-  StyleSheet, 
-  Text, 
-  View, 
-  Image, 
-  Button, 
-  ScrollView, 
-  Alert, 
-  Platform, 
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  Alert,
+  Platform,
   ListView,
   TouchableHighlight
 } from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
+import Button from "react-native-button";
 import getEventSelf from "../../services/firebase/getEventSelf";
 import getMatchedGuests from "../../services/firebase/getMatchedGuests";
 import getFirebaseUser from "../../services/firebase/getFirebaseUser";
@@ -61,7 +61,15 @@ class Messages extends Component {
       if(this.state.guestList.length === 0){
         return(
         <View style={styles.container}>
-          <Text style={{margin: 5}}>You currently do not have anyone you have matched with.</Text>
+          <Text style={{margin: 5, textAlign: "center", fontSize: 20, color: "#70C1B3"}}>Matches will appear here.{"\n"} Start Swiping to get some matches now!</Text>
+          <Button
+              containerStyle={{marginRight: 20, marginLeft: 20, marginTop: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={()=>{Actions.home();}}
+              accessibilityLabel="Back"
+            >
+            Home
+          </Button>
         </View>
         )
       }
@@ -89,7 +97,7 @@ class Messages extends Component {
             />
           </View>
         </View>
-        );      
+        );
       }
     }
 }
