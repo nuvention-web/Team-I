@@ -1,13 +1,19 @@
 import React, {Component} from "react";
+<<<<<<< HEAD
 import {StyleSheet, Text, View, Image, ScrollView, Alert, Platform, ListView, TouchableHighlight} from "react-native";
 import firebaseApp from "../../services/firebase/firebaseService";
 import Button from "react-native-button";
 import getEventSelf from "../../services/firebase/getEventSelf";
+=======
+import {StyleSheet, Text, View, Image, Platform, ListView, TouchableHighlight} from "react-native";
+import Button from "react-native-button";
+import firebaseApp from "../../services/firebase/firebaseService";
+>>>>>>> 95f4af415bb2dbd8038764687f4a6986242835e3
 import getMatchedGuests from "../../services/firebase/getMatchedGuests";
-import getFirebaseUser from "../../services/firebase/getFirebaseUser";
 import {Actions} from "react-native-router-flux";
 
 var PULLDOWN_DISTANCE = 40;
+
 class Messages extends Component {
   constructor(props){
     super(props);
@@ -50,6 +56,7 @@ class Messages extends Component {
     if(this.state.guestList.length === 0){
       return(
       <View style={styles.container}>
+<<<<<<< HEAD
         <Text style={{margin: 5, textAlign: "center", fontSize: 20, color: "#70C1B3"}}>Matches will appear here.{"\n"} Start Swiping to get some matches now!</Text>
         <Button
             containerStyle={{marginRight: 20, marginLeft: 20, marginTop: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
@@ -61,6 +68,20 @@ class Messages extends Component {
         </Button>
       </View>
     );
+=======
+        <Text style={{margin: 20, fontSize: 20, color: "#70C1B3", textAlign: "center"}}>You are not currently matched for an event.</Text>
+        <Button
+          containerStyle={{marginRight: 20, marginTop:20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
+          style={{fontSize: 14, color: "white"}}
+          onPress={()=>{Actions.home();}}
+          title="Discover Events"
+          accessibilityLabel="Discover Events"
+        >
+        Discover Events Now!
+        </Button>
+      </View>
+      );
+>>>>>>> 95f4af415bb2dbd8038764687f4a6986242835e3
     }
 
     else {
@@ -74,10 +95,17 @@ class Messages extends Component {
                 <View style={styles.listItem}>
                   <View>
                     <Image style={styles.listPicture} source={{uri: rowData.picture}} />
+<<<<<<< HEAD
                   </View>
                   <View style={styles.listInfo}>
                     <Text style={styles.titleLabel}>{rowData.name}</Text>
                   </View>
+=======
+                  </View>
+                  <View style={styles.listInfo}>
+                    <Text style={styles.titleLabel}>{rowData.name}</Text>
+                  </View>
+>>>>>>> 95f4af415bb2dbd8038764687f4a6986242835e3
                 </View>
               </TouchableHighlight>
             }

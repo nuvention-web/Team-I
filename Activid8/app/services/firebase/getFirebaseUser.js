@@ -8,7 +8,6 @@ export default function getFirebaseUser (userID) {
     userRef.on("value", function(snapshot) {
       var exists = (snapshot.val() !== null);
       if (exists) {
-        // console.log(snapshot.val());
         resolve(snapshot.val());
       }
       else {

@@ -8,8 +8,6 @@ import Login from "../login/login";
 import getFirebaseUser from "../../services/firebase/getFirebaseUser";
 import handlePressMatch from "../../services/firebase/handlePressMatch";
 
-
-
 class matchProfile extends Component {
 
   constructor(props) {
@@ -61,6 +59,30 @@ class matchProfile extends Component {
 
 
   render() {
+    var match, message;
+    if (this.props.match){
+      match = (
+         <Button
+            containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+            style={{fontSize: 14, color: "white"}}
+            onPress={() => {this.pressMatch(this.state.userObj.userID);}}
+            accessibilityLabel="Match"
+          >
+            Match with {this.state.userObj.name}
+        </Button>);
+    }
+    if (this.props.message){
+      message = (
+         <Button
+            containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+            style={{fontSize: 14, color: "white"}}
+            onPress={() => {Actions.messaging();}}
+            accessibilityLabel="Message"
+          >
+            Message {this.state.userObj.name} now!
+        </Button>);
+    }
+
 
     return (
       <ScrollView
@@ -87,14 +109,8 @@ class matchProfile extends Component {
               >
                 Back
             </Button>
-            <Button
-                containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-                style={{fontSize: 14, color: "white"}}
-                onPress={() => {this.pressMatch(this.state.userObj.userID);}}
-                accessibilityLabel="Match"
-              >
-                Match with {this.state.userObj.name}
-            </Button>
+            {match}
+            {message}
           </View>
      </ScrollView>
     );
@@ -106,6 +122,8 @@ export default matchProfile;
 
 matchProfile.propTypes = {
   userID: React.PropTypes.string.isRequired,
+  match: React.PropTypes.bool.isRequired,
+  message: React.PropTypes.bool.isRequired,
 };
 
 const styles = StyleSheet.create({
