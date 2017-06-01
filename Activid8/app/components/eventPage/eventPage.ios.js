@@ -91,62 +91,57 @@ class EventPage extends Component {
       console.log("EVENT OBJ:");
       console.log(this.state.eventObj);
 
-      var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
-      var matchCount = getNumberOfMatches(this.state.eventObj);
-      var matchButton;
-      var matchText = (
-        <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
-        You have no potential matches yet. {"\n"}Check by in a little time!
-        </Text>
-      );
-
       if (typeof this.state.eventObj.accepted_guest === "undefined" && !this.state.matchObj){ //EVENT BUT NO ACCEPTED MATCH
         var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
         var matchCount = getNumberOfMatches(this.state.eventObj);
+        var matchButton;
+        var matchText = (
+          <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+          You have no potential matches yet. {"\n"}Check by in a little time!
+          </Text>
+        );
+
+        if(matchCount > 0){
+          matchButton = (
+            <Button
+              containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
+              title={this.state.eventObj.eventName}
+              accessibilityLabel="Got to my Event"
+            >
+              Match List ({matchCount})!
+            </Button>);
+
+          matchText = (
+              <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+              You have {matchCount} potential matches. {"\n"} Swipe through them in the Match List!
+              </Text>
+            );
+        }
 
         temp = (
-      if(matchCount > 0){
-        matchButton = (
-          <Button
-            containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-            style={{fontSize: 14, color: "white"}}
-            onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
-            title={this.state.eventObj.eventName}
-            accessibilityLabel="Got to my Event"
-          >
-            Match List ({matchCount})!
-          </Button>);
-
-        matchText = (
-            <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
-            You have {matchCount} potential matches. {"\n"} Swipe through them in the Match List!
-            </Text>
-          );
-      }
-
-      temp = (
-            <View>
-            {matchText}
-            <Text style={styles.title}> Event Name: </Text>
-            <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
-            <Text style={styles.title}> Event Location: </Text>
-            <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
-            <Text style={styles.title}> Event Date: </Text>
-            <Text style={styles.subtitle}> {eventDate} </Text>
-            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
-              <Button
-                  containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-                  style={{fontSize: 14, color: "white"}}
-                  onPress={()=>{Actions.editEvent({eventObj: this.state.eventObj});}}
-                  accessibilityLabel="Go Back"
-                >
-                  Edit Event
-              </Button>
-              {matchButton}
+              <View>
+              {matchText}
+              <Text style={styles.title}> Event Name: </Text>
+              <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
+              <Text style={styles.title}> Event Location: </Text>
+              <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
+              <Text style={styles.title}> Event Date: </Text>
+              <Text style={styles.subtitle}> {eventDate} </Text>
+              <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                <Button
+                    containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                    style={{fontSize: 14, color: "white"}}
+                    onPress={()=>{Actions.editEvent({eventObj: this.state.eventObj});}}
+                    accessibilityLabel="Go Back"
+                  >
+                    Edit Event
+                </Button>
+                {matchButton}
+              </View>
             </View>
-          </View>
-
-        );
+          );
       }
       else { ///HAS AN ACCEPTED MATCH
 
