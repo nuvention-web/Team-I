@@ -101,6 +101,9 @@ class Profile extends Component {
           <View style={{justifyContent: "center", alignItems: "center"}}>
             <Image source={{uri: this.state.userObj.picture}} style={styles.mainImage}/>
           </View>
+          <View style={{flex: 1, flexDirection: "row", justifyContent:"center", marginTop: 20}}>
+            <Login />
+          </View>
           <Text style={styles.name}>{this.state.userObj.name}, <Text style={styles.age}>{this.state.userObj.age}</Text></Text>
           <Text style={styles.title}>Bio: </Text>
           <Text style={styles.bio}> {this.state.userObj.bio}</Text>
@@ -115,9 +118,7 @@ class Profile extends Component {
             </Button>
             {temp}
           </View>
-          <View style={{flex: 1, flexDirection: "row", justifyContent:"center", marginTop: 20}}>
-            <Login />
-          </View>
+          
      </ScrollView>
     );
   }
