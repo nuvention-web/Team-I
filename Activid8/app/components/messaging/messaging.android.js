@@ -19,12 +19,12 @@ class Messages extends Component {
   componentWillMount(){
     this.setState({refreshing: true});
     getMatchedGuests().then(
-      (guestList)=>{
+      (chatList)=>{
         this.setState({
-          guestList: guestList,
+          chatList: chatList,
           refreshing: false
         });
-        console.log(this.state.guestList);
+        console.log(this.state.chatList);
       },
       (err)=>{
         console.log(err);
@@ -33,7 +33,11 @@ class Messages extends Component {
     );
   }
   onMessagePress(guest){
-    Actions.chatBox({guestObj: guest});
+    console.log(guest);
+    Actions.chatBox({
+      guestObj: guest
+
+    });
   }
   
   render(){
@@ -42,7 +46,7 @@ class Messages extends Component {
         <View style={{marginTop: 89}}><Text>Loading...</Text></View>
       );
     }
-    if(this.state.guestList.length === 0){
+    if(this.state.chatList.length === 0){
       return(
       <View style={styles.container}>
         <Text style={{margin: 20, fontSize: 20, color: "#70C1B3", textAlign: "center"}}>You are not currently matched for an event.</Text>
@@ -64,7 +68,7 @@ class Messages extends Component {
       <View style={styles.container}>
         <View style={styles.listContainer}>
           <ListView
-            dataSource={this.ds.cloneWithRows(this.state.guestList)}
+            dataSource={this.ds.cloneWithRows(this.state.chatList)}
             renderRow={(rowData) =>
               <TouchableHighlight onPress={() => this.onMessagePress(rowData)}>
                 <View style={styles.listItem}>
