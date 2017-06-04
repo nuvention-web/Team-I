@@ -35,8 +35,7 @@ class Messages extends Component {
   onMessagePress(guest){
     console.log(guest);
     Actions.chatBox({
-      guestObj: guest
-
+      guest: guest
     });
   }
   

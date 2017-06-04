@@ -2,10 +2,10 @@ import getUserID from "../facebook/getUserID";
 import firebaseApp from "./firebaseService";
 
 //Gets the users event if they have one
-export default function getMessageSelf (eventID) {
+export default function getMessages (chatID) {
   return new Promise(function(resolve, reject) {
-    var userRef = firebaseApp().database().ref("Events/"+eventID);
-    userRef.on("value", function(snapshot) {
+    var chatRef = firebaseApp().database().ref("Chats/"+chatID);
+    chatRef.on("value", function(snapshot) {
       var exists = (snapshot.val().messages !== undefined);
       
       if (exists) {

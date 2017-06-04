@@ -79,7 +79,7 @@ class MatchList extends Component {
   }
 
   render() {
-  		return (
+      return (
       <View style = {styles.viewContainer}>
       <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
 

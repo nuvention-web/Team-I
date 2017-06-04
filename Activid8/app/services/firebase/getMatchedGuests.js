@@ -17,9 +17,7 @@ export default function getMatchedGuests () {
     	// key: the name of the object key
     	// index: the ordinal position of the key within the object 
     		var obj = u_self.matched_users[key];
-    		console.log(obj.chatID);
-    		console.log(obj.userID);
-    		getFirebaseUser(matchInfo).then(
+    		getFirebaseUser(obj.userID).then(
             (guest)=>{
               guest.chatID = obj.chatID;
               guest.userID = obj.userID;

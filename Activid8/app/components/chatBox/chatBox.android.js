@@ -33,23 +33,25 @@ class ChatBox extends Component {
     }
     componentWillMount(){
       getFirebaseSelf().then(
-        (user)=>{
-          this.setState({user: user});
-          getMessages(user.userID).then(
-            (messages)=>{
-              console.log(user.userID);
-              this.setState({
-                textList: messages
-              });
-            },
-            (error)=>{
-              console.log(error);
-            }
-          );
+        (self)=>{
+          this.setState({
+            user: self
+          });
         },
         (error)=>{
           console.log(error);
-        });
+        }
+      );
+      getMessages(this.props.guest.chatID).then(
+        (messages)=>{
+          this.setState({
+            textList: messages
+          });
+        },
+        (error)=>{
+          console.log(error);
+        }
+      );
     }
 
     onSendPress(){
@@ -68,18 +70,15 @@ class ChatBox extends Component {
           textList: textArr,
           message: ""});
         updateObject.messages = textArr;
-        getUserID().then(
-          (userID)=>{
-            var eventRef = firebaseApp().database().ref("Events/" + userID);
-            eventRef.update(updateObject).then(
-              (val) => {
-                console.log("Successfully sent the message");
-              },
-              (err) => {
-                console.log(err);
-                reject(err);
-            });
-        })
+        var chatRef = firebaseApp().database().ref("Chats/" + this.props.guest.chatID);
+        chatRef.update(updateObject).then(
+          (val) => {
+            console.log("Successfully sent the message");
+          },
+          (err) => {
+            console.log(err);
+            reject(err);
+        });
       }
     }
 
@@ -126,7 +125,7 @@ class ChatBox extends Component {
                 <Text style={{color: '#fff', fontSize: 30}}>&larr; </Text>
               </View>
             </TouchableHighlight>
-            <Text style={styles.guestName}> {this.props.guestObj.name}</Text>
+            <Text style={styles.guestName}> {this.props.guest.name}</Text>
           </View>
           <View style={styles.chatContainer}>
             <ScrollView
