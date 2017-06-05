@@ -33,7 +33,6 @@ class Messages extends Component {
     );
   }
   onMessagePress(guest){
-    console.log(guest);
     Actions.chatBox({
       guest: guest
     });
@@ -75,8 +74,17 @@ class Messages extends Component {
                     <Image style={styles.listPicture} source={{uri: rowData.picture}} />
                   </View>
                   <View style={styles.listInfo}>
-                    <Text style={styles.titleLabel}>{rowData.name}</Text>
+                    <Text style={styles.listName}>{rowData.name}</Text>
                   </View>
+                  <Button
+                    style={styles.listButton}
+                    title="Go to the event"
+                    onPress={()=>{Actions.eventDetails({
+                      guest: rowData,
+                    });
+                  }}>
+                  Event Details
+                  </Button>
                 </View>
               </TouchableHighlight>
             }
@@ -130,8 +138,19 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
   },
-  titleLabel: {
-    fontSize: 15,
+  listButton: {
+    color: "#70C1B3",
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingLeft: 12,
+    paddingRight: 12,
+    marginRight: 20,
+    fontWeight: "200",
+  },
+  listName: {
+    fontSize: 18,
     fontWeight: "200",
     color: "#ffffff",
     marginLeft: 20,

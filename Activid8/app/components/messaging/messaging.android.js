@@ -81,7 +81,7 @@ class Messages extends Component {
                     title="Go to the event"
                     onPress={()=>{Actions.eventDetails({
                       guest: rowData,
-                    })
+                    });
                   }}>
                   Event Details
                   </Button>
