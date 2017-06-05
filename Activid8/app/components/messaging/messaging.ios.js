@@ -19,12 +19,12 @@ class Messages extends Component {
   componentWillMount(){
     this.setState({refreshing: true});
     getMatchedGuests().then(
-      (guestList)=>{
+      (chatList)=>{
         this.setState({
-          guestList: guestList,
+          chatList: chatList,
           refreshing: false
         });
-        console.log(this.state.guestList);
+        console.log(this.state.chatList);
       },
       (err)=>{
         console.log(err);
@@ -33,20 +33,18 @@ class Messages extends Component {
     );
   }
   onMessagePress(guest){
-    Actions.chatBox({guestObj: guest});
+    Actions.chatBox({
+      guest: guest
+    });
   }
-
-  getMessageList(){
-
-  }
-
+  
   render(){
     if(this.state.refreshing){
       return(
         <View style={{marginTop: 89}}><Text>Loading...</Text></View>
       );
     }
-    if(this.state.guestList.length === 0){
+    if(this.state.chatList.length === 0){
       return(
       <View style={styles.container}>
         <Text style={{margin: 20, fontSize: 20, color: "#70C1B3", textAlign: "center"}}>You are not currently matched for an event.</Text>
@@ -68,7 +66,7 @@ class Messages extends Component {
       <View style={styles.container}>
         <View style={styles.listContainer}>
           <ListView
-            dataSource={this.ds.cloneWithRows(this.state.guestList)}
+            dataSource={this.ds.cloneWithRows(this.state.chatList)}
             renderRow={(rowData) =>
               <TouchableHighlight onPress={() => this.onMessagePress(rowData)}>
                 <View style={styles.listItem}>
@@ -76,8 +74,17 @@ class Messages extends Component {
                     <Image style={styles.listPicture} source={{uri: rowData.picture}} />
                   </View>
                   <View style={styles.listInfo}>
-                    <Text style={styles.titleLabel}>{rowData.name}</Text>
+                    <Text style={styles.listName}>{rowData.name}</Text>
                   </View>
+                  <Button
+                    style={styles.listButton}
+                    title="Go to the event"
+                    onPress={()=>{Actions.eventDetails({
+                      guest: rowData,
+                    });
+                  }}>
+                  Event Details
+                  </Button>
                 </View>
               </TouchableHighlight>
             }
@@ -131,8 +138,19 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
   },
-  titleLabel: {
-    fontSize: 15,
+  listButton: {
+    color: "#70C1B3",
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    paddingTop: 6,
+    paddingBottom: 6,
+    paddingLeft: 12,
+    paddingRight: 12,
+    marginRight: 20,
+    fontWeight: "200",
+  },
+  listName: {
+    fontSize: 18,
     fontWeight: "200",
     color: "#ffffff",
     marginLeft: 20,

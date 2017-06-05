@@ -159,6 +159,6 @@ const styles = StyleSheet.create({
   //   // marginTop:100
   // },
   viewContainer: {
-    ...Platform.select({ios: {top: 129},android: {top: 119}}),
+    ...Platform.select({ios: {top: 129},android: {top: 39}}),
   }
 });

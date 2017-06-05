@@ -16,6 +16,7 @@ import Launch from "./components/launch/Launch.js";
 import LoginScreen from "./components/loginScreen/loginScreen";
 import editProfile from "./components/editProfile/editProfile";
 import EditEvent from "./components/editEvent/editEvent";
+import EventDetails from "./components/eventDetails/eventDetails"
 
 import MatchList from "./components/matchList/matchList";
 
@@ -90,6 +91,7 @@ export default class Activid8 extends Component {
           {/* <Scene key="EventPage" clone component={EventPage} title="Your Event" hideNavBar/> */}
           <Scene key="matchProfile" clone component={matchProfile} title="Profile" hideNavBar/>
           <Scene key="chatBox" component={ChatBox} title="Chat Box" hideNavBar/>
+          <Scene key="eventDetails" component={EventDetails} title="Event Details" hideNavBar/>
       </Scene>
     </Router>
     );

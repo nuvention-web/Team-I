@@ -1,24 +1,63 @@
 import React, { Component, PropTypes} from "react";
-import { AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, Alert} from "react-native";
+import {Platform, AppRegistry, ListView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableHighlight, View, Image, RefreshControl} from "react-native";
 import Button from "react-native-button";
 import { SwipeListView, SwipeRow } from "react-native-swipe-list-view";
 import {Actions} from "react-native-router-flux";
 import getGuests from "../../services/firebase/getGuests";
 import handlePressMatch from "../../services/firebase/handlePressMatch";
+import handlePressRemove from "../../services/firebase/handlePressRemove";
+import getEventSelf from "../../services/firebase/getEventSelf";
+import getFirebaseUser from "../../services/firebase/getFirebaseUser";
 
 
 class EventPage extends Component {
   constructor(props) {
     super(props);
-    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {matches: [{name: "aaaa 23"}, {name: "bbbb 22"}]};
+    this.state = {
+      refreshing: false,
+      eventObj: false,
+      matchObj: false,
+    };
+  }
+
+  _onRefresh() {
+    this.setState({refreshing: true});
+    getEventSelf().then(
+          (eventObj)=>{
+            console.log(eventObj);
+            if (typeof eventObj.accepted_guest !== "undefined"){
+              getFirebaseUser(eventObj.accepted_guest).then((matchObj)=>
+              {
+                this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false});
+              },
+              (err)=>{
+                console.log(err);
+                this.setState({eventObj: eventObj, refreshing: false});
+              });
+            }
+            else this.setState({eventObj: eventObj, refreshing: false});
+          },
+          (err)=>{
+            console.log(err);
+            this.setState({refreshing: false});
+          });
   }
 
   componentWillMount() {
-    getGuests(this.props.eventObj).then(
-      (guests)=>{
-        console.log(guests);
-        this.setState({matches: guests});
+    getEventSelf().then(
+      (eventObj)=>{
+        console.log(eventObj);
+        if (typeof eventObj.accepted_guest !== "undefined"){
+          getFirebaseUser(eventObj.accepted_guest).then((matchObj)=>
+          {
+            this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false});
+          },
+          (err)=>{
+            console.log(err);
+            this.setState({eventObj: eventObj, refreshing: false});
+          });
+        }
+        else this.setState({eventObj: eventObj, refreshing: false});
       },
       (err)=>{
         console.log(err);
@@ -26,146 +65,233 @@ class EventPage extends Component {
   }
 
 
-  deleteRow(secId, rowId, rowMap) {
-    Alert.alert(
-      "Confirm Delete",
-      "Removing a suitor will not show them again for this event.",
-      [
-        {text: "OK", onPress: () => {
-          console.log("OK Pressed");
-          rowMap[`${secId}${rowId}`].closeRow();
-          const newData = [...this.state.matches];
-          newData.splice(rowId, 1);
-          this.setState({matches: newData});
-        }},
-        {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
-      ],
-      { cancelable: false }
-    );
-  }
-
-  onPressMatch(userObj){
-    Alert.alert(
-      "Confirm Match",
-      "Congratulations, you have agreed to go out on your event with " + userObj.name + " !",
-      [
-        {text: "OK", onPress: () => {
-          console.log(this);
-          handlePressMatch(userObj.userID).then(
-            (val)=> {
-              console.log(val);
-              Alert.alert(userObj.name + " has been notified. You can now message them!");
-              Actions.pop();
-              setTimeout(()=>{
-                Actions.messaging();
-              });
-            },
-            (err)=>{
-              console.log(err);
-              Alert.alert("An unexpected error has happened, please try again later.");
-            });
-        }},
-        {text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel"}
-      ],
-      { cancelable: false }
-    );
-  }
-
   render() {
-      return (
-      <View>
-      <Text style={{padding: 20, fontSize: 18, color: "#70C1B3", textAlign: "center"}}>These potential matches have expressed interest in your event! </Text>
+    var temp;
 
-          <SwipeListView
-              dataSource={this.ds.cloneWithRows(this.state.matches)}
-              renderRow={ (data, secId, rowId, rowMap) => (
-                <SwipeRow
-                      leftOpenValue={75}
-                      tension={4}
-                      rightOpenValue={-75}
-                      >
-                      <View style={{flexGrow: 1, flexDirection: "row", alignItems:"flex-start", justifyContent: "center"}}>
-                          <TouchableHighlight style={styles.rightRowBack} onPress={_ => this.onPressMatch(data)}>
-                                  <Text style={styles.rightRowBackText}>Match</Text>
-                          </TouchableHighlight>
-                          <TouchableHighlight style={styles.leftRowBack} onPress={ _ => this.deleteRow(secId, rowId, rowMap)}>
-                              <Text style={styles.leftRowBackText}>Remove</Text>
-                          </TouchableHighlight>
-                      </View>
-                      <TouchableHighlight onPress={()=>{Actions.matchProfile({userID: data.userID});}}>
-                          <View style={styles.rowFront}>
-                            <Image source={{uri: data.picture}} style={styles.listImage}/>
-                            <View style={{paddingLeft: 5, justifyContent: "center"}}>
-                                <Text style={styles.rowFrontText}>{data.name}</Text>
-                            </View>
-                          </View>
-                      </TouchableHighlight>
-                  </SwipeRow>
-              )}
-            />
-
+    if (this.state.eventObj === false) { //NO EVENT
+      temp = (
+        <View>
+          <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+              Create an event below to be discoverable by other users!
+          </Text>
           <Button
-              containerStyle={{marginRight: 20, marginTop: 10, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
-              style={{fontSize: 14, color: "white"}}
-              onPress={()=>{Actions.pop();}}
-              accessibilityLabel="Go Back"
-            >
-              Go Back
-          </Button>
-        </View>);
+            containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, borderRadius:10, backgroundColor: "#70C1B3"}}
+            style={{fontSize: 14, color: "white"}}
+            onPress={()=>{Actions.CreateEvent();}}
+            title="Create Event"
+            accessibilityLabel="Create Event"
+          >
+          Create Event
+        </Button>
+      </View>
+
+      );
     }
+    else {
+      console.log("EVENT OBJ:");
+      console.log(this.state.eventObj);
+
+      if (typeof this.state.eventObj.accepted_guest === "undefined" && !this.state.matchObj){ //EVENT BUT NO ACCEPTED MATCH
+        var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+        var matchCount = getNumberOfMatches(this.state.eventObj);
+        var matchButton;
+        var matchText = (
+          <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+          You have no potential matches yet. {"\n"}Check by in a little time!
+          </Text>
+        );
+
+        if(matchCount > 0){
+          matchButton = (
+            <Button
+              containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+              style={{fontSize: 14, color: "white"}}
+              onPress={()=>{Actions.matchList({eventObj: this.state.eventObj});}}
+              title={this.state.eventObj.eventName}
+              accessibilityLabel="Got to my Event"
+            >
+              Match List ({matchCount})!
+            </Button>);
+
+          matchText = (
+              <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+              You have {matchCount} potential matches. {"\n"} Swipe through them in the Match List!
+              </Text>
+            );
+        }
+
+        temp = (
+              <View>
+              {matchText}
+              <Text style={styles.title}> Event Name: </Text>
+              <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
+              <Text style={styles.title}> Event Location: </Text>
+              <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
+              <Text style={styles.title}> Event Date: </Text>
+              <Text style={styles.subtitle}> {eventDate} </Text>
+              <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+                <Button
+                    containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                    style={{fontSize: 14, color: "white"}}
+                    onPress={()=>{Actions.editEvent({eventObj: this.state.eventObj});}}
+                    accessibilityLabel="Go Back"
+                  >
+                    Edit Event
+                </Button>
+                {matchButton}
+              </View>
+            </View>
+          );
+      }
+      else { ///HAS AN ACCEPTED MATCH
+
+        var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
+
+        temp = (
+            <View>
+            <Text style={{marginLeft: 10 , padding: 10, marginTop: 20, color: "#70C1B3", fontSize: 18, textAlign: "center"}}>
+                Congratulations you have accepted to go to this event with: {this.state.matchObj.name} {"\n"}
+                Message them now!
+            </Text>
+            <View style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+                <TouchableHighlight
+                  onPress={()=>{Actions.matchProfile({userID: this.state.eventObj.accepted_guest, match: false, message: true});}}
+                  activeOpacity={0.001}
+                  underlayColor="white">
+                  <Image style={styles.matchpicture} source={{uri: this.state.matchObj.picture}} />
+                </TouchableHighlight>
+            </View>
+            <Text style={styles.title}> Event Name: </Text>
+            <Text style={styles.subtitle}> {this.state.eventObj.eventName} </Text>
+            <Text style={styles.title}> Event Location: </Text>
+            <Text style={styles.subtitle}> {this.state.eventObj.eventLocation} </Text>
+            <Text style={styles.title}> Event Date: </Text>
+            <Text style={styles.subtitle}> {eventDate} </Text>
+            <View style={{flex: 1, flexDirection: "row", marginTop: 20}}>
+              <Button
+                  containerStyle={{marginRight: 20, marginLeft: 20, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                  style={{fontSize: 14, color: "white"}}
+                  onPress={()=>{Actions.editEvent({eventObj: this.state.eventObj});}}
+                  accessibilityLabel="Go Back"
+                >
+                  Edit Event
+              </Button>
+              <Button
+                  containerStyle={{marginRight: 20, marginLeft: 80, padding:10, height:45, overflow:"hidden", borderRadius:10, backgroundColor: "#70C1B3"}}
+                  style={{fontSize: 14, color: "white"}}
+                  onPress={()=>{Actions.matchProfile({userID: this.state.eventObj.accepted_guest, match: false, message: true});}}
+                  title={this.state.matchObj.name}
+                  accessibilityLabel="Your Match"
+                >
+                {this.state.matchObj.name}
+              </Button>
+            </View>
+          </View>);
+      }
+    }
+
+
+    return (
+      <ScrollView
+        style = {styles.viewContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh.bind(this)}
+            title="Loading..."
+          />}
+        >
+          {temp}
+      </ScrollView>
+  );
+  }
 }
 
 
+
+function formatDate(date) {
+  var nowTime = new Date();
+  var dayNames = [
+    "Sunday", "Monday", "Tuesday", "Wednesday",
+    "Thursday", "Friday", "Saturday"
+  ];
+  var diff = daydiff(nowTime, date);
+  var hours = date.getHours();
+  var hours = (hours+24-2)%24;
+  var minutes = (date.getMinutes()<10?"0":"") + date.getMinutes();
+  var mid="am";
+  if(hours==0) //At 00 hours we need to show 12 am
+    hours=12;
+  else if(hours>12)
+  {
+    hours=hours%12;
+    mid="pm";
+  }
+
+  if (diff == 0) // Today
+    return "Today at " +  hours + ":" + minutes +  mid;
+  else if (diff == 1) // Tomorrow
+    return "Tomorrow at " + hours + ":" + minutes + mid;
+  else if (diff > 7) { // Next week
+    var day = date.getDay();
+    return "Next "+dayNames[day]+" at " + hours + ":" + minutes + mid;
+  }
+  else {
+    var day = date.getDay();
+    return dayNames[day]+" at " + hours + ":" + minutes + mid;
+  }
+}
+
+function daydiff(first, second) {
+  return Math.round((second-first)/(1000*60*60*24));
+}
+
+
+function getNumberOfMatches(eventObj){
+  count = 0;
+  donecount = 0;
+  if (typeof eventObj.guests !== "undefined"){
+    console.log(eventObj.guests);
+    for (var key in eventObj.guests) {
+      if (eventObj.guests[key] == true){
+        count++;
+        donecount++;
+        if (donecount == Object.keys(eventObj.guests).length){
+          return count;
+        }
+      }
+    }
+  }
+  else return 0;
+}
+
 const styles = StyleSheet.create({
-  leftRowBack: {
-    width: 200,
-    height: 100,
-    flexGrow: 1,
-    justifyContent:"center",
+  title:{
+    fontSize: 20,
+    marginTop: 20,
+    color: "#70C1B3",
+    marginLeft: 20
+  },
+  matchpicture: {
+    justifyContent: "center",
     alignItems: "center",
-    backgroundColor:"#FF4136",
-    paddingTop: 15,
-    paddingBottom: 50,
+    marginTop: 30,
+    borderRadius: 40,
+    width: 80,
+    height: 80,
   },
-  leftRowBackText: {
-    marginLeft: 100,
-    fontSize: 16,
+  subtitle:{
+    fontSize: 18,
+    color: "#000",
+    marginLeft: 40
   },
-  rightRowBack: {
-    width: 200,
-    height: 100,
-    flexGrow: 1,
-    justifyContent:"center",
-    alignItems: "center",
-    backgroundColor:"#2ECC40",
-    paddingTop: 15,
-    paddingBottom: 50,
-  },
-  rightRowBackText: {
-    marginRight: 100,
-    fontSize: 16,
-  },
-  rowFront: {
-    paddingLeft: 20,
-    backgroundColor: "white",
-    paddingRight: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    flexDirection: "row",
-    borderBottomWidth:1,
-    borderBottomColor:"orange",
-    borderTopWidth:1,
-    borderTopColor:"orange",
-  },
-  rowFrontText: {
-    color: "black",
-    fontSize: 18
-  },
+  viewContainer: {
+    backgroundColor: "#fff",
+    ...Platform.select({ios: {top: 70},android: {top: 39}}),
+  }
 });
 
 export default EventPage;
-
-EventPage.propTypes = {
-  eventObj: React.PropTypes.object.isRequired,
-};

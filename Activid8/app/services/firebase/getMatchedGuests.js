@@ -9,12 +9,19 @@ export default function getMatchedGuests () {
     getFirebaseSelf().then((u_self)=>{
       var guestList = [];
       l = 0;
+      console.log(typeof u_self.matched_users);
       if (typeof u_self.matched_users !== "undefined"){
+      	console.log("bye");
         var keys = [];
-        for(var user in u_self.matched_users){
-          if (u_self.matched_users.hasOwnProperty(user)){
-            getFirebaseUser(user).then(
+        Object.keys(u_self.matched_users).forEach(function(key,index) {
+    	// key: the name of the object key
+    	// index: the ordinal position of the key within the object 
+    		var obj = u_self.matched_users[key];
+    		getFirebaseUser(obj.userID).then(
             (guest)=>{
+              guest.chatID = obj.chatID;
+              guest.userID = obj.userID;
+              console.log(guest);
               guestList.push(guest);
               l++;
               if (l >= Object.keys(u_self.matched_users).length){
@@ -22,8 +29,7 @@ export default function getMatchedGuests () {
               }
             },
             (err)=>{console.log(err);});
-          }
-        }
+		});        
       }
       else resolve(guestList);
     },(err)=>{

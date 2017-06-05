@@ -2,18 +2,17 @@ import getUserID from "../facebook/getUserID";
 import firebaseApp from "./firebaseService";
 
 //Gets the users event if they have one
-export default function getMessages (chatID) {
+export default function getChatInfo (chatID) {
   return new Promise(function(resolve, reject) {
     var chatRef = firebaseApp().database().ref("Chats/"+chatID);
     chatRef.on("value", function(snapshot) {
-      var exists = (snapshot.val().messages !== undefined);
-      
+      var exists = (snapshot.val() !== undefined);
+      var chatObj = {};
       if (exists) {
-        resolve(snapshot.val().messages);
-      }
-      else {
-        console.log("No Messages");
-        resolve([]);
+        chatObj.eventDate = snapshot.val().eventDate;
+        chatObj.eventName = snapshot.val().eventName;
+        chatObj.eventLocation = snapshot.val().eventLocation;
+        resolve(chatObj);
       }
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);

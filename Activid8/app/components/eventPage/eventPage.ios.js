@@ -194,7 +194,7 @@ class EventPage extends Component {
     }
 
 
-  	return (
+    return (
       <ScrollView
         style = {styles.viewContainer}
         refreshControl={
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     backgroundColor: "#fff",
-    ...Platform.select({ios: {top: 70},android: {top: 119}}),
+    ...Platform.select({ios: {top: 70},android: {top: 39}}),
   }
 });
 
