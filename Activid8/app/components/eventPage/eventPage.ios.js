@@ -206,7 +206,7 @@ class EventPage extends Component {
         >
           {temp}
       </ScrollView>
-  );
+    );
   }
 }
 
@@ -254,10 +254,17 @@ function getNumberOfMatches(eventObj){
   count = 0;
   donecount = 0;
   if (typeof eventObj.guests !== "undefined"){
+    console.log("GUESTS: ");
     console.log(eventObj.guests);
     for (var key in eventObj.guests) {
       if (eventObj.guests[key] == true){
         count++;
+        donecount++;
+        if (donecount == Object.keys(eventObj.guests).length){
+          return count;
+        }
+      }
+      else {
         donecount++;
         if (donecount == Object.keys(eventObj.guests).length){
           return count;
