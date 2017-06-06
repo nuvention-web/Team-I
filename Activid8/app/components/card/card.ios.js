@@ -72,7 +72,7 @@ function formatDate(date) {
   ];
   var diff = daydiff(nowTime, date);
   var hours = date.getHours();
-  var hours = (hours+24-2)%24;
+  var hours = hours%24;
   var minutes = (date.getMinutes()<10?'0':'') + date.getMinutes();
   var mid='am';
   if(hours==0) //At 00 hours we need to show 12 am

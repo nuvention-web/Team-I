@@ -10,6 +10,7 @@ export default function getuserID (){
                   if(data){
                     // console.log("In Get User ID: ");
                     // console.log(data);
+                    // resolve("10207417484470250");
                     resolve(data.userID);
                   }
                   else {

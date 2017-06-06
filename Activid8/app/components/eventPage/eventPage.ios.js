@@ -17,6 +17,7 @@ class EventPage extends Component {
       refreshing: false,
       eventObj: false,
       matchObj: false,
+      match: false,
     };
   }
 
@@ -28,18 +29,18 @@ class EventPage extends Component {
             if (typeof eventObj.accepted_guest !== "undefined"){
               getFirebaseUser(eventObj.accepted_guest).then((matchObj)=>
               {
-                this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false});
+                this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false, match: true});
               },
               (err)=>{
                 console.log(err);
-                this.setState({eventObj: eventObj, refreshing: false});
+                this.setState({eventObj: eventObj, refreshing: false, match: false});
               });
             }
-            else this.setState({eventObj: eventObj, refreshing: false});
+            else this.setState({eventObj: eventObj, refreshing: false, match: false});
           },
           (err)=>{
             console.log(err);
-            this.setState({refreshing: false});
+            this.setState({refreshing: false, match: false});
           });
   }
 
@@ -50,14 +51,14 @@ class EventPage extends Component {
         if (typeof eventObj.accepted_guest !== "undefined"){
           getFirebaseUser(eventObj.accepted_guest).then((matchObj)=>
           {
-            this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false});
+            this.setState({eventObj: eventObj, matchObj: matchObj, refreshing: false, match: true});
           },
           (err)=>{
             console.log(err);
-            this.setState({eventObj: eventObj, refreshing: false});
+            this.setState({eventObj: eventObj, refreshing: false, match: false});
           });
         }
-        else this.setState({eventObj: eventObj, refreshing: false});
+        else this.setState({eventObj: eventObj, refreshing: false, match: false});
       },
       (err)=>{
         console.log(err);
@@ -91,7 +92,7 @@ class EventPage extends Component {
       console.log("EVENT OBJ:");
       console.log(this.state.eventObj);
 
-      if (typeof this.state.eventObj.accepted_guest === "undefined" && !this.state.matchObj){ //EVENT BUT NO ACCEPTED MATCH
+      if (!this.state.match && !this.state.matchObj){ //EVENT BUT NO ACCEPTED MATCH
         var eventDate = formatDate(new Date(this.state.eventObj.eventDate));
         var matchCount = getNumberOfMatches(this.state.eventObj);
         var matchButton;
@@ -213,14 +214,14 @@ class EventPage extends Component {
 
 
 function formatDate(date) {
-  var nowTime = new Date();
+  var nowTime = new Date().toLocaleString("en-US", {timeZone: "America/Chicago"});
   var dayNames = [
     "Sunday", "Monday", "Tuesday", "Wednesday",
     "Thursday", "Friday", "Saturday"
   ];
   var diff = daydiff(nowTime, date);
   var hours = date.getHours();
-  var hours = (hours+24-2)%24;
+  var hours = hours%24;
   var minutes = (date.getMinutes()<10?"0":"") + date.getMinutes();
   var mid="am";
   if(hours==0) //At 00 hours we need to show 12 am

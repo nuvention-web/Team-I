@@ -37,7 +37,7 @@ class Messages extends Component {
       guest: guest
     });
   }
-  
+
   render(){
     if(this.state.refreshing){
       return(
@@ -88,7 +88,7 @@ class Messages extends Component {
                 </View>
               </TouchableHighlight>
             }
-            onEndReached={() => this.getMessageList()}
+            // onEndReached={() => this.getMessageList()}
             onEndReachedThreshold={PULLDOWN_DISTANCE}
           />
         </View>

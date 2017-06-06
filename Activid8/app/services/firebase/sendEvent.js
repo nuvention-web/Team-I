@@ -14,7 +14,6 @@ export default function sendEvent (eventName, eventLocation, eventDate) {
     tmp.eventDate = eventDate;
     tmp.host = userID.toString();
     tmp.guests = [];
-    tmp.accepted_guest = "";
     ref.update(tmp);
     Actions.pop();
   }, (err)=>{console.log(err);});
